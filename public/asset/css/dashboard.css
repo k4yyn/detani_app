@@ -1,0 +1,41 @@
+.bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 30px;
+    max-width: 80px;
+}
+
+.bar {
+    width: 100%;
+    background-color: #3b82f6;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.3s ease-in-out;
+}
+
+.bar:hover {
+    background-color: #2563eb;
+}
+
+.bar-label {
+    font-size: 12px;
+    color: #374151;
+    margin-top: 4px;
+    text-align: center;
+}
+
+.bar-value {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffffff;
+    position: absolute;
+    top: -24px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 3px 6px;
+    border-radius: 4px;
+    visibility: hidden;
+}
+
+.bar-container:hover .bar-value {
+    visibility: visible;
+}
