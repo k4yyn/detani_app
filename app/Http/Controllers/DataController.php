@@ -19,7 +19,12 @@ class DataController extends Controller
 
         $data = $query->latest()->paginate(10);
 
-        return view('admin.data.index', compact('data'));
+        // cek role & return view yang sesuai
+        if (auth()->user()->role === 'admin') {
+            return view('admin.data.index', compact('data'));
+        } else {
+            return view('user.data.index', compact('data'));
+        }
     }
 
     public function create()

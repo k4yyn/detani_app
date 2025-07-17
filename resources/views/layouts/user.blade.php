@@ -1,149 +1,160 @@
-<!-- resources/views/layouts/user.blade.php -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir Amaliah - {{ $title ?? 'Dashboard' }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    @stack('styles')
-    <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f8f5f2;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#d97706"> <!-- Amber-600 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>@yield('title', 'Kasir DeTani')</title>
 
-        .shadow-inner {
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-        }
+<!-- Tailwind -->
+@vite('resources/css/app.css')
 
-        .transition-colors {
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x/dist/cdn.min.js" defer></script>
 
-        .hover\:shadow-md:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 
-        .border-l-4 {
-            border-left-width: 4px;
-        }
-
-        .text-stone-800 {
-            color: #292524;
-        }
-
-        .text-stone-700 {
-            color: #44403c;
-        }
-
-        .text-stone-600 {
-            color: #57534e;
-        }
-
-        .text-stone-500 {
-            color: #78716c;
-        }
-
-        .text-stone-400 {
-            color: #a8a29e;
-        }
-
-        .bg-stone-100 {
-            background-color: #f5f5f4;
-        }
-
-        .bg-stone-200 {
-            background-color: #e7e5e4;
-        }
-
-        .bg-amber-50 {
-            background-color: #fffbeb;
-        }
-
-        .bg-amber-100 {
-            background-color: #fef3c7;
-        }
-
-        .bg-amber-200 {
-            background-color: #fde68a;
-        }
-
-        .bg-amber-600 {
-            background-color: #d97706;
-        }
-
-        .bg-amber-700 {
-            background-color: #b45309;
-        }
-
-        .border-stone-100 {
-            border-color: #f5f5f4;
-        }
-
-        .border-amber-200 {
-            border-color: #fde68a;
-        }
-
-        .divide-stone-100 {
-            border-color: #f5f5f4;
-        }
-
-        .text-amber-600 {
-            color: #d97706;
-        }
-
-        .text-amber-700 {
-            color: #b45309;
-        }
-
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        th {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-    </style>
+@stack('styles')
 </head>
-<body class="bg-stone-100">
-    <div class="min-h-screen">
-        <!-- Header -->
-        <header class="bg-amber-700 text-white shadow-md">
-            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-store text-2xl"></i>
-                    <h1 class="text-xl font-bold">Kasir Amaliah</h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="date-display flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 text-stone-700 shadow-md border border-amber-200">
-                        <i class="far fa-calendar-alt text-amber-600"></i>
-                        <span class="font-medium tracking-wide">{{ now()->format('d M Y') }}</span>
-                    </div>
-                    <span class="text-sm"><i class="far fa-user mr-1"></i> {{ auth()->user()->name }}</span>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="text-sm hover:text-amber-200 transition">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </form>
+
+<body class="bg-stone-100 font-sans text-stone-800 h-full antialiased">
+<div x-data="{ showSidebar: false }" class="flex flex-col min-h-full">
+
+<!-- HEADER -->
+<header class="bg-amber-700 text-white shadow sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Menu & Logo -->
+            <div class="flex items-center">
+                <button @click="showSidebar = true" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-amber-100 hover:bg-amber-600 focus:outline-none transition">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div class="flex items-center ml-4 space-x-2">
+                    <i class="fas fa-store text-xl"></i>
+                    <h1 class="text-lg font-semibold hidden sm:inline">Kasir DeTani</h1>
                 </div>
             </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="container mx-auto px-4 py-6">
-            @yield('content')
-        </main>
+            <!-- Date & User -->
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center bg-amber-50 px-3 py-1 rounded-lg text-amber-700 shadow">
+                    <i class="far fa-calendar-alt mr-2 text-amber-600"></i>
+                    <span class="text-sm font-medium">{{ now()->format('d M Y') }}</span>
+                </div>
+                <div class="flex items-center text-white group relative">
+                    <div class="flex items-center space-x-2">
+                        <div class="h-8 w-8 rounded-full bg-amber-600 flex items-center justify-center text-white font-medium">
+                            {{ substr(auth()->user()->name, 0, 1) }}
+                        </div>
+                        <span class="hidden md:inline text-sm">{{ auth()->user()->name }}</span>
+                    </div>
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded shadow py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-amber-50 hover:text-amber-700">
+                                <i class="fas fa-sign-out-alt mr-2 text-stone-400"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</header>
 
-    @stack('scripts')
+<!-- SIDEBAR -->
+<div class="fixed inset-0 z-40" x-show="showSidebar" x-cloak>
+    <div class="absolute inset-0 bg-black/50" @click="showSidebar = false"></div>
+    <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-xl transform transition-all duration-300" 
+         x-show="showSidebar" 
+         x-transition:enter="transform transition ease-in-out duration-300"
+         x-transition:enter-start="-translate-x-full" 
+         x-transition:enter-end="translate-x-0"
+         x-transition:leave="transform transition ease-in-out duration-300"
+         x-transition:leave-start="translate-x-0"
+         x-transition:leave-end="-translate-x-full">
+        <div class="flex flex-col h-full">
+            <div class="flex items-center justify-between px-4 py-4 bg-amber-600 text-white">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-store text-lg"></i>
+                    <span class="text-lg font-semibold">Kasir DeTani</span>
+                </div>
+                <button @click="showSidebar = false" class="text-amber-100 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+                <a href="{{ url('transaksi') }}" 
+                   class="{{ request()->is('transaksi*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mb-1">
+                    <i class="fas fa-shopping-cart mr-2"></i> Transaksi
+                </a>
+               <a href="{{ route('data.index') }}" 
+                class="{{ request()->is('data*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
+                <i class="fas fa-chart-line mr-2"></i> Data barang
+                </a>
+            </nav>
+
+            <div class="px-4 py-3 border-t">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-amber-50 hover:text-amber-700">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<main class="flex-1 transition-all duration-200" :class="{ 'blur-sm': showSidebar }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        @hasSection('page-title')
+        <div class="mb-4">
+            <h1 class="text-2xl font-semibold text-stone-800">@yield('page-title')</h1>
+            @hasSection('page-description')
+                <p class="text-sm text-stone-600">@yield('page-description')</p>
+            @endif
+        </div>
+        @endif
+
+        <div class="bg-white rounded shadow p-6">
+            @yield('content')
+        </div>
+    </div>
+</main>
+
+<!-- MOBILE NAV -->
+<nav class="fixed bottom-0 inset-x-0 bg-white border-t shadow md:hidden z-20">
+    <div class="flex justify-around">
+        <a href="{{ url('user/dashboard') }}" 
+           class="{{ request()->is('user/dashboard*') ? 'text-amber-600' : 'text-stone-500' }} flex flex-col items-center justify-center p-2">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs">Dashboard</span>
+        </a>
+        <a href="{{ url('user/transaksi') }}" 
+           class="{{ request()->is('user/transaksi*') ? 'text-amber-600' : 'text-stone-500' }} flex flex-col items-center justify-center p-2">
+            <i class="fas fa-shopping-cart text-lg"></i>
+            <span class="text-xs">Transaksi</span>
+        </a>
+        <a href="{{ url('user/laporan') }}" 
+           class="{{ request()->is('user/laporan*') ? 'text-amber-600' : 'text-stone-500' }} flex flex-col items-center justify-center p-2">
+            <i class="fas fa-chart-line text-lg"></i>
+            <span class="text-xs">Laporan</span>
+        </a>
+    </div>
+</nav>
+</div>
+
+<style>
+[x-cloak] { display: none !important; }
+button, a { transition: all 0.2s ease; touch-action: manipulation; }
+button:active, a:active { transform: scale(0.98); }
+</style>
+
+@stack('scripts')
 </body>
 </html>

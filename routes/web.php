@@ -12,7 +12,7 @@ use App\Http\Controllers\{
     UserController,
 };
 
-// Redirect user berdasarkan role saat akses root '/'
+// Redirect user ke dashboard sesuai role saat akses root '/'
 Route::get('/', function () {
     if (!auth()->check()) {
         return redirect()->route('login');
@@ -51,10 +51,18 @@ Route::middleware('auth')->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 
-    // USER Routes (role = user)
+    // ========================
+    // USER Routes (role:user)
+    // ========================
     Route::middleware('role:user')->group(function () {
+
         Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
+        // Data Barang untuk USER
+         Route::get('/data', [DataController::class, 'index'])->name('data.index');
+
+
+        // Transaksi
         Route::prefix('transaksi')->name('transaksi.')->group(function () {
             Route::get('/', [TransaksiKasirController::class, 'index'])->name('index');
             Route::get('/create', [TransaksiKasirController::class, 'create'])->name('create');
@@ -68,31 +76,26 @@ Route::middleware('auth')->group(function () {
             Route::get('/transaksi/search-product', [TransaksiKasirController::class, 'searchProduct'])->name('searchProduct');
             Route::post('/transaksi/checkout', [TransaksiKasirController::class, 'checkout'])->name('transaksi.checkout');
             Route::get('/transaksi/success', [TransaksiKasirController::class, 'success'])->name('transaksi.success');
-           Route::get('/struk/{id}', [TransaksiKasirController::class, 'cetakStruk'])->name('struk');
-
-
+            Route::get('/struk/{id}', [TransaksiKasirController::class, 'cetakStruk'])->name('struk');
         });
     });
 
-    // ADMIN Routes (role = admin)
+    // ========================
+    // ADMIN Routes (role:admin)
+    // ========================
     Route::prefix('admin')->middleware('role:admin')->name('admin.')->group(function () {
 
-        // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Data Management
+        // Data Barang untuk admin
         Route::prefix('data')->name('data.')->group(function () {
-    Route::get('/', [DataController::class, 'index'])->name('index');
-    Route::get('/create', [DataController::class, 'create'])->name('create');
-    Route::post('/', [DataController::class, 'store'])->name('store');
-    Route::get('/{id}/edit', [DataController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [DataController::class, 'update'])->name('update'); // Tambahkan ini
-    Route::delete('/{id}', [DataController::class, 'destroy'])->name('destroy');
-
-    Route::get('/{id}/tambah-stok', [DataController::class, 'stok'])->name('stok.form');
-    Route::post('/{id}/tambah-stok', [DataController::class, 'stok'])->name('stok');
-});
-
+            Route::get('/', [DataController::class, 'index'])->name('index');
+            Route::get('/create', [DataController::class, 'create'])->name('create');
+            Route::post('/', [DataController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [DataController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [DataController::class, 'update'])->name('update');
+            Route::delete('/{id}', [DataController::class, 'destroy'])->name('destroy');
+        });
 
         // User Management
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
