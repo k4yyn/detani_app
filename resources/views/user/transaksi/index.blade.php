@@ -15,7 +15,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm font-medium transition-colors">
-                            <i class="fas fa-trash-alt mr-1"></i> Hapus Semua
+                            <i class="fas fa-trash-alt mr-1"></i> Hapus
                         </button>
                     </form>
                 </div>
