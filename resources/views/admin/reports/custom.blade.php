@@ -10,12 +10,9 @@
             <i class="fas fa-calendar-range mr-2"></i> Laporan Kustom 
             ({{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }})
         </h2>
-        <div class="flex space-x-2">
+        <div>
             <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                 <i class="fas fa-file-excel mr-2"></i> Export Excel
-            </button>
-            <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                <i class="fas fa-file-pdf mr-2"></i> Export PDF
             </button>
         </div>
     </div>
