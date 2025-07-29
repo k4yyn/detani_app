@@ -1,8 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Struk Pembayaran</title>
+@extends('layouts.user')
+
+@section('content')
+<div class="min-h-screen bg-gray-50">
+    @if(session('success'))
+        <div style="background: #d4edda; color: #155724; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <style>
         body { font-family: Arial, sans-serif; font-size: 14px; }
         .struk { max-width: 400px; margin: auto; border: 1px solid #ccc; padding: 20px; }
@@ -14,12 +19,11 @@
         .btn-cetak { margin-top: 20px; text-align: center; }
         .btn-cetak button { padding: 8px 16px; font-size: 14px; cursor: pointer; }
     </style>
-</head>
-<body>
+    <body>
     <div class="struk">
         <div class="center">
-            <h2>Toko Kita</h2>
-            <p>Jl. Contoh No.1, Bandung<br>Telp: 0812-3456-7890</p>
+            <h2>Kantin DeTani</h2>
+            <p>Jln. Goalpara, Kp. Cijeruk, Sukamekar, Kec. Sukaraja, Sukabumi <br>Telp: 0819-1188-0088</p>
         </div>
 
         <hr>
@@ -27,7 +31,16 @@
         <p>
             <strong>Kode Transaksi:</strong> {{ $transaksi->kode_transaksi }}<br>
             <strong>Tanggal:</strong> {{ $transaksi->created_at->format('d/m/Y H:i') }}<br>
-            <strong>Kasir:</strong> {{ $transaksi->user->name }}
+            <strong>Kasir:</strong> {{ optional($transaksi->user)->name ?? '-' }}<br>
+            @if ($transaksi->nama_pelanggan)
+                <strong>Pelanggan:</strong> {{ $transaksi->nama_pelanggan }}<br>
+            @endif
+            @if ($transaksi->nomor_meja)
+                <strong>Meja:</strong> {{ $transaksi->nomor_meja }}<br>
+            @endif
+            @if ($transaksi->keterangan_tambahan)
+                <strong>Catatan:</strong> {{ $transaksi->keterangan_tambahan }}<br>
+            @endif
         </p>
 
         <table>
@@ -42,10 +55,18 @@
             <tbody>
                 @foreach ($transaksi->details as $item)
                     <tr>
-                        <td>{{ $item->data->nama_barang }}</td>
+                        <td>
+                            {{ $item->nama_manual ?? optional($item->data)->nama_barang ?? '-' }}
+                            @if ($item->diskon && $item->diskon > 0)
+                                <br><small>Diskon: Rp {{ number_format($item->diskon, 0, ',', '.') }}</small>
+                            @endif
+                            @if ($transaksi->keterangan)
+                            <br><strong>Catatan:</strong> {{ $transaksi->keterangan }}<br>
+                            @endif
+                        </td>
                         <td>{{ $item->qty }}</td>
-                        <td>Rp {{ number_format($item->data->harga_jual, 0, ',', '.') }}</td>
-                        <td>Rp {{ number_format($item->qty * $item->data->harga_jual, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
                 <tr class="total-row">
@@ -65,12 +86,21 @@
 
         <div class="footer">
             <p>Terima kasih telah berbelanja!</p>
-            <p>~ Toko Kita ~</p>
+            <p>~ De Tani Waterpark ~</p>
         </div>
 
-        <div class="btn-cetak">
-            <button onclick="window.print()">🖨️ Cetak Struk</button>
-        </div>
-    </div>
-</body>
-</html>
+        <!-- Button kembali -->
+    <a href="{{ route('user.transaksi.index') }}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Kembali ke Transaksi</a>
+</div>
+
+@if (request('print') === 'true')
+<script>
+    window.onload = function () {
+        window.print();
+        setTimeout(function () {
+            window.location.href = "{{ route('user.transaksi.index') }}";
+        }, 1000);
+    };
+</script>
+@endif
+@endsection

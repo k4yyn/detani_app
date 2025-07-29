@@ -21,7 +21,7 @@ Route::get('/', function () {
     return redirect()->intended(
         auth()->user()->role === 'admin'
             ? route('admin.dashboard')
-            : route('transaksi.index')
+            : route('user.transaksi.index')
     );
 });
 
@@ -41,7 +41,7 @@ Route::middleware('guest')->group(function () {
 // ========================
 Route::middleware('auth')->group(function () {
 
-    // Logout
+    // Logout 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     // Profile Routes (semua user)
@@ -60,25 +60,19 @@ Route::middleware('auth')->group(function () {
 
         // Data Barang untuk USER
          Route::get('/data', [DataController::class, 'index'])->name('data.index');
-
-
-        // Transaksi
-        Route::prefix('transaksi')->name('transaksi.')->group(function () {
-            Route::get('/', [TransaksiKasirController::class, 'index'])->name('index');
-            Route::get('/create', [TransaksiKasirController::class, 'create'])->name('create');
-            Route::post('/', [TransaksiKasirController::class, 'store'])->name('store');
-            Route::get('/{transaksi}', [TransaksiKasirController::class, 'show'])->name('show');
-            Route::get('/{transaksi}/edit', [TransaksiKasirController::class, 'edit'])->name('edit');
-            Route::put('/{transaksi}', [TransaksiKasirController::class, 'update'])->name('update');
-            Route::delete('/delete-all', [TransaksiKasirController::class, 'deleteAll'])->name('deleteAll');
-            Route::delete('/{transaksi}', [TransaksiKasirController::class, 'destroy'])->name('destroy');
-            Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');
-            Route::get('/transaksi/search-product', [TransaksiKasirController::class, 'searchProduct'])->name('searchProduct');
-            Route::post('/transaksi/checkout', [TransaksiKasirController::class, 'checkout'])->name('transaksi.checkout');
-            Route::get('/transaksi/success', [TransaksiKasirController::class, 'success'])->name('transaksi.success');
-            Route::get('/struk/{id}', [TransaksiKasirController::class, 'cetakStruk'])->name('struk');
-        });
     });
+
+     // Route untuk transaksi kasir
+        Route::prefix('user/transaksi')->name('user.transaksi.')->group(function () {
+            Route::get('/', [TransaksiKasirController::class, 'index'])->name('index');
+            Route::post('/keranjang/tambah', [TransaksiKasirController::class, 'tambahKeranjang'])->name('keranjang.tambah');
+            Route::get('/keranjang', [TransaksiKasirController::class, 'keranjang'])->name('keranjang');
+            Route::post('/keranjang/update/{id}', [TransaksiKasirController::class, 'updateQty'])->name('keranjang.update');
+            Route::delete('/keranjang/{id}', [TransaksiKasirController::class, 'hapusItem'])->name('keranjang.hapus');
+            Route::post('/keranjang/edit/{id}', [TransaksiKasirController::class, 'editHargaDiskon'])->name('keranjang.edit');
+            Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');
+            Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
+        });
 
     // ========================
     // ADMIN Routes (role:admin)

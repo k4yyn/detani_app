@@ -43,7 +43,7 @@ public function register(Request $request)
     return redirect()->intended(
         $user->role === 'admin' 
             ? route('admin.dashboard')
-            : route('transaksi.index')
+            : route('user.transaksi.index')
     );
 }
 }

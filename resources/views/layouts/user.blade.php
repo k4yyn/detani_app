@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#d97706"> <!-- Amber-600 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <title>@yield('title', 'Kasir DeTani')</title>
 
 <!-- Tailwind -->
@@ -93,8 +94,8 @@
                    class="{{ request()->is('user/dashboard*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mb-1">
                     <i class="fas fa-home mr-2"></i> Dashboard
                 </a>
-                <a href="{{ url('transaksi') }}" 
-                   class="{{ request()->is('transaksi*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mb-1">
+                <a href="{{ url('user/transaksi') }}" 
+                   class="{{ request()->is('user/transaksi*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mb-1">
                     <i class="fas fa-shopping-cart mr-2"></i> Transaksi
                 </a>
                 <a href="{{ route('data.index') }}" 

@@ -4,159 +4,235 @@ namespace App\Http\Controllers;
 
 use App\Models\Data;
 use App\Models\Transaksi;
-use App\Models\TransaksiKasir;
 use App\Models\TransaksiDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class TransaksiKasirController extends Controller
 {
     public function index()
     {
-        $transaksis = TransaksiDetail::with('data')
-            ->whereNull('transaksi_id')
-            ->latest()
-            ->get();
-            
-        $grandTotal = $transaksis->sum(function($item) {
-            return $item->qty * $item->data->harga_jual;
-        });
+        $data = Data::all();
+        $keranjang = Session::get('keranjang', []);
+        $total = collect($keranjang)->sum('subtotal');
 
-        $products = Data::where('stok', '>', 0)
-            ->orderBy('nama_barang')
-            ->get();
-
-        return view('user.transaksi.index', [
-            'transaksis' => $transaksis,
-            'grandTotal' => $grandTotal,
-            'products' => $products
-        ]);
+        return view('user.transaksi.index', compact('data', 'keranjang', 'total'));
     }
 
-    // Keep other methods but ensure they use Transaksi model
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'data_id' => 'required|exists:data,id',
-            'codetrx' => 'required',
-            'nama_barang' => 'required',
-            'kategori' => 'required',
-            'harga_jual' => 'required|numeric|min:0',
-            'qty' => 'required|integer|min:1'
-        ]);
-
-        $product = Data::findOrFail($request->data_id);
-
-        if ($product->stok < $request->qty) {
-            return back()->with('error', 'Stok tidak mencukupi! Stok tersedia: ' . $product->stok);
-        }
-
-        $existingItem = TransaksiDetail::where('data_id', $request->data_id)
-                                     ->whereNull('transaksi_id')
-                                     ->first();
-
-        if ($existingItem) {
-            $existingItem->qty += $request->qty;
-            $existingItem->save();
-        } else {
-            TransaksiDetail::create([
-                'data_id' => $request->data_id,
-                'codetrx' => $request->codetrx,
-                'qty' => $request->qty
-            ]);
-        }
-
-        return redirect()->route('transaksi.index')->with('success', 'Item berhasil ditambahkan ke transaksi!');
-    }
-
-    public function destroy($id)
-    {
-        $transaksi = Transaksi::findOrFail($id);
-        $transaksi->delete();
-
-        return redirect()->route('transaksi.index')->with('success', 'Data berhasil dihapus!');
-    }
-
-    public function deleteAll()
-    {
-        TransaksiDetail::whereNull('transaksi_id')->delete();
-
-        return redirect()->route('transaksi.index')->with('success', 'Semua item transaksi berhasil dihapus!');
-    }
-
-    public function checkout(Request $request)
+    public function tambahKeranjang(Request $request)
 {
-    $request->validate([
-        'codetrx' => 'required|string',
-        'uang_dibayar' => 'required|numeric|min:0',
-    ]);
+    //transaksi manual
+    if ($request->manual) {
+        $keranjang = Session::get('keranjang', []);
+        $index = collect($keranjang)->search(fn($item) => $item['id'] == $request->id);
 
-    $transaksiDetails = TransaksiDetail::with('data')->whereNull('transaksi_id')->get();
-
-    if ($transaksiDetails->isEmpty()) {
-        return response()->json(['success' => false, 'message' => 'Tidak ada item untuk diproses.']);
-    }
-
-    $grandTotal = $transaksiDetails->sum(function ($item) {
-        return $item->qty * $item->data->harga_jual;
-    });
-
-    if ($request->uang_dibayar < $grandTotal) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Uang dibayar kurang dari total belanja. Kurang: Rp ' . number_format($grandTotal - $request->uang_dibayar, 0, ',', '.')
-        ]);
-    }
-
-    DB::beginTransaction();
-
-    try {
-        $transaksi = Transaksi::create([
-            'user_id' => auth()->id(),
-            'kode_transaksi' => $request->codetrx,
-            'total_harga' => $grandTotal,
-            'uang_dibayar' => $request->uang_dibayar,
-            'kembalian' => $request->uang_dibayar - $grandTotal
-        ]);
-
-        foreach ($transaksiDetails as $item) {
-            $item->transaksi_id = $transaksi->id;
-            $item->save();
-
-            $product = Data::find($item->data_id);
-            if ($product->stok < $item->qty) {
-                throw new \Exception("Stok {$product->nama_barang} tidak mencukupi");
-            }
-            $product->decrement('stok', $item->qty);
+        if ($index !== false) {
+            $keranjang[$index]['qty'] += $request->qty;
+            $keranjang[$index]['subtotal'] = $keranjang[$index]['qty'] * $keranjang[$index]['harga'];
+        } else {
+            $keranjang[] = [
+                'id' => $request->id,
+                'nama' => $request->nama,
+                'harga' => $request->harga,
+                'qty' => $request->qty,
+                'diskon' => 0,
+                'subtotal' => $request->harga * $request->qty,
+            ];
         }
 
-        DB::commit();
+        Session::put('keranjang', $keranjang);
 
         return response()->json([
             'success' => true,
-            'struk_url' => route('transaksi.struk', $transaksi->id)
+            'message' => 'Transaksi tambahan berhasil ditambahkan ke keranjang',
+            'keranjang_count' => collect($keranjang)->sum('qty'),
+            'total' => collect($keranjang)->sum('subtotal'),
+            'keranjang' => $keranjang
+        ]);
+    }
+
+    // Proses transaksi dari produk asli (bukan tambahan)
+    $produk = Data::findOrFail($request->id);
+    $keranjang = Session::get('keranjang', []);
+    $index = collect($keranjang)->search(fn($item) => $item['id'] == $produk->id);
+
+    if ($index !== false) {
+        $keranjang[$index]['qty'] += 1;
+        $keranjang[$index]['subtotal'] = $keranjang[$index]['qty'] * $keranjang[$index]['harga'];
+    } else {
+        $keranjang[] = [
+            'id' => $produk->id,
+            'nama' => $produk->nama_barang,
+            'harga' => $produk->harga_jual,
+            'qty' => 1,
+            'diskon' => 0,
+            'subtotal' => $produk->harga_jual,
+        ];
+    }
+
+    Session::put('keranjang', $keranjang);
+
+    if ($request->ajax()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil ditambahkan ke keranjang',
+            'keranjang_count' => collect($keranjang)->sum('qty'),
+            'total' => collect($keranjang)->sum('subtotal'),
+            'keranjang' => $keranjang
+        ]);
+    }
+
+    return redirect()->route('user.transaksi.index');
+}
+
+
+    public function keranjang()
+    {
+        $keranjang = Session::get('keranjang', []);
+        $total = collect($keranjang)->sum('subtotal');
+
+        return view('user.transaksi.keranjang', compact('keranjang', 'total'));
+    }
+
+    public function hapusItem($id)
+    {
+        $keranjang = Session::get('keranjang', []);
+        $keranjang = collect($keranjang)->reject(fn($item) => $item['id'] == $id)->values()->all();
+        Session::put('keranjang', $keranjang);
+
+        if (request()->ajax()) {
+            $total = collect($keranjang)->sum('subtotal');
+            $totalItems = collect($keranjang)->sum('qty');
+            
+            return response()->json([
+                'success' => true,
+                'keranjang_count' => $totalItems,
+                'total' => $total,
+                'keranjang' => $keranjang
+            ]);
+        }
+
+        return back();
+    }
+
+    public function updateQty(Request $request, $id)
+    {
+        $keranjang = Session::get('keranjang', []);
+        $index = collect($keranjang)->search(fn($item) => $item['id'] == $id);
+
+        if ($index !== false) {
+            $qty = max(1, (int)$request->qty);
+            $keranjang[$index]['qty'] = $qty;
+            $hargaSetelahDiskon = $keranjang[$index]['harga'] - ($keranjang[$index]['diskon'] ?? 0);
+            $keranjang[$index]['subtotal'] = $hargaSetelahDiskon * $qty;
+            Session::put('keranjang', $keranjang);
+        }
+
+        if ($request->ajax()) {
+            $total = collect($keranjang)->sum('subtotal');
+            $totalItems = collect($keranjang)->sum('qty');
+            
+            return response()->json([
+                'success' => true,
+                'keranjang_count' => $totalItems,
+                'total' => $total,
+                'keranjang' => $keranjang
+            ]);
+        }
+
+        return back();
+    }
+
+    public function editHargaDiskon(Request $request, $id)
+{
+    $keranjang = session()->get('keranjang', []);
+    
+    // Cari item berdasarkan ID produk, bukan index
+    $index = collect($keranjang)->search(fn($item) => $item['id'] == $id);
+
+    if ($index === false) {
+        return response()->json(['success' => false, 'message' => 'Item tidak ditemukan']);
+    }
+
+    $keranjang[$index]['harga'] = $request->harga;
+    $keranjang[$index]['diskon'] = $request->diskon ?? 0;
+    $keranjang[$index]['subtotal'] = ($request->harga - $request->diskon) * $keranjang[$index]['qty'];
+
+    session()->put('keranjang', $keranjang);
+
+    return response()->json(['success' => true]);
+}
+
+
+    public function checkout(Request $request)
+{
+    $keranjang = Session::get('keranjang', []);
+    if (empty($keranjang)) {
+        return back()->with('error', 'Keranjang kosong');
+    }
+
+    $total = collect($keranjang)->sum('subtotal');
+    $bayar = (float)$request->bayar;
+
+    if ($bayar < $total) {
+        return back()->with('error', 'Uang bayar tidak mencukupi');
+    }
+
+    $kembalian = $bayar - $total;
+
+    // Simpan transaksi
+    $transaksi = Transaksi::create([
+        'user_id' => auth()->id(),
+        'kode_transaksi' => $request->no_transaksi ?? 'TRX-' . strtoupper(\Str::random(8)),
+        'nama_pelanggan' => $request->nama_pelanggan,
+        'nomor_meja' => $request->nomor_meja,
+        'keterangan_tambahan' => $request->keterangan_tambahan,
+        'keterangan' => $request->keterangan,
+        'total_harga' => $total,
+        'uang_dibayar' => $bayar,
+        'kembalian' => $kembalian,
+    ]);
+
+    // Simpan detail
+    foreach ($keranjang as $item) {
+        TransaksiDetail::create([
+            'transaksi_id' => $transaksi->id,
+            'data_id' => is_numeric($item['id']) ? $item['id'] : null,
+            'nama_manual' => !is_numeric($item['id']) ? $item['nama'] : null,
+            'harga' => $item['harga'],
+            'qty' => $item['qty'],
+            'subtotal' => $item['subtotal'],
+            'diskon' => $item['diskon'] ?? 0
         ]);
 
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['success' => false, 'message' => 'Transaksi gagal: ' . $e->getMessage()]);
+        if (is_numeric($item['id'])) {
+            $produk = Data::find($item['id']);
+            if ($produk) {
+                $produk->decrement('stok', $item['qty']);
+            }
+        }
+    }
+
+    Session::forget('keranjang');
+
+    // Cek apakah user ingin mencetak struk
+    $cetak = $request->has('cetak_struk') ? 'true' : 'false';
+
+    if ($request->has('cetak_struk')) {
+        return redirect()->route('user.transaksi.struk', [
+            'id' => $transaksi->id,
+            'print' => 'true'
+        ])->with('success', 'Transaksi berhasil. Struk akan dicetak.');
+    } else {
+        return redirect()->route('user.transaksi.index')
+            ->with('success', 'Transaksi berhasil.');
     }
 }
 
-    public function showStruk($id)
-    {
-        $transaksi = Transaksi::with(['user', 'details.data'])->findOrFail($id);
-        return view('transaksi.struk', compact('transaksi'));
-    }
-
-    public function cetakStruk($id)
+    public function struk($id)
 {
-    $transaksi = Transaksi::with(['details.data', 'user'])->findOrFail($id);
-
-    return view('user.transaksi.struk', [
-        'transaksi' => $transaksi
-    ]);
+        $transaksi = Transaksi::with(['user', 'details.data'])->findOrFail($id);
+        return view('user.transaksi.struk', compact('transaksi'));
 }
 
 }
