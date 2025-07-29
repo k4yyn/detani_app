@@ -21,9 +21,6 @@
             <button id="exportExcel" class="bg-green-50 hover:bg-green-100 border border-green-200 px-4 py-2 text-green-700 rounded-lg text-sm font-medium flex items-center transition-colors">
                 <i class="fas fa-file-excel mr-2"></i> Export Excel
             </button>
-            <button id="exportPDF" class="bg-red-50 hover:bg-red-100 border border-red-200 px-4 py-2 text-red-700 rounded-lg text-sm font-medium flex items-center transition-colors">
-                <i class="fas fa-file-pdf mr-2"></i> Export PDF
-            </button>
         </div>
     </div>
 
@@ -145,43 +142,8 @@
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('exportPDF').addEventListener('click', function () {
-            const btn = this;
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Membuat PDF...';
-            btn.disabled = true;
-
-            const element = document.querySelector('.bg-white.rounded-lg.shadow-sm');
-
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                scrollY: -window.scrollY
-            }).then(canvas => {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let position = 0;
-
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                pdf.save('Laporan_Transaksi_{{ \Carbon\Carbon::now()->format("Ymd_His") }}.pdf');
-                btn.innerHTML = original;
-                btn.disabled = false;
-            }).catch(err => {
-                console.error(err);
-                alert('Gagal membuat PDF');
-                btn.innerHTML = original;
-                btn.disabled = false;
-            });
-        });
-
         document.getElementById('exportExcel').addEventListener('click', function () {
             const table = document.getElementById('transactionTable');
             const wb = XLSX.utils.table_to_book(table, { sheet: "Laporan" });
