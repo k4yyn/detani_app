@@ -108,7 +108,12 @@
             Sign In
         </button>
 
-       
+       <!-- Register Link -->
+        <div class="text-center text-sm text-slate-400 mt-4">
+            Belum punya akun?
+            <a href="{{ route('register') }}" class="text-blue-400 hover:underline">Daftar di sini</a>
+        </div>
+
 
     <!-- Password Toggle Script -->
     <script>
