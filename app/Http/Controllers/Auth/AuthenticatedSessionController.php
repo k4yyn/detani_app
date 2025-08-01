@@ -8,6 +8,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
+
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,22 +26,43 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-public function store(LoginRequest $request): RedirectResponse
+   
+   public function store(Request $request): RedirectResponse
 {
-    $request->authenticate();
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ]);
+    }
+
+    // Cek apakah sudah ada admin
+    $adminExists = \App\Models\User::where('role', 'admin')->exists();
+
+    // Kalau sudah ada admin, cek apakah user disetujui
+    if ($adminExists && !$user->is_approved) {
+        return back()->withErrors([
+            'email' => 'Akun Anda belum disetujui oleh admin.',
+        ]);
+    }
+
+
+    Auth::login($user, $request->boolean('remember'));
+
     $request->session()->regenerate();
 
- $user = Auth::user();
-
-return match ($user->role) {
-    'admin' => redirect(route('admin.dashboard')), // langsung redirect
-    default => redirect(route('transaksi.index')),
-};
-
-
-
+    return redirect()->intended(
+        $user->role === 'admin'
+            ? route('admin.dashboard')
+            : route('user.transaksi.index')
+    );
 }
-
 
     /**
      * Destroy an authenticated session (logout).

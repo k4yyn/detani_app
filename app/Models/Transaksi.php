@@ -12,7 +12,11 @@ class Transaksi extends Model
         'kode_transaksi',
         'total_harga',
         'uang_dibayar',
-        'kembalian'
+        'kembalian',
+        'nama_pelanggan',
+        'nomor_meja',
+        'keterangan',
+        'keterangan_tambahan'
     ];
 
     // Relasi ke tabel transaksi_details

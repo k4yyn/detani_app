@@ -11,10 +11,19 @@ class UserController extends Controller
     // Menampilkan halaman profil pengguna
     public function index()
     {
-        return view('user.profile.index', [
-            'user' => Auth::user() // Mengambil data pengguna yang sedang login
-        ]);
+        $users = User::where('is_approved', false)->get();
+        return view('admin.users.index', compact('users'));
     }
+
+    public function approve($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_approved = true;
+        $user->save();
+
+        return redirect()->back()->with('success', 'User disetujui.');
+    }
+
 
     // Menampilkan halaman untuk mengedit profil pengguna
     public function edit()

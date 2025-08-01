@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserApprovalController;
 use App\Http\Controllers\{
     Auth\RegisterController,
     Auth\AuthenticatedSessionController,
@@ -12,7 +13,9 @@ use App\Http\Controllers\{
     UserController,
 };
 
-// Redirect user ke dashboard sesuai role saat akses root '/'
+// ========================
+// Default Route (Redirect)
+// ========================
 Route::get('/', function () {
     if (!auth()->check()) {
         return redirect()->route('login');
@@ -21,7 +24,7 @@ Route::get('/', function () {
     return redirect()->intended(
         auth()->user()->role === 'admin'
             ? route('admin.dashboard')
-            : route('transaksi.index')
+            : route('user.transaksi.index')
     );
 });
 
@@ -41,10 +44,10 @@ Route::middleware('guest')->group(function () {
 // ========================
 Route::middleware('auth')->group(function () {
 
-    // Logout
+    // ---------- Logout ----------
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-    // Profile Routes (semua user)
+    // ---------- Profile (All Roles) ----------
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
@@ -55,28 +58,21 @@ Route::middleware('auth')->group(function () {
     // USER Routes (role:user)
     // ========================
     Route::middleware('role:user')->group(function () {
-
         Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
-        // Data Barang untuk USER
-         Route::get('/data', [DataController::class, 'index'])->name('data.index');
+        // Data Barang
+        Route::get('/data', [DataController::class, 'index'])->name('data.index');
 
-
-        // Transaksi
-        Route::prefix('transaksi')->name('transaksi.')->group(function () {
+        // Transaksi Kasir
+        Route::prefix('user/transaksi')->name('user.transaksi.')->group(function () {
             Route::get('/', [TransaksiKasirController::class, 'index'])->name('index');
-            Route::get('/create', [TransaksiKasirController::class, 'create'])->name('create');
-            Route::post('/', [TransaksiKasirController::class, 'store'])->name('store');
-            Route::get('/{transaksi}', [TransaksiKasirController::class, 'show'])->name('show');
-            Route::get('/{transaksi}/edit', [TransaksiKasirController::class, 'edit'])->name('edit');
-            Route::put('/{transaksi}', [TransaksiKasirController::class, 'update'])->name('update');
-            Route::delete('/delete-all', [TransaksiKasirController::class, 'deleteAll'])->name('deleteAll');
-            Route::delete('/{transaksi}', [TransaksiKasirController::class, 'destroy'])->name('destroy');
+            Route::post('/keranjang/tambah', [TransaksiKasirController::class, 'tambahKeranjang'])->name('keranjang.tambah');
+            Route::get('/keranjang', [TransaksiKasirController::class, 'keranjang'])->name('keranjang');
+            Route::post('/keranjang/update/{id}', [TransaksiKasirController::class, 'updateQty'])->name('keranjang.update');
+            Route::delete('/keranjang/{id}', [TransaksiKasirController::class, 'hapusItem'])->name('keranjang.hapus');
+            Route::post('/keranjang/edit/{id}', [TransaksiKasirController::class, 'editHargaDiskon'])->name('keranjang.edit');
             Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');
-            Route::get('/transaksi/search-product', [TransaksiKasirController::class, 'searchProduct'])->name('searchProduct');
-            Route::post('/transaksi/checkout', [TransaksiKasirController::class, 'checkout'])->name('transaksi.checkout');
-            Route::get('/transaksi/success', [TransaksiKasirController::class, 'success'])->name('transaksi.success');
-            Route::get('/struk/{id}', [TransaksiKasirController::class, 'cetakStruk'])->name('struk');
+            Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
         });
     });
 
@@ -85,9 +81,10 @@ Route::middleware('auth')->group(function () {
     // ========================
     Route::prefix('admin')->middleware('role:admin')->name('admin.')->group(function () {
 
+        // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Data Barang untuk admin
+        // Data Barang
         Route::prefix('data')->name('data.')->group(function () {
             Route::get('/', [DataController::class, 'index'])->name('index');
             Route::get('/create', [DataController::class, 'create'])->name('create');
@@ -99,6 +96,12 @@ Route::middleware('auth')->group(function () {
 
         // User Management
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::post('/users/{id}/approve', [UserController::class, 'approve'])->name('users.approve');
+
+        // Approval (akses ke halaman konfirmasi user)
+        Route::get('/approval', [UserApprovalController::class, 'index'])->name('approval');
+        Route::post('/approval/{id}/approve', [UserApprovalController::class, 'approve'])->name('approval.approve');
+        Route::post('/approval/{id}/reject', [UserApprovalController::class, 'reject'])->name('approval.reject');
 
         // Reports
         Route::prefix('reports')->name('reports.')->group(function () {

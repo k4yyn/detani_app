@@ -9,7 +9,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class RegisterController extends Controller
+class RegisterController extends Controller 
 {
     public function showRegistrationForm()
     {
@@ -21,29 +21,20 @@ class RegisterController extends Controller
 public function register(Request $request)
 {
     $validated = $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'password' => ['required', 'string', 'min:8', 'confirmed'],
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|confirmed|min:6',
+        'role' => 'required|in:user,admin',
     ]);
-
-    $isFirstUser = User::count() == 0;
 
     $user = User::create([
         'name' => $validated['name'],
         'email' => $validated['email'],
-        'password' => Hash::make($validated['password']),
-        'role' => $isFirstUser ? 'admin' : 'user',
+        'password' => bcrypt($validated['password']),
+        'role' => $validated['role'],
+        'is_approved' => false, // belum disetujui
     ]);
 
-    event(new Registered($user));
-
-    Auth::login($user);
-
-    // Redirect dengan intended untuk menghindari masalah redirect
-    return redirect()->intended(
-        $user->role === 'admin' 
-            ? route('admin.dashboard')
-            : route('transaksi.index')
-    );
+    return redirect()->route('login')->with('status', 'Registrasi berhasil, tunggu persetujuan admin.');
 }
 }

@@ -135,6 +135,15 @@
                                 <span class="flex-1">Laporan</span>
                                 <div class="w-2 h-2 rounded-full bg-indigo-500 {{ request()->is('admin/reports*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></div>
                             </a>
+
+                            <a href="{{ url('admin/approval') }}" 
+                               class="{{ request()->is('admin/approval*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600' }} group flex items-center px-4 py-3 text-sm font-medium rounded-lg mx-2 transition-all duration-200">
+                                <div class="w-6 h-6 rounded-full mr-3 flex items-center justify-center {{ request()->is('admin/approval*') ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-500 group-hover:bg-indigo-100 group-hover:text-indigo-600' }} transition-all duration-200">
+                                    <i class="fas fa-lock text-sm"></i>
+                                </div>
+                                <span class="flex-1">Izin Akses</span>
+                                <div class="w-2 h-2 rounded-full bg-indigo-500 {{ request()->is('admin/approval*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></div>
+                            </a>
                         </nav>
 
                         <!-- Logout -->
@@ -213,6 +222,15 @@
                         <span class="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/reports*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
                     </div>
                     <span class="text-xs font-medium transition-all duration-200 group-hover:font-semibold">Laporan</span>
+                </a>
+
+                <a href="{{ url('admin/approval') }}" 
+                   class="{{ request()->is('admin/approval*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-3 text-center w-full transition-colors duration-200 group">
+                    <div class="relative">
+                        <i class="fas fa-lock text-xl mb-1 transition-all duration-200 group-hover:scale-110"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/approval*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
+                    </div>
+                    <span class="text-xs font-medium transition-all duration-200 group-hover:font-semibold">Izin Akses</span>
                 </a>
             </div>
         </nav>

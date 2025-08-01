@@ -192,33 +192,18 @@
             }
         </style>
     </head>
-   <body class="font-sans antialiased main-gradient min-h-screen">
-    <!-- Floating Shapes - KIRI -->
-    <div class="floating-shapes absolute top-10 left-10">
-        <div class="shape w-32 h-32 bg-slate-100 rounded-full opacity-60"></div>
-        <div class="shape w-24 h-24 bg-slate-100 rounded-full opacity-60 mt-4"></div>
-        <div class="shape w-28 h-28 bg-slate-300 rounded-full opacity-60 mt-4"></div>
-          
-    </div>
-
-   
-</body>
+    <body class="font-sans antialiased main-gradient min-h-screen">
+        <!-- Floating Shapes -->
+        <div class="floating-shapes">
+            <div class="shape w-32 h-32 bg-slate-100 rounded-full"></div>
+            <div class="shape w-24 h-24 bg-slate-100 rounded-full"></div>
+            <div class="shape w-28 h-28 bg-slate-300 rounded-full"></div>
+        </div>
 
         <!-- Main Container -->
         <div class="min-h-screen flex items-center justify-center p-6 content-wrapper">
-            <div class="flex w-full max-w-6xl space-x-12">
-                
-                <!-- Parent Container -->
-                <div class="w-full h-screen flex items-center justify-center">
-                <!-- Card -->
-                <div class="card-glass rounded-3xl p-10 w-full max-w-md mx-auto relative">
-                
- 
-                        {{ $slot }}
-                    </div>
-                </div>
-
-               
+            <div class="card-glass rounded-3xl p-10 w-full max-w-md mx-auto relative">
+                {{ $slot }}
             </div>
         </div>
     </body>

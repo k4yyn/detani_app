@@ -4,28 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Data;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection; // Tambahkan di atas
 
 class DataController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Data::query();
 
-        if ($search = $request->search) {
-            $query->where('nama_barang', 'like', "%$search%")
-                  ->orWhere('codetrx', 'like', "%$search%")
-                  ->orWhere('lokasi_penyimpanan', 'like', "%$search%");
-        }
+public function index(Request $request)
+{
+    $query = Data::query();
 
-        $data = $query->latest()->paginate(10);
-
-        // cek role & return view yang sesuai
-        if (auth()->user()->role === 'admin') {
-            return view('admin.data.index', compact('data'));
-        } else {
-            return view('user.data.index', compact('data'));
-        }
+    if ($search = $request->search) {
+        $query->where('nama_barang', 'like', "%$search%")
+              ->orWhere('codetrx', 'like', "%$search%")
+              ->orWhere('lokasi_penyimpanan', 'like', "%$search%");
     }
+
+    $data = $query->latest()->get(); // Ambil semua data, tanpa paginate
+
+    // Group data by kategori
+    $groupedData = $data->groupBy('kategori');
+
+    if (auth()->user()->role === 'admin') {
+        return view('admin.data.index', compact('groupedData'));
+    } else {
+        return view('user.data.index', compact('groupedData'));
+    }
+}
+
 
     public function create()
     {
