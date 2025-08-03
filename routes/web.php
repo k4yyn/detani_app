@@ -60,8 +60,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:user')->group(function () {
         Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
-        // Data Barang
-        Route::get('/data', [DataController::class, 'index'])->name('data.index');
+        // Data Barang untuk User
+        Route::prefix('user/data')->name('user.data.')->group(function () {
+            Route::get('/', [DataController::class, 'index'])->name('index'); // Halaman kategori
+            Route::get('/all', [DataController::class, 'indexAll'])->name('all'); // Semua barang
+            Route::get('/kategori/{kategori}', [DataController::class, 'byKategori'])->name('by-kategori'); // Per kategori
+        });
 
         // Transaksi Kasir
         Route::prefix('user/transaksi')->name('user.transaksi.')->group(function () {
@@ -84,9 +88,11 @@ Route::middleware('auth')->group(function () {
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Data Barang
+       // Data Barang
         Route::prefix('data')->name('data.')->group(function () {
-            Route::get('/', [DataController::class, 'index'])->name('index');
+            Route::get('/', [DataController::class, 'index'])->name('index'); // Default ke halaman kategori
+            Route::get('/all', [DataController::class, 'indexAll'])->name('all'); // Halaman daftar semua barang
+            Route::get('/kategori/{kategori}', [DataController::class, 'byKategori'])->name('by-kategori'); // Produk per kategori
             Route::get('/create', [DataController::class, 'create'])->name('create');
             Route::post('/', [DataController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [DataController::class, 'edit'])->name('edit');

@@ -19,7 +19,7 @@
 
     <!-- Search -->
     <div class="bg-white rounded-2xl shadow-xl border border-amber-100 p-6 mb-8 flex flex-col lg:flex-row gap-4 justify-between">
-        <form action="{{ route('data.index') }}" method="GET" class="flex-grow max-w-xl">
+        <form action="{{ route('user.data.index') }}" method="GET" class="flex-grow max-w-xl">
             <div class="relative">
                 <input
                     type="text"

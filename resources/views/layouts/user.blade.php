@@ -98,8 +98,8 @@
                    class="{{ request()->is('user/transaksi*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mb-1">
                     <i class="fas fa-shopping-cart mr-2"></i> Transaksi
                 </a>
-                <a href="{{ route('data.index') }}" 
-                   class="{{ request()->is('data*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
+                <a href="{{ route('user.data.index') }}" 
+                   class="{{ request()->is('user.data.index*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
                     <i class="fas fa-box text-sm"></i> Data Barang
                 </a>
             </nav>
@@ -142,12 +142,12 @@
             <i class="fas fa-home text-lg mb-1"></i>
             <span class="text-xs font-medium">Dashboard</span>
         </a>
-        <a href="{{ url('transaksi') }}" 
-           class="{{ request()->is('transaksi*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
+        <a href="{{ url('user/transaksi') }}" 
+           class="{{ request()->is('user/transaksi*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
             <i class="fas fa-shopping-cart text-lg mb-1"></i>
             <span class="text-xs font-medium">Transaksi</span>
         </a>
-        <a href="{{ route('data.index') }}" 
+        <a href="{{ route('user.data.index') }}" 
            class="{{ request()->is('data*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
             <i class="fas fa-box text-sm"></i>
             <span class="text-xs font-medium">Data Barang</span>
