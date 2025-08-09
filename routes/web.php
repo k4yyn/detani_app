@@ -28,7 +28,7 @@ Route::get('/', function () {
     );
 });
 
-// ========================
+// ======================= =
 // Guest (Auth) Routes
 // ========================
 Route::middleware('guest')->group(function () {
@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
         });
     });
+       
 
     // ========================
     // ADMIN Routes (role:admin)
@@ -120,5 +121,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/filter', [ReportController::class, 'filter'])->name('filter');
             Route::match(['get', 'post'], '/export', [ReportController::class, 'export'])->name('export');
         });
+
+        // struk admin
+        Route::get('/transaksi/{id}/struk', [ReportController::class, 'struk'])->name('transaksi.struk');        
     });
 });

@@ -39,22 +39,71 @@
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-8">
         <h3 class="text-lg font-medium text-black mb-4">Filter Laporan</h3>
 
-        <form method="GET" action="{{ route('admin.reports.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-black mb-2">Dari Tanggal</label>
-                <input type="date" name="start_date" value="{{ request('start_date') }}" class="w-full px-3 py-2 rounded-lg border border-gray-300">
+        <form method="GET" action="{{ route('admin.reports.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+        <div class="md:col-span-1">
+            <label class="block text-sm font-medium text-black mb-2">Jenis Laporan</label>
+            <select id="filterSelect" name="filter" onchange="this.form.submit()" class="w-full px-3 py-2 rounded-lg border border-gray-300">
+                <option value="">Pilih Jenis Laporan</option>
+                <option value="harian" {{ request('filter') == 'harian' ? 'selected' : '' }}>Harian</option>
+                <option value="mingguan" {{ request('filter') == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
+                <option value="bulanan" {{ request('filter') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
+                <option value="tahunan" {{ request('filter') == 'tahunan' ? 'selected' : '' }}>Tahunan</option>
+                <option value="custom" {{ request('filter') == 'custom' ? 'selected' : '' }}>Custom</option>
+            </select>
+        </div>
+
+
+        @if(request('filter') === 'custom')
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div>
+                    <label class="block text-sm font-medium text-black mb-2">Dari Tanggal</label>
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="w-full px-3 py-2 rounded-lg border border-gray-300">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-black mb-2">Sampai Tanggal</label>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="w-full px-3 py-2 rounded-lg border border-gray-300">
+                </div>
+
+                <div class="flex items-end">
+                    <button type="submit" class="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium">
+                        <i class="fas fa-search mr-2"></i> Terapkan Filter
+                    </button>
+                </div>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-black mb-2">Sampai Tanggal</label>
-                <input type="date" name="end_date" value="{{ request('end_date') }}" class="w-full px-3 py-2 rounded-lg border border-gray-300">
-            </div>
-            <div class="flex items-end">
-                <button type="submit" class="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium">
-                    <i class="fas fa-search mr-2"></i> Terapkan Filter
-                </button>
-            </div>
-        </form>
+        @endif
+
+        <div class="mt-4">
+        @php
+        $routeMap = [
+            'harian' => 'daily',
+            'mingguan' => 'weekly',
+            'bulanan' => 'monthly',
+            'tahunan' => 'yearly',
+        ];
+         @endphp
+
+        @if(request('filter') && request('filter') != 'custom' && isset($routeMap[request('filter')]))
+        <div class="md:col-span-1 flex justify-end">
+            <a href="{{ route('admin.reports.' . $routeMap[request('filter')]) }}"
+            class="inline-block w-full md:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium text-center">
+            <i class="fas fa-external-link-alt mr-2"></i> Lihat Laporan Lengkap
+            </a>
+        </div>
+        @endif
     </div>
+    </form>
+        @if(request()->has('filter') || request()->has('start_date') || request()->has('end_date'))
+            <div class="mt-2">
+                <a href="{{ route('admin.reports.index') }}"
+                class="inline-block px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium">
+                    <i class="fas fa-undo mr-2"></i> Reset Filter
+                </a>
+            </div>
+        @endif
+   </div>
+</div>
+
 
     <!-- Summary -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -79,6 +128,8 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase">Kasir</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase">Item</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase">Total</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase">Metode</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
@@ -90,6 +141,16 @@
                             <td class="px-6 py-4 text-sm text-gray-700">{{ $transaksi->user->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-center text-gray-700">{{ $transaksi->details->sum('qty') }}</td>
                             <td class="px-6 py-4 text-sm font-semibold text-gray-800">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $transaksi->metode_pembayaran ?? '-' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">
+                                <a href="{{ route('admin.transaksi.struk', $transaksi->id) }}" target="_blank"
+                                    class="inline-flex items-center px-3 py-1 text-sm bg-orange-500 text-white rounded hover:bg-orange-600 transition">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16h8M8 12h8m-7 8h6m1-10V4a1 1 0 00-1-1H7a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1z" />
+                                    </svg>
+                                    Lihat Struk
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -150,5 +211,23 @@
             XLSX.writeFile(wb, 'Laporan_Transaksi_{{ \Carbon\Carbon::now()->format("Ymd_His") }}.xlsx');
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterDropdown = document.getElementById('filterRedirect');
+        const customFilterSection = document.getElementById('customDateFilter');
+
+       filterDropdown.addEventListener('change', function () {
+            const selected = this.value;
+            if (selected === 'custom') {
+                customFilterSection.style.display = 'grid';
+            } else if (selected !== '') {
+                const url = new URL(window.location.href);
+                url.searchParams.set('filter', selected);
+                url.searchParams.delete('start_date');
+                url.searchParams.delete('end_date');
+            }
+        });
+    });
+
 </script>
 @endpush

@@ -12,7 +12,12 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         $filter = $request->input('filter', 'harian');
-
+                
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+                $dateFrom = Carbon::parse($request->start_date)->startOfDay();
+                $dateTo = Carbon::parse($request->end_date)->endOfDay();
+            } else {
+        // Gunakan preset berdasarkan filter
         switch ($filter) {
             case 'mingguan':
                 $dateFrom = Carbon::now('Asia/Jakarta')->startOfWeek();
@@ -30,6 +35,7 @@ class ReportController extends Controller
                 $dateFrom = Carbon::now('Asia/Jakarta')->startOfDay();
                 $dateTo = Carbon::now('Asia/Jakarta')->endOfDay();
         }
+    }
 
         $transaksis = Transaksi::with(['details.data', 'user'])
             ->whereBetween('created_at', [$dateFrom, $dateTo])
@@ -129,32 +135,49 @@ class ReportController extends Controller
         return view('admin.reports.weekly', compact('transaksis', 'total'));
     }
 
-    public function monthly()
+    public function monthly(Request $request)
     {
-        $transaksis = Transaksi::whereBetween('created_at', [
-                Carbon::now()->startOfMonth(),
-                Carbon::now()->endOfMonth()
-            ])
+         $selectedMonth = $request->input('month', now()->format('Y-m'));
+
+        $transaksis = Transaksi::whereYear('created_at', substr($selectedMonth, 0, 4))
+            ->whereMonth('created_at', substr($selectedMonth, 5, 2))
             ->orderBy('created_at', 'desc')
             ->get();
 
         $total = $transaksis->sum('total_harga');
 
-        return view('admin.reports.monthly', compact('transaksis', 'total'));
+        return view('admin.reports.monthly', compact('transaksis', 'total', 'selectedMonth'));
     }
 
-    public function yearly()
+    public function yearly(Request $request)
     {
-        $transaksis = Transaksi::whereBetween('created_at', [
-                Carbon::now()->startOfYear(),
-                Carbon::now()->endOfYear()
-            ])
+        $tahun = $request->input('tahun', date('Y')); // default ke tahun sekarang
+
+        $start = Carbon::createFromDate($tahun)->startOfYear();
+        $end = Carbon::createFromDate($tahun)->endOfYear();
+
+        $transaksis = Transaksi::whereBetween('created_at', [$start, $end])
             ->orderBy('created_at', 'desc')
             ->get();
 
         $total = $transaksis->sum('total_harga');
 
-        return view('admin.reports.yearly', compact('transaksis', 'total'));
+        $monthlyTotals = Transaksi::select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('SUM(total_harga) as total')
+        )
+        ->whereYear('created_at', $tahun)
+        ->groupBy(DB::raw('MONTH(created_at)'))
+        ->pluck('total', 'month')
+        ->toArray();
+
+        // Biar semua bulan tetap ada meskipun 0
+        $monthlyChart = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthlyChart[] = $monthlyTotals[$i] ?? 0;
+        }
+
+        return view('admin.reports.yearly', compact('transaksis', 'total', 'tahun', 'monthlyChart'));
     }
 
     public function custom(Request $request)
@@ -175,4 +198,11 @@ class ReportController extends Controller
 
         return view('admin.reports.custom', compact('transaksis', 'startDate', 'endDate', 'total'));
     }
+
+    public function struk($id)
+    {
+        $transaksi = Transaksi::with(['user', 'details.data'])->findOrFail($id);
+        return view('admin.transaksi.struk', compact('transaksi'));
+    }
+
 }
