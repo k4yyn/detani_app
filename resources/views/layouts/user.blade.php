@@ -102,6 +102,10 @@
                    class="{{ request()->is('user.data.index*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
                     <i class="fas fa-box text-sm"></i> Data Barang
                 </a>
+                <a href="{{ route('user.nota.notaHarian') }}" 
+                    class="{{ request()->is('user/nota.nota-harian*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
+                    <i class="fas fa-receipt mr-2"></i> Nota Harian
+                </a>
             </nav>
 
             <div class="px-4 py-3 border-t">
@@ -151,6 +155,11 @@
            class="{{ request()->is('data*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
             <i class="fas fa-box text-sm"></i>
             <span class="text-xs font-medium">Data Barang</span>
+        </a>
+        <a href="{{ route('user.nota.notaHarian') }}" 
+            class="{{ request()->is('user/nota/nota-harian*') ? 'bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
+            <i class="fas fa-receipt mr-2"></i> 
+             <span class="text-xs font-medium">Nota Harian</span>
         </a>
     </div>
 </nav>

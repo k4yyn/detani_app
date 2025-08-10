@@ -80,6 +80,16 @@ Route::middleware('auth')->group(function () {
         });
     });
        
+        // Nota
+        Route::get('/user/nota/nota-harian', [App\Http\Controllers\NotaHarianController::class, 'index'])
+        ->name('user.nota.notaHarian')
+        ->middleware('auth');
+        Route::get('/user/nota/nota-harian/cetak', [App\Http\Controllers\NotaHarianController::class, 'cetak'])
+        ->name('user.nota.notaHarian.cetak')
+        ->middleware('auth');
+
+
+
 
     // ========================
     // ADMIN Routes (role:admin)
