@@ -159,69 +159,80 @@
             @endif
         </div>
 
-        <!-- Summary Card -->
+        <!-- Summary Card - IMPROVED RESPONSIVE LAYOUT -->
         @if($data->count() > 0)
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-white rounded-xl shadow-lg border border-amber-100 p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                            </svg>
+        <div class="mt-8">
+            <!-- Mobile: 1 column, SM: 2 columns, MD: 2 columns, LG+: 4 columns -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <!-- Card 1: Total Produk -->
+                <div class="bg-white rounded-xl shadow-lg border border-amber-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Total Produk</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ $data->count() }}</p>
+                        <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Total Produk</p>
+                            <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $data->count() }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="bg-white rounded-xl shadow-lg border border-green-100 p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
-                            </svg>
+                <!-- Card 2: Total Stok -->
+                <div class="bg-white rounded-xl shadow-lg border border-green-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Total Stok</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ $data->sum('stok') }}</p>
+                        <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Total Stok</p>
+                            <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ number_format($data->sum('stok')) }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="bg-white rounded-xl shadow-lg border border-yellow-100 p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                            </svg>
+                <!-- Card 3: Nilai Stok -->
+                <div class="bg-white rounded-xl shadow-lg border border-yellow-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Nilai Stok</p>
-                        <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($data->sum(function($item) { return $item->stok * $item->harga_pokok; }), 0, ',', '.') }}</p>
+                        <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Nilai Stok</p>
+                            <p class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">
+                                Rp {{ number_format($data->sum(function($item) { return $item->stok * $item->harga_pokok; }), 0, ',', '.') }}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="bg-white rounded-xl shadow-lg border border-purple-100 p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                            </svg>
+                <!-- Card 4: Rata-rata Harga -->
+                <div class="bg-white rounded-xl shadow-lg border border-purple-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">Rata-rata Harga</p>
-                        <p class="text-2xl font-bold text-gray-900">Rp {{ number_format($data->avg('harga_jual'), 0, ',', '.') }}</p>
+                        <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                            <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Rata-rata Harga</p>
+                            <p class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">
+                                Rp {{ number_format($data->avg('harga_jual'), 0, ',', '.') }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

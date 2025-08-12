@@ -89,7 +89,13 @@ public function store(Request $request)
         'harga_pokok' => 'required|numeric|min:0',
         'harga_jual' => 'required|numeric|min:0',
         'lokasi_penyimpanan' => 'required|string',
+        'kategori_lainnya' => 'nullable|string' // validasi tambahan
     ]);
+
+    // Cek jika kategori = Lainnya, ganti dengan input custom
+    $kategori = $request->kategori === 'Lainnya' && $request->filled('kategori_lainnya')
+        ? $request->kategori_lainnya
+        : $request->kategori;
 
     $todayFormatted = now()->format('dmY');
     $countToday = Data::whereDate('created_at', now())->count() + 1;
@@ -99,7 +105,7 @@ public function store(Request $request)
     Data::create([
         'codetrx' => $codetrx,
         'nama_barang' => $request->nama_barang,
-        'kategori' => $request->kategori,
+        'kategori' => $kategori, // sudah diganti
         'deskripsi' => $request->deskripsi,
         'stok' => $request->stok,
         'harga_pokok' => $request->harga_pokok,
@@ -109,6 +115,7 @@ public function store(Request $request)
 
     return redirect()->route('admin.data.index')->with('success', 'Data berhasil disimpan!');
 }
+
 
 public function edit($id)
 {
@@ -120,14 +127,20 @@ public function update(Request $request, $id)
 {
     $request->validate([
         'stok' => 'required|integer|min:1|max:9999',
+        'harga_pokok' => 'required|numeric|min:0',
+        'harga_jual' => 'required|numeric|min:0',
+        'lokasi_penyimpanan' => 'required|string'
     ]);
 
     $data = Data::findOrFail($id);
     $data->update([
         'stok' => $request->stok,
+        'harga_pokok' => $request->harga_pokok,
+        'harga_jual' => $request->harga_jual,
+        'lokasi_penyimpanan' => $request->lokasi_penyimpanan,
     ]);
 
-    return redirect()->route('admin.data.index')->with('success', 'Data berhasil diperbarui!');
+    return redirect()->route('admin.data.by-kategori', $data->kategori)->with('success', 'Data berhasil diperbarui!');
 }
 
 public function destroy($id)
@@ -135,6 +148,13 @@ public function destroy($id)
     $data = Data::findOrFail($id);
     $data->delete();
 
-    return redirect()->route('admin.data.index')->with('success', 'Data berhasil dihapus!');
+    return redirect()->route('admin.data.by-kategori', $data->kategori)->with('success', 'Data berhasil dihapus!');
 }
+
+public function destroyKategori($kategori)
+{
+    Data::where('kategori', $kategori)->delete();
+    return redirect()->route('admin.data.index')->with('success', 'Kategori berhasil dihapus!');
+}
+
 }

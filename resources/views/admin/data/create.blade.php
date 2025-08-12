@@ -102,17 +102,23 @@
                             </svg>
                             Kategori <span class="text-red-500">*</span>
                         </label>
-                        <select name="kategori"
-                                class="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-blue-300 bg-white"
-                                required>
+                        <select id="kategoriSelect" name="kategori"
+                            class="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-blue-300 bg-white"
+                            required>
                             <option value="">Pilih Kategori</option>
                             <option value="Makanan" {{ old('kategori') == 'Makanan' ? 'selected' : '' }}>🍔 Makanan</option>
                             <option value="Minuman" {{ old('kategori') == 'Minuman' ? 'selected' : '' }}>🥤 Minuman</option>
                             <option value="Kesehatan & Kebersihan" {{ old('kategori') == 'Kesehatan & Kebersihan' ? 'selected' : '' }}>🧼 Kesehatan & Kebersihan</option>
                             <option value="Lainnya" {{ old('kategori') == 'Lainnya' ? 'selected' : '' }}>📦 Lainnya</option>
                         </select>
-                    </div>
 
+                        {{-- Input teks tambahan untuk kategori custom --}}
+                        <input type="text" id="kategoriLainnya" name="kategori_lainnya"
+                            class="w-full px-4 py-3 mt-3 border-2 border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-blue-300 bg-white hidden"
+                            placeholder="Tulis kategori lainnya..."
+                            value="{{ old('kategori_lainnya') }}">
+                    </div>
+                    
                     <!-- Lokasi Penyimpanan -->
                     <div>
                         <label class="block text-sm font-semibold text-blue-800 mb-2 flex items-center">
@@ -230,4 +236,19 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.getElementById('kategoriSelect').addEventListener('change', function () {
+    const lainnyaInput = document.getElementById('kategoriLainnya');
+    if (this.value === 'Lainnya') {
+        lainnyaInput.classList.remove('hidden');
+        lainnyaInput.setAttribute('required', 'required');
+    } else {
+        lainnyaInput.classList.add('hidden');
+        lainnyaInput.removeAttribute('required');
+    }
+});
+</script>
+@endpush
 @endsection

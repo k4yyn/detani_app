@@ -7,7 +7,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <!-- Title -->
             <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">
-                Update Stok Barang
+                Edit Data Barang
             </h2>
 
             <!-- Error Messages -->
@@ -33,7 +33,7 @@
                 @method('PUT')
 
                 <!-- Stock Input -->
-                <div class="mb-6">
+                <div class="mb-4">
                     <label for="stok" class="block text-sm font-medium text-gray-700 mb-2">
                         Jumlah Stok
                     </label>
@@ -50,13 +50,65 @@
                     >
                 </div>
 
+                <!-- Purchase Price Input -->
+                <div class="mb-4">
+                    <label for="harga_pokok" class="block text-sm font-medium text-gray-700 mb-2">
+                        Harga Pokok (Rp)
+                    </label>
+                    <input
+                        type="number"
+                        name="harga_pokok"
+                        id="harga_pokok"
+                        min="0"
+                        step="100"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        placeholder="Masukkan harga pokok"
+                        value="{{ old('harga_pokok', $data->harga_pokok) }}"
+                    >
+                </div>
+
+                <!-- Selling Price Input -->
+                <div class="mb-4">
+                    <label for="harga_jual" class="block text-sm font-medium text-gray-700 mb-2">
+                        Harga Jual (Rp)
+                    </label>
+                    <input
+                        type="number"
+                        name="harga_jual"
+                        id="harga_jual"
+                        min="0"
+                        step="100"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        placeholder="Masukkan harga jual"
+                        value="{{ old('harga_jual', $data->harga_jual) }}"
+                    >
+                </div>
+
+                <!-- Storage Location Input -->
+                <div class="mb-6">
+                    <label for="lokasi_penyimpanan" class="block text-sm font-medium text-gray-700 mb-2">
+                        Lokasi Penyimpanan
+                    </label>
+                    <input
+                        type="text"
+                        name="lokasi_penyimpanan"
+                        id="lokasi_penyimpanan"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        placeholder="Masukkan lokasi penyimpanan"
+                        value="{{ old('lokasi_penyimpanan', $data->lokasi_penyimpanan) }}"
+                    >
+                </div>
+
                 <!-- Buttons -->
                 <div class="flex gap-3">
                     <button
                         type="submit"
                         class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
-                        Update Stok
+                        Simpan Perubahan
                     </button>
 
                     <a

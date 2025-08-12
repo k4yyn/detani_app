@@ -109,6 +109,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}/edit', [DataController::class, 'edit'])->name('edit');
             Route::put('/{id}', [DataController::class, 'update'])->name('update');
             Route::delete('/{id}', [DataController::class, 'destroy'])->name('destroy');
+            Route::delete('/kategori/{kategori}', [DataController::class, 'destroyKategori'])->name('destroy-kategori');
         });
 
         // User Management

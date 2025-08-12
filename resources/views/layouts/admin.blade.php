@@ -32,7 +32,7 @@
                         </button>
                         <div class="flex-shrink-0 flex items-center ml-4">
                             <img class="h-8 w-auto" src="{{ asset('asset/image/logo amaliah.png') }}" alt="Amaliah Logo">
-                            <span class="ml-2 text-lg font-medium text-gray-800 hidden sm:inline">Admin dTani</span>
+                            <span class="ml-2 text-lg font-medium text-gray-800 hidden sm:inline">Admin De Tani</span>
                         </div>
                     </div>
 

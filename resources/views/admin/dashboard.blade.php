@@ -160,14 +160,14 @@
                         <tr class="hover:bg-slate-50 transition-colors duration-200">
                             <td class="py-3 px-4 font-medium text-slate-800 text-sm">#{{ $transaksi->kode_transaksi }}</td>
                             <td class="py-3 px-4 text-slate-600 text-sm">
-                                {{ \Carbon\Carbon::parse($transaksi->created_at)->format('H:i') }} WIB
+                               <span class="text-xs text-gray-400">{{ $transaksi->created_at->timezone('Asia/Jakarta')->format('H:i') }} WIB</span>
                             </td>
                             <td class="py-3 px-4 font-medium text-slate-800 text-sm">
                                 @currency($transaksi->total_harga)
                             </td>
                             <td class="py-3 px-4">
                                 <span class="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
-                                    {{ ucfirst($transaksi->status) }}
+                                    {{$transaksi->status_pembayaran ?? '-'}}
                                 </span>
                             </td>
                         </tr>
