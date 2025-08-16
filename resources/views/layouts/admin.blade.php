@@ -136,6 +136,28 @@
                                 <div class="w-2 h-2 rounded-full bg-indigo-500 {{ request()->is('admin/reports*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></div>
                             </a>
 
+                            <!-- Menu Ticketing -->
+                            <a href="{{ url('admin/tickets') }}" 
+                            class="{{ request()->is('admin/tickets') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600' }} group flex items-center px-4 py-3 text-sm font-medium rounded-lg mx-2 transition-all duration-200">
+                                <div class="w-6 h-6 rounded-full mr-3 flex items-center justify-center {{ request()->is('admin/tickets') ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-500 group-hover:bg-indigo-100 group-hover:text-indigo-600' }} transition-all duration-200">
+                                    <i class="fas fa-ticket-alt text-sm"></i>
+                                </div>
+                                <span class="flex-1">Ticketing</span>
+                            </a>
+
+                            <!-- Submenu Data Ticketing -->
+                            <a href="{{ url('admin/tickets') }}" 
+                            class="{{ request()->is('admin/tickets') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:bg-gray-50 hover:text-indigo-600' }} block pl-14 pr-4 py-2 text-sm rounded-lg mx-2 transition-all duration-200">
+                                Data Ticketing
+                            </a>
+
+                            <!-- Submenu Laporan Ticketing -->
+                            <a href="{{ route('admin.tickets.reports.index') }}" 
+                            class="{{ request()->is('admin/tickets/reports*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:bg-gray-50 hover:text-indigo-600' }} block pl-14 pr-4 py-2 text-sm rounded-lg mx-2 transition-all duration-200">
+                                Laporan Ticketing
+                            </a>
+
+
                             <a href="{{ url('admin/approval') }}" 
                                class="{{ request()->is('admin/approval*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-indigo-600' }} group flex items-center px-4 py-3 text-sm font-medium rounded-lg mx-2 transition-all duration-200">
                                 <div class="w-6 h-6 rounded-full mr-3 flex items-center justify-center {{ request()->is('admin/approval*') ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-500 group-hover:bg-indigo-100 group-hover:text-indigo-600' }} transition-all duration-200">
@@ -186,7 +208,18 @@
                         </div>
                     @endif
                 </div>
+                {{-- FLASH MESSAGE --}}
+                @if(session('success'))
+                    <div class="mb-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300">
+                        <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+                    </div>
+                @endif
 
+                @if(session('error'))
+                    <div class="mb-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300">
+                        <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
+                    </div>
+                @endif
                 <!-- Content -->
                 <div class="bg-white rounded-lg p-6 transition-all duration-200 shadow-sm hover:shadow-md border border-gray-100">
                     @yield('content')
@@ -195,45 +228,54 @@
         </main>
 
         <!-- Bottom Navigation (Mobile) -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg z-20 md:hidden">
-            <div class="flex justify-around">
-                <a href="{{ url('admin/dashboard') }}" 
-                   class="{{ request()->is('admin/dashboard*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-3 text-center w-full transition-colors duration-200 group">
-                    <div class="relative">
-                        <i class="fas fa-home text-xl mb-1 transition-all duration-200 group-hover:scale-110"></i>
-                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/dashboard*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
-                    </div>
-                    <span class="text-xs font-medium transition-all duration-200 group-hover:font-semibold">Dashboard</span>
-                </a>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-lg z-20 md:hidden">
+        <div class="flex justify-around">
+            <a href="{{ url('admin/dashboard') }}" 
+            class="{{ request()->is('admin/dashboard*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-2 text-center w-full transition-colors duration-200 group">
+                <div class="relative h-6 flex items-center justify-center">
+                    <i class="fas fa-home text-lg transition-all duration-200 group-hover:scale-110"></i>
+                    <span class="absolute -top-0.5 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/dashboard*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
+                </div>
+                <span class="text-xs font-medium mt-1 transition-all duration-200 group-hover:font-semibold">Dashboard</span>
+            </a>
 
-                <a href="{{ url('admin/data') }}" 
-                   class="{{ request()->is('admin/data*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-3 text-center w-full transition-colors duration-200 group">
-                    <div class="relative">
-                        <i class="fas fa-box text-xl mb-1 transition-all duration-200 group-hover:scale-110"></i>
-                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/data*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
-                    </div>
-                    <span class="text-xs font-medium transition-all duration-200 group-hover:font-semibold">Data Barang</span>
-                </a>
+            <a href="{{ url('admin/data') }}" 
+            class="{{ request()->is('admin/data*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-2 text-center w-full transition-colors duration-200 group">
+                <div class="relative h-6 flex items-center justify-center">
+                    <i class="fas fa-box text-lg transition-all duration-200 group-hover:scale-110"></i>
+                    <span class="absolute -top-0.5 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/data*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
+                </div>
+                <span class="text-xs font-medium mt-1 transition-all duration-200 group-hover:font-semibold">Data</span>
+            </a>
 
-                <a href="{{ url('admin/reports') }}" 
-                   class="{{ request()->is('admin/reports*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-3 text-center w-full transition-colors duration-200 group">
-                    <div class="relative">
-                        <i class="fas fa-chart-line text-xl mb-1 transition-all duration-200 group-hover:scale-110"></i>
-                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/reports*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
-                    </div>
-                    <span class="text-xs font-medium transition-all duration-200 group-hover:font-semibold">Laporan</span>
-                </a>
+            <a href="{{ url('admin/reports') }}" 
+            class="{{ request()->is('admin/reports*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-2 text-center w-full transition-colors duration-200 group">
+                <div class="relative h-6 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-lg transition-all duration-200 group-hover:scale-110"></i>
+                    <span class="absolute -top-0.5 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/reports*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
+                </div>
+                <span class="text-xs font-medium mt-1 transition-all duration-200 group-hover:font-semibold">Laporan</span>
+            </a>
 
-                <a href="{{ url('admin/approval') }}" 
-                   class="{{ request()->is('admin/approval*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-3 text-center w-full transition-colors duration-200 group">
-                    <div class="relative">
-                        <i class="fas fa-lock text-xl mb-1 transition-all duration-200 group-hover:scale-110"></i>
-                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/approval*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
-                    </div>
-                    <span class="text-xs font-medium transition-all duration-200 group-hover:font-semibold">Izin Akses</span>
-                </a>
-            </div>
-        </nav>
+            <a href="{{ url('admin/tickets') }}" 
+            class="{{ request()->is('admin/tickets*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-2 text-center w-full transition-colors duration-200 group">
+                <div class="relative h-6 flex items-center justify-center">
+                    <i class="fas fa-ticket-alt text-lg transition-all duration-200 group-hover:scale-110"></i>
+                    <span class="absolute -top-0.5 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/tickets*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
+                </div>
+                <span class="text-xs font-medium mt-1 transition-all duration-200 group-hover:font-semibold">Tiket</span>
+            </a>
+
+            <a href="{{ url('admin/approval') }}" 
+            class="{{ request()->is('admin/approval*') ? 'text-indigo-600' : 'text-gray-500' }} flex flex-col items-center justify-center p-2 text-center w-full transition-colors duration-200 group">
+                <div class="relative h-6 flex items-center justify-center">
+                    <i class="fas fa-lock text-lg transition-all duration-200 group-hover:scale-110"></i>
+                    <span class="absolute -top-0.5 -right-1 w-2 h-2 bg-indigo-500 rounded-full {{ request()->is('admin/approval*') ? 'opacity-100' : 'opacity-0' }} transition-opacity duration-200"></span>
+                </div>
+                <span class="text-xs font-medium mt-1 transition-all duration-200 group-hover:font-semibold">Izin</span>
+            </a>
+        </div>
+    </nav>
     </div>
 
     <style>

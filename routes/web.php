@@ -11,6 +11,8 @@ use App\Http\Controllers\{
     TransaksiKasirController,
     ReportController,
     UserController,
+    TicketAdminController,
+    TicketKasirController,
 };
 
 // ========================
@@ -77,9 +79,14 @@ Route::middleware('auth')->group(function () {
             Route::post('/keranjang/edit/{id}', [TransaksiKasirController::class, 'editHargaDiskon'])->name('keranjang.edit');
             Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');
             Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
+            });
         });
-    });
        
+        Route::prefix('user')->group(function () {
+        Route::get('tickets/create', [TicketKasirController::class, 'createSale'])->name('user.tickets.create');
+        Route::post('tickets', [TicketKasirController::class, 'storeSale'])->name('user.tickets.store');
+        });
+
         // Nota
         Route::get('/user/nota/nota-harian', [App\Http\Controllers\NotaHarianController::class, 'index'])
         ->name('user.nota.notaHarian')
@@ -89,8 +96,6 @@ Route::middleware('auth')->group(function () {
         ->middleware('auth');
 
 
-
-
     // ========================
     // ADMIN Routes (role:admin)
     // ========================
@@ -98,6 +103,16 @@ Route::middleware('auth')->group(function () {
 
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Tickets Admin
+        Route::prefix('tickets')->name('tickets.')->group(function () {
+            Route::get('/', [TicketAdminController::class, 'index'])->name('index');
+            Route::get('/create', [TicketAdminController::class, 'create'])->name('create');
+            Route::post('/', [TicketAdminController::class, 'store'])->name('store');
+            Route::get('/reports', [TicketAdminController::class, 'reportsIndex'])->name('reports.index');
+            Route::get('/{ticket}/edit', [TicketAdminController::class, 'edit'])->name('edit');
+            Route::put('/{ticket}', [TicketAdminController::class, 'update'])->name('update');
+        });
 
        // Data Barang
         Route::prefix('data')->name('data.')->group(function () {
@@ -135,5 +150,5 @@ Route::middleware('auth')->group(function () {
 
         // struk admin
         Route::get('/transaksi/{id}/struk', [ReportController::class, 'struk'])->name('transaksi.struk');        
-    });
+        });
 });

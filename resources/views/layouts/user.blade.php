@@ -106,6 +106,10 @@
                     class="{{ request()->is('user/nota.nota-harian*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
                     <i class="fas fa-receipt mr-2"></i> Nota Harian
                 </a>
+                <a href="{{ route('user.tickets.create') }}" 
+                    class="{{ request()->is('user/tickets/create') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mt-1">
+                    <i class="fas fa-ticket-alt mr-2"></i> Penjualan Tiket
+                </a>
             </nav>
 
             <div class="px-4 py-3 border-t">
@@ -132,6 +136,20 @@
         </div>
         @endif
 
+                {{-- FLASH MESSAGE --}}
+        @if(session('success'))
+            <div class="mb-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300">
+                <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300">
+                <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
+            </div>
+        @endif
+
+
         <div class="bg-white rounded shadow p-6">
             @yield('content')
         </div>
@@ -139,27 +157,33 @@
 </main>
 
 <!-- MOBILE BOTTOM NAVIGATION -->
+<!-- MOBILE BOTTOM NAVIGATION -->
 <nav class="fixed bottom-0 inset-x-0 bg-white border-t shadow md:hidden z-20">
     <div class="flex justify-around">
         <a href="{{ url('user/dashboard') }}" 
-           class="{{ request()->is('user/dashboard*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
+           class="{{ request()->is('user/dashboard*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
             <i class="fas fa-home text-lg mb-1"></i>
             <span class="text-xs font-medium">Dashboard</span>
         </a>
         <a href="{{ url('user/transaksi') }}" 
-           class="{{ request()->is('user/transaksi*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
+           class="{{ request()->is('user/transaksi*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
             <i class="fas fa-shopping-cart text-lg mb-1"></i>
             <span class="text-xs font-medium">Transaksi</span>
         </a>
         <a href="{{ route('user.data.index') }}" 
-           class="{{ request()->is('data*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
-            <i class="fas fa-box text-sm"></i>
-            <span class="text-xs font-medium">Data Barang</span>
+           class="{{ request()->is('data*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+            <i class="fas fa-box text-lg mb-1"></i>
+            <span class="text-xs font-medium">Barang</span>
         </a>
         <a href="{{ route('user.nota.notaHarian') }}" 
-            class="{{ request()->is('user/nota/nota-harian*') ? 'bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-3 transition-all duration-200 flex-1">
-            <i class="fas fa-receipt mr-2"></i> 
-             <span class="text-xs font-medium">Nota Harian</span>
+           class="{{ request()->is('user/nota/nota-harian*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+            <i class="fas fa-receipt text-lg mb-1"></i>
+            <span class="text-xs font-medium">Nota</span>
+        </a>
+        <a href="{{ route('user.tickets.create') }}" 
+           class="{{ request()->is('user/tickets/*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+            <i class="fas fa-ticket-alt text-lg mb-1"></i>
+            <span class="text-xs font-medium">Tiket</span>
         </a>
     </div>
 </nav>
