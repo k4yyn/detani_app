@@ -11,7 +11,7 @@
                 <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">Laporan Transaksi Hari Ini</h2>
                 <p class="text-gray-600">
                     <a href="{{ route('admin.reports.index') }}" 
-                       class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors text-sm md:text-base">
+                       class="inline-flex items-center text-green-600 hover:text-green-800 transition-colors text-sm md:text-base">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -37,7 +37,7 @@
         <div class="overflow-x-auto">
             <div class="min-w-full inline-block align-middle">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-amber-600">
+                    <thead class="bg-red-700">
                         <tr>
                             <th scope="col" class="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-white uppercase tracking-wider">
                                 Tanggal
@@ -77,13 +77,13 @@
                                 </td>
                                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-                                        {{ strtolower($t->metode_pembayaran ?? 'tunai') === 'tunai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                        {{ strtolower($t->metode_pembayaran ?? 'tunai') === 'tunai' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700' }}">
                                         {{ ucfirst($t->metode_pembayaran ?? 'Tunai') }}
                                     </span>
                                 </td>
                                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
                                     <a href="{{ route('admin.transaksi.struk', $t->id) }}" target="_blank"
-                                       class="inline-flex items-center px-2 md:px-3 py-1 md:py-2 text-xs md:text-sm bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm">
+                                       class="inline-flex items-center px-2 md:px-3 py-1 md:py-2 text-xs md:text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors shadow-sm">
                                         <svg class="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -109,12 +109,12 @@
                         @endforelse
                     </tbody>
                     <tfoot class="bg-gray-50">
-                        <tr class="border-t-2 border-amber-200">
+                        <tr class="border-t-2 border-red-600">
                             <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 text-right font-bold text-gray-900 text-sm md:text-lg">
                                 Total:
                             </td>
                             <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 font-bold text-lg md:text-xl text-gray-900">
-                                <div class="bg-amber-100 rounded-lg px-3 py-2 inline-block">
+                                <div class="bg-green-100 rounded-lg px-3 py-2 inline-block text-green-800">
                                     Rp {{ number_format($total, 0, ',', '.') }}
                                 </div>
                             </td>
@@ -143,7 +143,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
     document.getElementById('exportExcel').addEventListener('click', function () {
-        const table = document.querySelector('table'); // Ambil tabel pertama
+        const table = document.querySelector('table'); 
         const wb = XLSX.utils.table_to_book(table, { sheet: "Laporan Harian" });
         XLSX.writeFile(wb, "laporan_harian_{{ date('Y-m-d') }}.xlsx");
     });
