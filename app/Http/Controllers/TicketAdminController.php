@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\TicketStock;
 use Illuminate\Http\Request;
@@ -47,38 +47,64 @@ class TicketAdminController extends Controller
         return redirect()->back()->with('success', 'Stok tiket berhasil disimpan/ditambahkan.');
     }
 
-   public function reportsIndex(Request $request)
+  public function reportsIndex(Request $request)
     {
-        $month = $request->input('month', now()->translatedFormat('F')); // default bulan sekarang (string)
-        $year = $request->input('year', now()->year);
+        // set locale agar nama bulan pakai Bahasa (jika diperlukan)
+        Carbon::setLocale('id');
 
+        // default filter (pakai nama bulan, karena blade select kamu mengirim nama bulan)
+        $month = $request->input('month', Carbon::now()->translatedFormat('F'));
+        $year  = $request->input('year', Carbon::now()->year);
+
+        // list stocks (bisa dipakai nanti kalau perlu menampilkan daftar stok)
+        $stocks = TicketStock::with('sales')
+                    ->orderBy('year', 'desc')
+                    ->orderBy('month', 'desc')
+                    ->get();
+
+        // ambil stock yang relevan untuk periode yang dipilih (single)
         $stock = TicketStock::with('sales')
-            ->where('month', $month)
-            ->where('year', $year)
-            ->latest('created_at')
-            ->first();
+                    ->where('month', $month)
+                    ->where('year', $year)
+                    ->latest('created_at')
+                    ->first();
 
-        $salesHistory = collect();
-        $totalSold = 0;
-        $remaining = 0;
-
+        // Jika ada stock, ambil sales dari relasi stock -> sales
         if ($stock) {
             $salesHistory = $stock->sales()->orderBy('date', 'asc')->get();
+
             $totalSold = $salesHistory->sum('sold_amount');
             $remaining = $stock->initial_stock - $totalSold;
+
+            // rekap uang (pastikan kolom-nya sesuai: gross_total, discount, net_total)
+            $totalRevenue = $salesHistory->sum('gross_total') ?? 0;
+            $totalDiscount = $salesHistory->sum('discount') ?? 0;
+            $totalNet = $salesHistory->sum('net_total') ?? 0;
+        } else {
+            // tidak ada stock untuk periode → set default
+            $salesHistory = collect();
+            $totalSold = 0;
+            $remaining = 0;
+            $totalRevenue = 0;
+            $totalDiscount = 0;
+            $totalNet = 0;
         }
 
+        // kirim ke view — termasuk 'stock' (singular) yang dibutuhkan blade kamu
         return view('admin.tickets.reports.index', compact(
             'stock',
+            'stocks',
             'salesHistory',
             'totalSold',
             'remaining',
             'month',
-            'year'
-        ));
+            'year',
+            'totalRevenue',
+            'totalDiscount',
+            'totalNet'
+        ))->with('transaksis', $salesHistory); // alias backward-compat kalau partial lama pakai $transaksis
     }
-
-
+        
     public function edit($id)
     {
         $stock = TicketStock::findOrFail($id);

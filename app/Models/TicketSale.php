@@ -10,11 +10,16 @@ class TicketSale extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ticket_stock_id',
-        'date',
-        'sold_amount',
-        'user_id',
-    ];
+    'ticket_stock_id',
+    'date',
+    'sold_amount',
+    'user_id',
+    'price_per_ticket',
+    'gross_total',
+    'discount',
+    'net_total',
+    'notes',
+];
 
     /**
      * Relasi ke stok tiket

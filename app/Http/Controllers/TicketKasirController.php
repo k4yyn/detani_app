@@ -31,9 +31,11 @@ class TicketKasirController extends Controller
         // Validasi input
         $request->validate([
             'ticket_stock_id' => 'required|exists:ticket_stocks,id',
-            'sold_amount' => 'required|integer|min:1',
-            'date' => 'required|date|after_or_equal:' . now()->startOfMonth()->toDateString() .
-                      '|before_or_equal:' . now()->endOfMonth()->toDateString(),
+            'sold_amount'     => 'required|integer|min:1',
+            'date'            => 'required|date|after_or_equal:' . now()->startOfMonth()->toDateString() .
+                                '|before_or_equal:' . now()->endOfMonth()->toDateString(),
+            'discount'        => 'nullable|integer|min:0',
+            'notes'           => 'nullable|string',
         ]);
 
         // Cek stok cukup
@@ -41,12 +43,26 @@ class TicketKasirController extends Controller
             return redirect()->back()->with('error', 'Stok tiket tidak mencukupi.');
         }
 
+        // Tentukan harga weekday / weekend
+        $isWeekend = Carbon::parse($request->date)->isWeekend();
+        $pricePerTicket = $isWeekend ? 25000 : 20000;
+
+        // Hitung total
+        $grossTotal = $pricePerTicket * $request->sold_amount;
+        $discount   = $request->discount ?? 0;
+        $netTotal   = $grossTotal - $discount;
+
         // Simpan penjualan
         TicketSale::create([
-            'ticket_stock_id' => $stock->id,
-            'date' => $request->date,
-            'sold_amount' => $request->sold_amount,
-            'user_id' => Auth::id(),
+            'ticket_stock_id'  => $stock->id,
+            'date'             => $request->date,
+            'sold_amount'      => $request->sold_amount,
+            'user_id'          => Auth::id(),
+            'price_per_ticket' => $pricePerTicket,
+            'gross_total'      => $grossTotal,
+            'discount'         => $discount,
+            'net_total'        => $netTotal,
+            'notes'            => $request->notes,
         ]);
 
         return redirect()->route('user.tickets.create')->with('success', 'Penjualan tiket berhasil dicatat.');

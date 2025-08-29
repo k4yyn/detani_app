@@ -146,6 +146,22 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Ringkasan Keuangan -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <p class="text-sm font-medium text-purple-600 mb-1">Pendapatan Kotor</p>
+                        <p class="text-2xl font-bold text-purple-800">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-sm font-medium text-red-600 mb-1">Total Diskon</p>
+                        <p class="text-2xl font-bold text-red-800">Rp {{ number_format($totalDiscount, 0, ',', '.') }}</p>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                        <p class="text-sm font-medium text-emerald-600 mb-1">Pendapatan Bersih</p>
+                        <p class="text-2xl font-bold text-emerald-800">Rp {{ number_format($totalNet, 0, ',', '.') }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -164,30 +180,14 @@
                 <table class="w-full">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    Tanggal
-                                </div>
-                            </th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                                    </svg>
-                                    Jumlah Terjual
-                                </div>
-                            </th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                    Diinput Oleh
-                                </div>
-                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Tanggal</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Jumlah Terjual</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Harga / Tiket</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Total Kotor</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Diskon</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Total Bersih</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Catatan</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Diinput Oleh</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -206,6 +206,21 @@
                                         {{ number_format($sale->sold_amount) }}
                                     </span>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    Rp {{ number_format($sale->price_per_ticket ?? 0, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    Rp {{ number_format($sale->gross_total ?? 0, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">
+                                    Rp {{ number_format($sale->discount ?? 0, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-700">
+                                    Rp {{ number_format($sale->net_total ?? 0, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    {{ $sale->notes ?? '-' }}
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3">
@@ -219,7 +234,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="px-6 py-12 text-center">
+                                <td colspan="8" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center text-gray-500">
                                         <svg class="w-16 h-16 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 7h.01M9 16h.01"/>
