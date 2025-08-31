@@ -4,7 +4,7 @@
 <div class="w-full px-4 py-6">
     <!-- Header Section -->
     <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-blue-600 mb-2">
+        <h1 class="text-3xl font-bold text-green-800 mb-2">
             🎟️ Data Ticketing
         </h1>
         <p class="text-gray-600">Kelola stok tiket per bulan dengan mudah</p>
@@ -13,7 +13,7 @@
     <!-- Action Button -->
     <div class="flex justify-end mb-6">
         <a href="{{ route('admin.tickets.create') }}" 
-           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-md transition duration-200 flex items-center">
+           class="bg-green-800 hover:bg-green-900 text-white px-6 py-2 rounded-lg shadow-sm transition duration-200 flex items-center">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
@@ -23,7 +23,7 @@
 
     <!-- Alert Section -->
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 relative" role="alert">
+        <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-6 relative" role="alert">
             <div class="flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -39,9 +39,9 @@
     @endif
 
     <!-- Main Content Section - Full Width Table -->
-    <div class="w-full overflow-x-auto shadow-lg rounded-lg">
+    <div class="w-full overflow-x-auto shadow-sm rounded-lg border border-gray-200">
         <table class="w-full bg-white">
-            <thead class="bg-blue-50 border-b-2 border-blue-100">
+            <thead class="bg-gray-100 border-b-2 border-gray-300">
                 <tr>
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
                         <div class="flex items-center">
@@ -94,7 +94,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="divide-y divide-gray-300">
                 @forelse($stocks as $stock)
                 <tr class="hover:bg-gray-50 transition duration-150">
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -104,12 +104,12 @@
                         <span class="text-sm text-gray-600">{{ $stock->year }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
                             {{ number_format($stock->initial_stock) }}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700">
                             {{ number_format($stock->totalSold()) }}
                         </span>
                     </td>
@@ -158,11 +158,11 @@
     <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
             <div class="flex items-center mb-2 sm:mb-0">
-                <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                <div class="w-2 h-2 bg-green-600 rounded-full mr-2 animate-pulse"></div>
                 <span>Data diperbarui secara real-time</span>
             </div>
             <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <span class="footer-time">Terakhir diperbarui: {{ now()->setTimezone('Asia/Jakarta')->format('d M Y H:i') }} WIB</span>

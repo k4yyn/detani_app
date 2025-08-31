@@ -12,8 +12,8 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">
-                    <span class="text-blue-600">📝</span> Tambah Stok Tiket
+                <h1 class="text-3xl font-bold text-green-800">
+                    <span class="text-green-700">📝</span> Tambah Stok Tiket
                 </h1>
                 <p class="text-gray-600 mt-1">Tambahkan stok tiket untuk bulan ini</p>
             </div>
@@ -24,7 +24,7 @@
     @if($errors->any())
         <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
             <div class="flex items-start">
-                <svg class="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-red-700 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <div class="flex-1">
@@ -44,10 +44,10 @@
     
     <!-- Form Section -->
     <div class="max-w-2xl mx-auto">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200">
+            <div class="px-6 py-4 bg-gray-100 border-b border-gray-300">
+                <h2 class="text-lg font-semibold text-green-800 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     Form Data Stok
@@ -69,7 +69,7 @@
                         type="text" 
                         id="month"
                         name="month" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-not-allowed"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent cursor-not-allowed"
                         value="{{ \Carbon\Carbon::now()->locale('id_ID')->isoFormat('MMMM') }}" 
                         required 
                         readonly
@@ -89,7 +89,7 @@
                         type="number" 
                         id="year"
                         name="year" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-not-allowed"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent cursor-not-allowed"
                         value="{{ date('Y') }}" 
                         required 
                         readonly
@@ -103,13 +103,13 @@
                         <svg class="w-4 h-4 inline mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                         </svg>
-                        Stok Awal <span class="text-red-500">*</span>
+                        Stok Awal <span class="text-red-700">*</span>
                     </label>
                     <input 
                         type="number" 
                         id="initial_stock"
                         name="initial_stock" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition duration-200"
                         placeholder="Masukkan jumlah stok awal..."
                         min="0" 
                         required
@@ -119,10 +119,10 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-300">
                     <button 
                         type="submit"
-                        class="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg shadow-md transition duration-200 flex items-center justify-center">
+                        class="flex-1 sm:flex-none bg-green-800 hover:bg-green-900 text-white font-medium py-3 px-6 rounded-lg shadow-sm transition duration-200 flex items-center justify-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                         </svg>
@@ -130,7 +130,7 @@
                     </button>
                     <a 
                         href="{{ route('admin.tickets.index') }}" 
-                        class="flex-1 sm:flex-none bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg shadow-md transition duration-200 flex items-center justify-center">
+                        class="flex-1 sm:flex-none bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg shadow-sm transition duration-200 flex items-center justify-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
@@ -143,8 +143,8 @@
         <!-- Info Card -->
         <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div class="flex items-start">
-                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <svg class="w-5 h-5 text-blue-700 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 01118 0z"/>
                 </svg>
                 <div class="text-sm text-blue-800">
                     <p class="font-medium mb-1">Informasi:</p>
