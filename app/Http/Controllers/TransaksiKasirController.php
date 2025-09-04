@@ -180,10 +180,13 @@ class TransaksiKasirController extends Controller
 
     $kembalian = $bayar - $total;
 
+    $invoice = 'INV-' . now()->format('YmdHis') . '-' . strtoupper(\Str::random(4));
+
     // Simpan transaksi
     $transaksi = Transaksi::create([
         'user_id' => auth()->id(),
         'kode_transaksi' => $request->no_transaksi ?? 'TRX-' . strtoupper(\Str::random(8)),
+        'invoice' => $invoice,
         'nama_pelanggan' => $request->nama_pelanggan,
         'nomor_meja' => $request->nomor_meja,
         'keterangan_tambahan' => $request->keterangan_tambahan,
@@ -191,6 +194,8 @@ class TransaksiKasirController extends Controller
         'total_harga' => $total,
         'uang_dibayar' => $bayar,
         'kembalian' => $kembalian,
+        'metode_pembayaran' => $request->metode_pembayaran,
+        'status_pembayaran' => 'Lunas', // Jika kamu nanti ingin menambahkan cicilan, bisa ubah ini
     ]);
 
     // Simpan detail

@@ -10,13 +10,16 @@ class Transaksi extends Model
     protected $fillable = [
         'user_id',
         'kode_transaksi',
+        'invoice',
         'total_harga',
         'uang_dibayar',
         'kembalian',
         'nama_pelanggan',
         'nomor_meja',
         'keterangan',
-        'keterangan_tambahan'
+        'keterangan_tambahan',
+        'metode_pembayaran',
+        'status_pembayaran'
     ];
 
     // Relasi ke tabel transaksi_details

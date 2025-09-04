@@ -1,4 +1,4 @@
-@extends('layouts.user')
+@extends('layouts.admin')
 
 @section('content')
 <div class="min-h-screen bg-gray-50">
@@ -98,7 +98,7 @@
         </div>
 
         <!-- Button kembali -->
-    <a href="{{ route('user.transaksi.index') }}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Kembali ke Transaksi</a>
+    <a href="{{ route('admin.reports.index') }}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Kembali</a>
 </div>
 
 @if (request('print') === 'true')

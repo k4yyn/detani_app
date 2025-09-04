@@ -35,6 +35,6 @@ public function register(Request $request)
         'is_approved' => false, // belum disetujui
     ]);
 
-    return redirect()->route('login')->with('status', 'Registrasi berhasil, tunggu persetujuan admin.');
+    return redirect()->route('login')->with('status', 'Registration successful, waiting for admin approval');
 }
 }

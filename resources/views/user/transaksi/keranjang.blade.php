@@ -206,7 +206,13 @@
                             <span class="ml-2 text-sm text-gray-700">Cetak Struk setelah checkout</span>
                         </label>
                     </div>
-
+                    <div class="mb-4">
+                        <label for="metode_pembayaran" class="block text-sm font-medium text-gray-700 mb-2">Metode Pembayaran</label>
+                        <select name="metode_pembayaran" id="metode_pembayaran" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                            <option value="Cash">Cash</option>
+                            <option value="QRIS">QRIS</option>
+                        </select>
+                    </div>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('user.transaksi.index') }}" 
                            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-center px-6 py-3 rounded-lg font-medium transition-colors">

@@ -9,20 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-        public function up()
+    public function up()
     {
         Schema::table('data', function (Blueprint $table) {
-            $table->string('codetrx', 50)->change();
+            if (!Schema::hasColumn('data', 'codetrx')) {
+                $table->string('codetrx', 50)->nullable();
+            }
         });
     }
 
     /**
      * Reverse the migrations.
      */
-        public function down()
+    public function down()
     {
         Schema::table('data', function (Blueprint $table) {
-            $table->decimal('codetrx', 15, 2)->change();
+            if (Schema::hasColumn('data', 'codetrx')) {
+                $table->dropColumn('codetrx');
+            }
         });
     }
 };

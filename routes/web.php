@@ -11,6 +11,8 @@ use App\Http\Controllers\{
     TransaksiKasirController,
     ReportController,
     UserController,
+    TicketAdminController,
+    TicketKasirController,
 };
 
 // ========================
@@ -28,7 +30,7 @@ Route::get('/', function () {
     );
 });
 
-// ========================
+// ======================= =
 // Guest (Auth) Routes
 // ========================
 Route::middleware('guest')->group(function () {
@@ -60,8 +62,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:user')->group(function () {
         Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
-        // Data Barang
-        Route::get('/data', [DataController::class, 'index'])->name('data.index');
+        // Data Barang untuk User
+        Route::prefix('user/data')->name('user.data.')->group(function () {
+            Route::get('/', [DataController::class, 'index'])->name('index'); // Halaman kategori
+            Route::get('/all', [DataController::class, 'indexAll'])->name('all'); // Semua barang
+            Route::get('/kategori/{kategori}', [DataController::class, 'byKategori'])->name('by-kategori'); // Per kategori
+        });
 
         // Transaksi Kasir
         Route::prefix('user/transaksi')->name('user.transaksi.')->group(function () {
@@ -73,8 +79,22 @@ Route::middleware('auth')->group(function () {
             Route::post('/keranjang/edit/{id}', [TransaksiKasirController::class, 'editHargaDiskon'])->name('keranjang.edit');
             Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');
             Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
+            });
         });
-    });
+       
+        Route::prefix('user')->group(function () {
+        Route::get('tickets/create', [TicketKasirController::class, 'createSale'])->name('user.tickets.create');
+        Route::post('tickets', [TicketKasirController::class, 'storeSale'])->name('user.tickets.store');
+        });
+
+        // Nota
+        Route::get('/user/nota/nota-harian', [App\Http\Controllers\NotaHarianController::class, 'index'])
+        ->name('user.nota.notaHarian')
+        ->middleware('auth');
+        Route::get('/user/nota/nota-harian/cetak', [App\Http\Controllers\NotaHarianController::class, 'cetak'])
+        ->name('user.nota.notaHarian.cetak')
+        ->middleware('auth');
+
 
     // ========================
     // ADMIN Routes (role:admin)
@@ -84,14 +104,27 @@ Route::middleware('auth')->group(function () {
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Data Barang
+        // Tickets Admin
+        Route::prefix('tickets')->name('tickets.')->group(function () {
+            Route::get('/', [TicketAdminController::class, 'index'])->name('index');
+            Route::get('/create', [TicketAdminController::class, 'create'])->name('create');
+            Route::post('/', [TicketAdminController::class, 'store'])->name('store');
+            Route::get('/reports', [TicketAdminController::class, 'reportsIndex'])->name('reports.index');
+            Route::get('/{ticket}/edit', [TicketAdminController::class, 'edit'])->name('edit');
+            Route::put('/{ticket}', [TicketAdminController::class, 'update'])->name('update');
+        });
+
+       // Data Barang
         Route::prefix('data')->name('data.')->group(function () {
-            Route::get('/', [DataController::class, 'index'])->name('index');
+            Route::get('/', [DataController::class, 'index'])->name('index'); // Default ke halaman kategori
+            Route::get('/all', [DataController::class, 'indexAll'])->name('all'); // Halaman daftar semua barang
+            Route::get('/kategori/{kategori}', [DataController::class, 'byKategori'])->name('by-kategori'); // Produk per kategori
             Route::get('/create', [DataController::class, 'create'])->name('create');
             Route::post('/', [DataController::class, 'store'])->name('store');
             Route::get('/{id}/edit', [DataController::class, 'edit'])->name('edit');
             Route::put('/{id}', [DataController::class, 'update'])->name('update');
             Route::delete('/{id}', [DataController::class, 'destroy'])->name('destroy');
+            Route::delete('/kategori/{kategori}', [DataController::class, 'destroyKategori'])->name('destroy-kategori');
         });
 
         // User Management
@@ -114,5 +147,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/filter', [ReportController::class, 'filter'])->name('filter');
             Route::match(['get', 'post'], '/export', [ReportController::class, 'export'])->name('export');
         });
-    });
+
+        // struk admin
+        Route::get('/transaksi/{id}/struk', [ReportController::class, 'struk'])->name('transaksi.struk');        
+        });
 });
