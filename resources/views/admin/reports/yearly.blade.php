@@ -8,20 +8,23 @@
     $selectedYear = request('tahun', now()->year);
 @endphp
 
-<div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
+<div class="bg-white rounded-xl shadow-sm border border-green-200 p-4 md:p-6">
     <!-- Header Section -->
     <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
         <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-            <h2 class="text-xl font-bold text-green-800 flex items-center">
-                <i class="fas fa-calendar mr-2"></i> 
+            <h2 class="text-xl font-bold text-green-900 flex items-center">
+                <i class="fas fa-calendar mr-2 text-green-700"></i> 
                 <span>Laporan Tahunan</span>
-                <span class="ml-2 text-green-700">({{ $selectedYear }})</span>
+                <span class="ml-2 text-green-800">({{ $selectedYear }})</span>
             </h2>
             
             <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                 <a href="{{ route('admin.reports.index') }}" 
-                   class="text-red-700 hover:text-red-800 hover:underline transition-colors text-sm font-medium">
-                    <i class="fas fa-arrow-left mr-1"></i> Kembali ke menu laporan
+                   class="inline-flex items-center px-4 py-2 bg-green-100 hover:bg-green-200 text-green-800 rounded-lg text-sm font-medium transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Kembali ke Menu Laporan
                 </a>
                 
                 <form method="GET" action="{{ route('admin.reports.yearly') }}" class="flex items-center">
@@ -29,7 +32,7 @@
                     <select id="selectYear" 
                             name="tahun" 
                             onchange="this.form.submit()"
-                            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-all">
+                            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all">
                         @for ($i = 2020; $i <= date('Y'); $i++)
                             <option value="{{ $i }}" {{ $tahun == $i ? 'selected' : '' }}>{{ $i }}</option>
                         @endfor
@@ -40,7 +43,7 @@
 
         <div class="flex justify-end">
             <button id="exportExcel" 
-                    class="px-4 py-2 bg-green-800 text-white rounded-lg hover:bg-green-900 transition-all duration-200 flex items-center shadow-sm hover:shadow-md">
+                    class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-200 flex items-center shadow-sm hover:shadow-md">
                 <i class="fas fa-file-excel mr-2"></i> 
                 <span class="hidden sm:inline">Export</span> Excel
             </button>
@@ -95,9 +98,9 @@
     </div>
 
     <!-- Chart Section -->
-    <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-green-200">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold text-green-800 flex items-center">
+            <h3 class="text-lg font-semibold text-green-900 flex items-center">
                 <i class="fas fa-chart-bar mr-2 text-green-700"></i>
                 Grafik Pendapatan Tahun {{ $tahun }}
             </h3>
@@ -108,9 +111,9 @@
     </div>
 
     <!-- Table Section -->
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-        <div class="px-6 py-4 bg-gray-100 border-b border-gray-300">
-            <h3 class="text-lg font-semibold text-green-800 flex items-center">
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-green-200">
+        <div class="px-6 py-4 bg-green-50 border-b border-green-200">
+            <h3 class="text-lg font-semibold text-green-900 flex items-center">
                 <i class="fas fa-table mr-2 text-green-700"></i>
                 Detail Bulanan
             </h3>
@@ -134,7 +137,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-300">
+                <tbody class="bg-white divide-y divide-gray-200">
                     @php
                         $monthlyData = $transaksis->groupBy(function($item) {
                             return $item->created_at->format('Y-m');
@@ -154,7 +157,7 @@
                             $monthName = \Carbon\Carbon::createFromFormat('Y-m', $yearMonth)->format('F');
                             $monthNameId = \Carbon\Carbon::createFromFormat('Y-m', $yearMonth)->locale('id')->format('F');
                         @endphp
-                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <tr class="hover:bg-green-50 transition-colors duration-200">
                             <td class="py-4 px-6 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
@@ -171,7 +174,7 @@
                                 <div class="text-xs text-gray-500">transaksi</div>
                             </td>
                             <td class="py-4 px-6 whitespace-nowrap">
-                                <div class="text-sm font-medium text-green-800">
+                                <div class="text-sm font-medium text-green-900">
                                     Rp {{ number_format($data['total'], 0, ',', '.') }}
                                 </div>
                                 @if($data['total'] > 0)
@@ -197,12 +200,12 @@
                         </tr>
                     @endfor
                 </tbody>
-                <tfoot class="bg-gray-50">
+                <tfoot class="bg-green-50">
                     <tr>
                         <td colspan="2" class="py-4 px-6 text-right text-sm font-bold text-gray-900">
                             <i class="fas fa-calculator mr-2"></i>Total Keseluruhan:
                         </td>
-                        <td class="py-4 px-6 text-sm font-bold text-green-800">
+                        <td class="py-4 px-6 text-sm font-bold text-green-900">
                             Rp {{ number_format($total, 0, ',', '.') }}
                         </td>
                         <td class="py-4 px-6"></td>

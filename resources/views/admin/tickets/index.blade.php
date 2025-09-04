@@ -67,6 +67,33 @@
                             Stok Awal
                         </div>
                     </th>
+                    @if($hasAdditionalStocks)
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            </svg>
+                            Total Penambahan
+                        </div>
+                    </th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                            Total Stok
+                        </div>
+                    </th>
+                    @else
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                            Total Stok
+                        </div>
+                    </th>
+                    @endif
                     <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">
                         <div class="flex items-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,9 +132,31 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
+                            {{ number_format($stock->original_stock ?? $stock->initial_stock) }}
+                        </span>
+                    </td>
+                    @if($hasAdditionalStocks)
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($stock->hasAdditionalStock())
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700">
+                            +{{ number_format($stock->totalAdditionalStock()) }}
+                        </span>
+                        @else
+                        <span class="text-gray-400 text-sm">-</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700">
                             {{ number_format($stock->initial_stock) }}
                         </span>
                     </td>
+                    @else
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700">
+                            {{ number_format($stock->initial_stock) }}
+                        </span>
+                    </td>
+                    @endif
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700">
                             {{ number_format($stock->totalSold()) }}
@@ -128,10 +177,10 @@
                                 </svg>
                             </a>
                             <a href="{{ route('admin.tickets.edit', $stock->id) }}" 
-                               class="inline-flex items-center px-3 py-2 border border-yellow-300 text-sm leading-4 font-medium rounded-md text-yellow-700 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150"
-                               title="Edit Stok">
+                               class="inline-flex items-center px-3 py-2 border border-green-300 text-sm leading-4 font-medium rounded-md text-green-700 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150"
+                               title="Tambah Stok">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                                 </svg>
                             </a>
                         </div>
@@ -139,7 +188,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-12 text-center">
+                    <td colspan="{{ $hasAdditionalStocks ? '8' : '6' }}" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center justify-center text-gray-500">
                             <svg class="w-16 h-16 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293L20 14l-2.293-2.293A1 1 0 0017 11.414H16"/>

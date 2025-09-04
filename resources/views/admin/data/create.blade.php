@@ -12,7 +12,7 @@
                     </svg>
                     Tambah Data Barang
                 </h1>
-                <p class="text-blue-100 mt-2">Lengkapi informasi barang dengan detail yang akurat</p>
+                <p class="text-white mt-2">Lengkapi informasi barang dengan detail yang akurat</p>
             </div>
         </div>
 
@@ -45,10 +45,10 @@
             use App\Models\Data;
 
             $today = Carbon::now()->format('dmY');
-            $prefix = 'am-' . $today . '-';
+            $prefix = 'DT-' . $today . '-';
             $countToday = Data::whereRaw('DATE(created_at) = ?', [now()->toDateString()])->count() + 1;
             $order = str_pad($countToday, 2, '0', STR_PAD_LEFT);
-            $generatedCodetrx = $prefix . $order . 'id';
+            $generatedCodetrx = $prefix . $order . 'ID';
         @endphp
 
         <!-- Form Section -->

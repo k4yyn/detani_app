@@ -17,7 +17,7 @@
                                 <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-white/30 transition-all duration-300 group-hover:w-full"></span>
                             </span>
                         </h1>
-                        <p class="text-blue-100 mt-2 text-base sm:text-lg">Daftar produk kategori {{ $kategori }}</p>
+                        <p class="text-white mt-2 text-base sm:text-lg">Daftar produk kategori {{ $kategori }}</p>
                     </div>
                     <div class="flex-shrink-0">
                         <div class="bg-white/20 rounded-lg px-3 py-2 sm:p-3">
@@ -298,7 +298,7 @@
                         </div>
                     </div>
                     <div class="ml-4 min-w-0">
-                        <p class="text-xs sm:text-sm font-medium text-red-700 truncate">Total Produk</p>
+                        <p class="text-xs sm:text-sm font-medium text-orange-500 truncate">Total Produk</p>
                         <p class="text-xl sm:text-2xl font-bold text-green-800">{{ $data->count() }}</p>
                     </div>
                 </div>
@@ -314,7 +314,7 @@
                         </div>
                     </div>
                     <div class="ml-4 min-w-0">
-                        <p class="text-xs sm:text-sm font-medium text-red-700 truncate">Total Stok</p>
+                        <p class="text-xs sm:text-sm font-medium text-orange-500 truncate">Total Stok</p>
                         <p class="text-xl sm:text-2xl font-bold text-green-800">{{ $data->sum('stok') }}</p>
                     </div>
                 </div>
@@ -330,7 +330,7 @@
                         </div>
                     </div>
                     <div class="ml-4 min-w-0">
-                        <p class="text-xs sm:text-sm font-medium text-red-700 truncate">Nilai Stok</p>
+                        <p class="text-xs sm:text-sm font-medium text-orange-500 truncate">Nilai Stok</p>
                         <p class="text-sm sm:text-2xl font-bold text-green-800 truncate" title="Rp {{ number_format($data->sum(function($item) { return $item->stok * $item->harga_pokok; }), 0, ',', '.') }}">
                             Rp {{ number_format($data->sum(function($item) { return $item->stok * $item->harga_pokok; }), 0, ',', '.') }}
                         </p>
@@ -348,7 +348,7 @@
                         </div>
                     </div>
                     <div class="ml-4 min-w-0">
-                        <p class="text-xs sm:text-sm font-medium text-red-700 truncate">Rata-rata Harga</p>
+                        <p class="text-xs sm:text-sm font-medium text-orange-500 truncate">Rata-rata Harga</p>
                         <p class="text-sm sm:text-2xl font-bold text-green-800 truncate" title="Rp {{ number_format($data->avg('harga_jual'), 0, ',', '.') }}">
                             Rp {{ number_format($data->avg('harga_jual'), 0, ',', '.') }}
                         </p>

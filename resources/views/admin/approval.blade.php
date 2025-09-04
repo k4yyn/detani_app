@@ -4,9 +4,9 @@
 <div class="container mx-auto px-4 py-6">
     <div class="max-w-4xl mx-auto">
         <!-- Header -->
-        <div class="bg-gray-50 rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-            <h2 class="text-2xl font-semibold text-green-800 mb-2">Permintaan Persetujuan User</h2>
-            <p class="text-red-700">Kelola permintaan persetujuan user yang baru mendaftar</p>
+        <div class="bg-green-50 rounded-xl shadow-sm border border-green-200 p-6 mb-6">
+            <h2 class="text-2xl font-semibold text-green-900 mb-2">Permintaan Persetujuan User</h2>
+            <p class="text-gray-600">Kelola permintaan persetujuan user yang baru mendaftar</p>
         </div>
 
         <!-- Success Message -->
@@ -22,22 +22,22 @@
         <!-- User Cards -->
         <div class="space-y-4">
             @forelse ($pendingUsers as $user)
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+                <div class="bg-white rounded-xl shadow-sm border border-green-200 hover:shadow-md transition-shadow duration-200">
                     <div class="p-6">
                         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                             <!-- User Info -->
                             <div class="flex-1">
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label class="text-sm font-medium text-red-700 uppercase tracking-wide">Nama</label>
-                                        <p class="mt-1 text-green-800 font-medium">{{ $user->name }}</p>
+                                        <label class="text-sm font-medium text-gray-700 uppercase tracking-wide">Nama</label>
+                                        <p class="mt-1 text-green-900 font-medium">{{ $user->name }}</p>
                                     </div>
                                     <div>
-                                        <label class="text-sm font-medium text-red-700 uppercase tracking-wide">Email</label>
-                                        <p class="mt-1 text-green-800">{{ $user->email }}</p>
+                                        <label class="text-sm font-medium text-gray-700 uppercase tracking-wide">Email</label>
+                                        <p class="mt-1 text-green-900">{{ $user->email }}</p>
                                     </div>
                                     <div>
-                                        <label class="text-sm font-medium text-red-700 uppercase tracking-wide">Role</label>
+                                        <label class="text-sm font-medium text-gray-700 uppercase tracking-wide">Role</label>
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 mt-1">
                                             {{ ucfirst($user->role) }}
                                         </span>
@@ -50,7 +50,7 @@
                                 <form action="{{ route('admin.approval.approve', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" 
-                                            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 transition-colors duration-200">
+                                            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600 transition-colors duration-200">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                         </svg>
@@ -60,7 +60,7 @@
                                 <form action="{{ route('admin.approval.reject', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" 
-                                            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-colors duration-200">
+                                            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 transition-colors duration-200">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
@@ -73,12 +73,12 @@
                 </div>
             @empty
                 <!-- Empty State -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+                <div class="bg-white rounded-xl shadow-sm border border-green-200 p-12 text-center">
                     <svg class="mx-auto h-12 w-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m3 5.197H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <h3 class="text-lg font-medium text-green-800 mb-2">Tidak ada permintaan pending</h3>
-                    <p class="text-red-700">Saat ini tidak ada user yang menunggu persetujuan.</p>
+                    <h3 class="text-lg font-medium text-green-900 mb-2">Tidak ada permintaan pending</h3>
+                    <p class="text-gray-600">Saat ini tidak ada user yang menunggu persetujuan.</p>
                 </div>
             @endforelse
         </div>

@@ -32,7 +32,7 @@
                         </button>
                         <div class="flex-shrink-0 flex items-center ml-4">
                             <img class="h-14 w-auto -mt-2" src="{{ asset('asset/image/logo detani.png') }}" alt="Amaliah Logo">
-                            <span class="ml-2 text-lg font-medium text-gray-800 hidden sm:inline">Admin De Tani</span>
+                            <span class="ml-2 text-lg font-medium text-gray-800 hidden sm:inline">Admin DeTani</span>
                         </div>
                     </div>
 
@@ -98,8 +98,7 @@
                             <div class="flex items-center">
                                 <img class="h-14 w-auto -mt-2" src="{{ asset('asset/image/logo detani.png') }}" alt="Detani Logo">
                                 <div class="ml-3">
-                                    <h2 class="text-lg font-semibold">Admin DeTani</h2>
-                                    <p class="text-sm text-green-100">Admin Panel</p>
+                                    <h2 class="text-lg font-semibold">Admin Panel</h2>
                                 </div>
                             </div>
                             <button @click="showSidebar = false" class="text-green-200 hover:text-white transition-colors duration-200">
@@ -137,26 +136,32 @@
                             </a>
 
                             <!-- Menu Ticketing -->
-                            <a href="{{ url('admin/tickets') }}" 
-                            class="{{ request()->is('admin/tickets') ? 'bg-green-50 text-green-800' : 'text-gray-600 hover:bg-gray-50 hover:text-green-800' }} group flex items-center px-4 py-3 text-sm font-medium rounded-lg mx-2 transition-all duration-200">
-                                <div class="w-6 h-6 rounded-full mr-3 flex items-center justify-center {{ request()->is('admin/tickets') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500 group-hover:bg-green-100 group-hover:text-green-800' }} transition-all duration-200">
+                        <div x-data="{ open: {{ request()->is('admin/tickets*') ? 'true' : 'false' }} }">
+                            <!-- Main Menu -->
+                            <button @click="open = !open"
+                                class="w-full {{ request()->is('admin/tickets*') ? 'bg-green-50 text-green-800' : 'text-gray-600 hover:bg-gray-50 hover:text-green-800' }} group flex items-center px-4 py-3 text-sm font-medium rounded-lg mx-2 transition-all duration-200">
+                                <div
+                                    class="w-6 h-6 rounded-full mr-3 flex items-center justify-center {{ request()->is('admin/tickets*') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500 group-hover:bg-green-100 group-hover:text-green-800' }} transition-all duration-200">
                                     <i class="fas fa-ticket-alt text-sm"></i>
                                 </div>
-                                <span class="flex-1">Ticketing</span>
-                            </a>
+                                <span class="flex-1 text-left">Ticketing</span>
+                                <!-- Icon panah -->
+                                <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'" class="fas text-xs ml-2"></i>
+                            </button>
 
-                            <!-- Submenu Data Ticketing -->
-                            <a href="{{ url('admin/tickets') }}" 
-                            class="{{ request()->is('admin/tickets') ? 'bg-green-50 text-green-800' : 'text-gray-500 hover:bg-gray-50 hover:text-green-800' }} block pl-14 pr-4 py-2 text-sm rounded-lg mx-2 transition-all duration-200">
-                                Data Ticketing
-                            </a>
+                            <!-- Submenu -->
+                            <div x-show="open" x-transition class="mt-1 space-y-1">
+                                <a href="{{ url('admin/tickets') }}"
+                                    class="{{ request()->is('admin/tickets') ? 'bg-green-50 text-green-800' : 'text-gray-500 hover:bg-gray-50 hover:text-green-800' }} block pl-14 pr-4 py-2 text-sm rounded-lg mx-2 transition-all duration-200">
+                                    Data Ticketing
+                                </a>
 
-                            <!-- Submenu Laporan Ticketing -->
-                            <a href="{{ route('admin.tickets.reports.index') }}" 
-                            class="{{ request()->is('admin/tickets/reports*') ? 'bg-green-50 text-green-800' : 'text-gray-500 hover:bg-gray-50 hover:text-green-800' }} block pl-14 pr-4 py-2 text-sm rounded-lg mx-2 transition-all duration-200">
-                                Laporan Ticketing
-                            </a>
-
+                                <a href="{{ route('admin.tickets.reports.index') }}"
+                                    class="{{ request()->is('admin/tickets/reports*') ? 'bg-green-50 text-green-800' : 'text-gray-500 hover:bg-gray-50 hover:text-green-800' }} block pl-14 pr-4 py-2 text-sm rounded-lg mx-2 transition-all duration-200">
+                                    Laporan Ticketing
+                                </a>
+                            </div>
+                            </div>
                             <a href="{{ url('admin/approval') }}" 
                                class="{{ request()->is('admin/approval*') ? 'bg-green-50 text-green-800' : 'text-gray-600 hover:bg-gray-50 hover:text-green-800' }} group flex items-center px-4 py-3 text-sm font-medium rounded-lg mx-2 transition-all duration-200">
                                 <div class="w-6 h-6 rounded-full mr-3 flex items-center justify-center {{ request()->is('admin/approval*') ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500 group-hover:bg-green-100 group-hover:text-green-800' }} transition-all duration-200">

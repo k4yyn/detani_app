@@ -159,9 +159,9 @@
 
        <!-- Register Link -->
         <div class="text-center text-sm text-green-300 mt-4">
-            Belum punya akun?
+            Don't have an account yet?
             <a href="{{ route('register') }}" class="text-green-400 hover:text-green-300 hover:underline transition-all duration-200 font-medium">
-                Daftar di sini
+                Sign up here
             </a>
         </div>
     </form>

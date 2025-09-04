@@ -3,7 +3,7 @@
 @section('title', 'Laporan Transaksi')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-6">
+<div class="min-h-screen bg-green-50 py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @php
             $totalPendapatan = $total ?? 0;
@@ -12,15 +12,15 @@
         @endphp
 
         <!-- Header Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden p-6 mb-6">
+        <div class="bg-white rounded-xl shadow-sm border border-green-200 overflow-hidden p-6 mb-6">
             <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
                 <div>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-green-800 mb-2">Laporan Transaksi</h1>
-                    <p class="text-red-700">Ringkasan data transaksi bisnis</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-green-900 mb-2">Laporan Transaksi</h1>
+                    <p class="text-gray-600">Ringkasan data transaksi bisnis</p>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                    <button id="exportExcel" class="bg-green-50 hover:bg-green-100 border border-green-200 px-4 py-2.5 text-green-700 rounded-lg text-sm font-medium flex items-center justify-center transition-all duration-200 hover:shadow-sm">
-                        <i class="fas fa-file-excel mr-2"></i> Export Excel
+                    <button id="exportExcel" class="bg-green-100 hover:bg-green-200 border border-green-300 px-4 py-2.5 text-green-800 rounded-lg text-sm font-medium flex items-center justify-center transition-all duration-200 hover:shadow-sm">
+                        <i class="fas fa-file-excel mr-2 text-green-700"></i> Export Excel
                     </button>
                 </div>
             </div>
@@ -40,18 +40,18 @@
         </div>
 
         <!-- Filter Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden p-6 mb-6">
+        <div class="bg-white rounded-xl shadow-sm border border-green-200 overflow-hidden p-6 mb-6">
             <div class="flex items-center mb-4">
-                <i class="fas fa-sliders-h text-indigo-600 mr-3"></i>
-                <h3 class="text-lg font-semibold text-green-800">Filter Laporan</h3>
+                <i class="fas fa-sliders-h text-orange-500 mr-3"></i>
+                <h3 class="text-lg font-semibold text-green-900">Filter Laporan</h3>
             </div>
 
             <form method="GET" action="{{ route('admin.reports.index') }}" class="space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="space-y-2">
-                        <label class="block text-sm font-medium text-red-700">Jenis Laporan</label>
+                        <label class="block text-sm font-medium text-gray-700">Jenis Laporan</label>
                         <select id="filterSelect" name="filter" onchange="this.form.submit()" 
-                                class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-colors">
+                                class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-colors">
                             <option value="">Pilih Jenis Laporan</option>
                             <option value="harian" {{ request('filter') == 'harian' ? 'selected' : '' }}>Harian</option>
                             <option value="mingguan" {{ request('filter') == 'mingguan' ? 'selected' : '' }}>Mingguan</option>
@@ -83,17 +83,17 @@
                  <!-- Filter Custom (awalnya hidden) -->
                 <div id="customDateFilter" style="{{ request('filter') === 'custom' ? 'display: grid' : 'display: none' }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-gray-300">
                     <div class="space-y-2">
-                        <label class="block text-sm font-medium text-red-700">Dari Tanggal</label>
+                        <label class="block text-sm font-medium text-gray-700">Dari Tanggal</label>
                         <input type="date" name="start_date" value="{{ request('start_date') }}" 
-                            class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-700 focus:border-green-700">
+                            class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-sm font-medium text-red-700">Sampai Tanggal</label>
+                        <label class="block text-sm font-medium text-gray-700">Sampai Tanggal</label>
                         <input type="date" name="end_date" value="{{ request('end_date') }}" 
-                            class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-700 focus:border-green-700">
+                            class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     </div>
                     <div class="flex items-end">
-                        <button type="submit"  class="px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors duration-300 text-sm font-medium flex items-center gap-2">
+                        <button type="submit"  class="px-4 py-2 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-700 transition-colors duration-300 text-sm font-medium flex items-center gap-2">
                             <i class="fas fa-search mr-2"></i> Terapkan Filter
                         </button>
                     </div>
@@ -130,35 +130,35 @@
         </div>
 
         <!-- Transaction Table -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="bg-gray-100 border-b border-gray-300 px-6 py-4">
+        <div class="bg-white rounded-xl shadow-sm border border-green-200 overflow-hidden">
+            <div class="bg-green-50 border-b border-green-200 px-6 py-4">
                 <div class="flex items-center">
-                    <i class="fas fa-table text-indigo-600 mr-3"></i>
-                    <h3 class="text-lg font-semibold text-gray-900">Detail Transaksi</h3>
+                    <i class="fas fa-table text-orange-500 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-green-900">Detail Transaksi</h3>
                 </div>
             </div>
 
             <div class="overflow-x-auto">
                 <table id="transactionTable" class="min-w-full divide-y divide-gray-300">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-green-50">
                         <tr>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kasir</th>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metode</th>
-                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">No</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Kode</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tanggal</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Kasir</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Item</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Total</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Metode</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-300">
+                    <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($transaksis as $transaksi)
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <tr class="hover:bg-green-50 transition-colors duration-150">
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
                                     {{ $loop->iteration }}
                                 </td>
-                                <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-700">
+                                <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">
                                     {{ $transaksi->kode_transaksi }}
                                 </td>
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -169,8 +169,8 @@
                                 </td>
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                     <div class="flex items-center">
-                                        <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mr-2">
-                                            <i class="fas fa-user text-xs text-yellow-600"></i>
+                                        <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center mr-2">
+                                            <i class="fas fa-user text-xs text-gray-600"></i>
                                         </div>
                                         {{ $transaksi->user->name ?? '-' }}
                                     </div>
@@ -180,7 +180,7 @@
                                         {{ $transaksi->details->sum('qty') }} item
                                     </span>
                                 </td>
-                                <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-bold text-green-800">
+                                <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-bold text-green-900">
                                     Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}
                                 </td>
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -191,7 +191,7 @@
                                 </td>
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="{{ route('admin.transaksi.struk', $transaksi->id) }}" target="_blank"
-                                       class="inline-flex items-center px-3 py-1.5 text-xs bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition-colors duration-200 hover:shadow-sm">
+                                       class="inline-flex items-center px-3 py-1.5 text-xs bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors duration-200 hover:shadow-sm">
                                         <svg class="w-3 h-3 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                                   d="M8 16h8M8 12h8m-7 8h6m1-10V4a1 1 0 00-1-1H7a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1z" />
@@ -224,7 +224,7 @@
         @endif
 
         <!-- Footer Info -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mt-6">
+        <div class="bg-white rounded-xl shadow-sm border border-green-200 p-4 mt-6">
             <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600 gap-3">
                 <div class="flex items-center">
                     <div class="w-2 h-2 bg-green-600 rounded-full mr-2 animate-pulse"></div>

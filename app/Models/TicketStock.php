@@ -13,6 +13,7 @@ class TicketStock extends Model
         'month',
         'year',
         'initial_stock',
+        'original_stock',
     ];
 
     /**
@@ -37,5 +38,25 @@ class TicketStock extends Model
     public function remainingStock()
     {
         return $this->initial_stock - $this->totalSold();
+    }
+
+    /**
+     * Hitung total penambahan stok setelah stok awal
+     */
+    public function totalAdditionalStock()
+    {
+        return $this->initial_stock - $this->original_stock;
+    }
+
+    /**
+     * Cek apakah ada penambahan stok
+     */
+    public function hasAdditionalStock()
+    {
+        // Pastikan original_stock tidak null dan ada selisih
+        if (is_null($this->original_stock)) {
+            return false;
+        }
+        return $this->totalAdditionalStock() > 0;
     }
 }

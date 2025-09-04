@@ -5,23 +5,24 @@
 
 @section('content')
     <!-- Header Section -->
-    <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6">
+    <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6 mb-6">
         <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
             <div class="flex-1">
-                <h2 class="text-xl md:text-2xl font-bold text-green-800 mb-2">Laporan Transaksi Hari Ini</h2>
-                <p class="text-gray-600">
+                <h2 class="text-xl md:text-2xl font-bold text-green-900 mb-2">Laporan Transaksi Hari Ini</h2>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-3">
                     <a href="{{ route('admin.reports.index') }}" 
-                       class="inline-flex items-center text-red-700 hover:text-red-800 transition-colors text-sm md:text-base">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       class="inline-flex items-center px-4 py-2 bg-green-100 hover:bg-green-200 text-green-800 rounded-lg text-sm font-medium transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
-                        Kembali ke menu laporan
+                        Kembali ke Menu Laporan
                     </a>
-                </p>
+                    <span class="text-sm text-gray-600">{{ now()->format('d F Y') }}</span>
+                </div>
             </div>
             <div class="flex-shrink-0">
                 <button id="exportExcel" 
-                        class="bg-green-50 hover:bg-green-100 border border-green-200 px-4 py-2.5 text-green-700 rounded-lg text-sm font-medium flex items-center justify-center transition-all duration-200 hover:shadow-sm">
+                        class="bg-orange-100 hover:bg-orange-200 border border-orange-300 px-4 py-2.5 text-orange-700 rounded-lg text-sm font-medium flex items-center justify-center transition-all duration-200 hover:shadow-sm">
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
                     </svg>
@@ -32,7 +33,7 @@
     </div>
 
     <!-- Table Section -->
-    <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-green-200">
         <!-- Responsive Table Container -->
         <div class="overflow-x-auto">
             <div class="min-w-full inline-block align-middle">
@@ -59,25 +60,25 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-300">
+                    <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($transaksis as $t)
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <tr class="hover:bg-green-50 transition-colors duration-150">
                                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
                                     <div class="font-medium">{{ $t->created_at->format('d M Y') }}</div>
                                     <div class="text-xs text-gray-500 md:hidden">{{ $t->created_at->timezone('Asia/Jakarta')->format('H:i') }} WIB</div>
                                 </td>
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
+                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-blue-600 font-mono">
                                     {{ $t->invoice ?? '-' }}
                                 </td>
                                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
                                     <div class="flex items-center">
-                                    <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center mr-2">
-                                            <i class="fas fa-user text-xs text-yellow-600"></i>
+                                    <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center mr-2">
+                                            <i class="fas fa-user text-xs text-gray-600"></i>
                                     </div>
                                     {{ $t->user->name ?? '_'}}
                                     </div>
                                 </td>
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm font-semibold text-green-800 text-right">
+                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm font-semibold text-green-900 text-right">
                                     <div class="text-sm md:text-base">Rp {{ number_format($t->total_harga, 0, ',', '.') }}</div>
                                 </td>
                                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
@@ -88,7 +89,7 @@
                                 </td>
                                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
                                     <a href="{{ route('admin.transaksi.struk', $t->id) }}" target="_blank"
-                                       class="inline-flex items-center px-2 md:px-3 py-1 md:py-2 text-xs md:text-sm bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors shadow-sm">
+                                       class="inline-flex items-center px-2 md:px-3 py-1 md:py-2 text-xs md:text-sm bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm">
                                         <svg class="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -113,12 +114,12 @@
                             </tr>
                         @endforelse
                     </tbody>
-                    <tfoot class="bg-gray-50">
-                        <tr class="border-t-2 border-green-800">
-                            <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 text-right font-bold text-green-800 text-sm md:text-lg">
+                    <tfoot class="bg-green-50">
+                        <tr class="border-t-2 border-green-700">
+                            <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 text-right font-bold text-green-900 text-sm md:text-lg">
                                 Total:
                             </td>
-                            <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 font-bold text-lg md:text-xl text-gray-900">
+                            <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 font-bold text-lg md:text-xl text-green-900">
                                 <div class="bg-blue-100 rounded-lg px-3 py-2 inline-block text-blue-700">
                                     Rp {{ number_format($total, 0, ',', '.') }}
                                 </div>
@@ -130,8 +131,8 @@
         </div>
         
         <!-- Mobile scroll indicator -->
-        <div class="md:hidden bg-gray-50 px-4 py-2 text-center">
-            <p class="text-xs text-gray-500">
+        <div class="md:hidden bg-green-100 px-4 py-2 text-center">
+            <p class="text-xs text-green-800">
                 <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
                 </svg>

@@ -100,7 +100,7 @@ public function store(Request $request)
     $todayFormatted = now()->format('dmY');
     $countToday = Data::whereDate('created_at', now())->count() + 1;
     $order = str_pad($countToday, 2, '0', STR_PAD_LEFT);
-    $codetrx = "am-{$order}-{$todayFormatted}-id";
+    $codetrx = "DT-{$order}-{$todayFormatted}-ID";
 
     Data::create([
         'codetrx' => $codetrx,

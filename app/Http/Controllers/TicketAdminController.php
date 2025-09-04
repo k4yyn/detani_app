@@ -11,7 +11,13 @@ class TicketAdminController extends Controller
     public function index()
     {
         $stocks = TicketStock::with('sales')->orderBy('year', 'desc')->orderBy('month', 'desc')->get();
-        return view('admin.tickets.index', compact('stocks'));
+        
+        // Cek apakah ada stock yang memiliki penambahan stok
+        $hasAdditionalStocks = $stocks->some(function($stock) {
+            return $stock->hasAdditionalStock();
+        });
+        
+        return view('admin.tickets.index', compact('stocks', 'hasAdditionalStocks'));
     }
 
     public function create()
@@ -118,11 +124,20 @@ class TicketAdminController extends Controller
         $request->validate([
             'month' => 'required',
             'year' => 'required|integer',
-            'initial_stock' => 'required|integer|min:0'
+            'additional_stock' => 'required|integer|min:1'
         ]);
 
-        $stock->update($request->all());
+        // Jika ini adalah penambahan stok pertama kali setelah pembuatan, set original_stock
+        if (is_null($stock->original_stock)) {
+            $stock->original_stock = $stock->initial_stock;
+            $stock->save();
+        }
 
-        return redirect()->route('admin.tickets.index')->with('success', 'Stok tiket berhasil diperbarui.');
+        // Tambahkan stok tambahan ke stok yang sudah ada
+        $stock->increment('initial_stock', $request->additional_stock);
+
+        return redirect()->route('admin.tickets.index')->with('success', 
+            "Berhasil menambahkan {$request->additional_stock} tiket ke stok {$stock->month} {$stock->year}. Total stok sekarang: " . number_format($stock->initial_stock)
+        );
     }
 }
