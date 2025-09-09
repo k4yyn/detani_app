@@ -1,13 +1,18 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="w-full px-4 py-6">
+<div class="max-w-9x1 mx-auto px-4 sm:px-2 lg:px-6 py-2">
     <!-- Header Section -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-green-800 mb-2">
-            <span class="text-green-700">📊</span> Laporan Tiket
-        </h1>
-        <p class="text-gray-600">Lihat ringkasan dan riwayat penjualan tiket per periode</p>
+    <div class="bg-green-800 px-4 sm:px-6 rounded-2xl md:px-8 py-4 md:py-6 mb-6">
+        <div class=flex-1>
+            <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-2xl font-semibold text-white flex items-center group">
+                <svg class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.929a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Laporan Tiket
+            </h1>
+            <p class="text-gray-300 text-sm sm:text-base md:text-md">Lihat ringkasan dan riwayat penjualan tiket per periode</p>
+        </div>
     </div>
 
     <!-- Filter Section -->

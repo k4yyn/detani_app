@@ -5,32 +5,35 @@
 
 @section('content')
     <!-- Header Section -->
-    <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6 mb-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
-            <div class="flex-1">
-                <h2 class="text-xl md:text-2xl font-bold text-green-900 mb-2">Laporan Transaksi Minggu Ini</h2>
-                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-3">
-                    <a href="{{ route('admin.reports.index') }}" 
-                       class="inline-flex items-center px-4 py-2 bg-green-100 hover:bg-green-200 text-green-800 rounded-lg text-sm font-medium transition-colors duration-200">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                        </svg>
-                        Kembali ke Menu Laporan
-                    </a>
-                    <span class="text-sm text-gray-600">{{ now()->startOfWeek()->format('d M Y') }} - {{ now()->endOfWeek()->format('d M Y') }}</span>
-                </div>
-            </div>
-            <div class="flex-shrink-0">
-                <button id="exportExcel" 
-                        class="bg-orange-100 hover:bg-orange-200 border border-orange-300 px-4 py-2.5 text-orange-700 rounded-lg text-sm font-medium flex items-center justify-center transition-all duration-200 hover:shadow-sm">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                    Export Excel
-                </button>
-            </div>
+    <div class="bg-green-900 rounded-xl shadow-sm border border-green-200 p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+
+        <div class="flex-shrink-0 order-2 md:order-1 w-full md:w-auto">
+            <a href="{{ route('admin.reports.index') }}"
+                class="inline-flex items-center justify-center w-full px-4 py-2 bg-green-100 hover:bg-green-200 text-green-800 rounded-lg text-sm font-medium transition-colors duration-200">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Kembali
+            </a>
+        </div>
+
+        <div class="flex-1 flex flex-col items-center text-center order-1 md:order-2">
+            <h2 class="text-xl md:text-2xl font-bold text-white">Laporan Transaksi Minggu Ini</h2>
+            <span class="text-sm text-gray-300 mt-1">{{ now()->format('d F Y') }}</span>
+        </div>
+
+        <div class="flex-shrink-0 order-3 md:order-3 w-full md:w-auto mt-4 md:mt-0">
+            <button id="exportExcel"
+                    class="bg-orange-100 hover:bg-orange-200 border border-orange-300 px-4 py-2.5 text-orange-700 rounded-lg text-sm font-medium flex items-center justify-center w-full transition-all duration-200 hover:shadow-sm">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+                Export Excel
+            </button>
         </div>
     </div>
+</div>
 
     <!-- Table Section -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-green-200">

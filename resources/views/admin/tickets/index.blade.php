@@ -1,25 +1,31 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="w-full px-4 py-6">
+<div class="max-w-9x1 mx-auto px-4 sm:px-2 lg:px-6 py-2">
     <!-- Header Section -->
-    <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-green-800 mb-2">
-            🎟️ Data Ticketing
-        </h1>
-        <p class="text-gray-600">Kelola stok tiket per bulan dengan mudah</p>
-    </div>
+    <div class="bg-green-800 px-4 sm:px-6 rounded-2xl md:px-8 py-4 md:py-6 mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
 
-    <!-- Action Button -->
-    <div class="flex justify-end mb-6">
+        <div class="flex-1">
+            <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-2xl font-semibold text-white flex items-center group">
+                <svg class="h-6 w-6 mr-3 sm:w-8 md:w-10 h-8 md:h-10 mr-2 sm:mr-3 md:mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Data Ticketing
+            </h1>
+            <p class="text-gray-300 text-sm sm:text-base md:text-md">Kelola stok tiket per bulan dengan mudah</p>
+        </div>
+
         <a href="{{ route('admin.tickets.create') }}" 
-           class="bg-green-800 hover:bg-green-900 text-white px-6 py-2 rounded-lg shadow-sm transition duration-200 flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+           class="w-full md:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-green-700 hover:bg-green-900 text-white font-medium sm:font-semibold text-sm sm:text-base rounded-lg md:rounded-xl shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200 group">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 4v16m8-8H4"></path>
             </svg>
-            Tambah Stok Bulan Ini
+            <span class="hidden sm:inline">Tambah Stok Bulan Ini</span>
+            <span class="sm:hidden">Tambah Stok</span>
         </a>
     </div>
+</div>
 
     <!-- Alert Section -->
     @if(session('success'))

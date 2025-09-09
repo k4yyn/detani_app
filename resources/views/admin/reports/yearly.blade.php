@@ -8,47 +8,49 @@
     $selectedYear = request('tahun', now()->year);
 @endphp
 
-<div class="bg-white rounded-xl shadow-sm border border-green-200 p-4 md:p-6">
-    <!-- Header Section -->
-    <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
-        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-            <h2 class="text-xl font-bold text-green-900 flex items-center">
-                <i class="fas fa-calendar mr-2 text-green-700"></i> 
-                <span>Laporan Tahunan</span>
-                <span class="ml-2 text-green-800">({{ $selectedYear }})</span>
-            </h2>
-            
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                <a href="{{ route('admin.reports.index') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-green-100 hover:bg-green-200 text-green-800 rounded-lg text-sm font-medium transition-colors duration-200">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
-                    Kembali ke Menu Laporan
-                </a>
-                
-                <form method="GET" action="{{ route('admin.reports.yearly') }}" class="flex items-center">
-                    <label for="selectYear" class="text-sm font-medium text-gray-700 mr-2 whitespace-nowrap">Tahun:</label>
-                    <select id="selectYear" 
-                            name="tahun" 
-                            onchange="this.form.submit()"
-                            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all">
-                        @for ($i = 2020; $i <= date('Y'); $i++)
-                            <option value="{{ $i }}" {{ $tahun == $i ? 'selected' : '' }}>{{ $i }}</option>
-                        @endfor
-                    </select>
-                </form>
-            </div>
+<div class="bg-green-900 rounded-xl shadow-sm border border-green-200 p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+
+        <div class="flex-shrink-0">
+            <a href="{{ route('admin.reports.index') }}" 
+               class="inline-flex items-center px-4 py-2 bg-green-100 hover:bg-green-200 text-green-800 rounded-lg text-sm font-medium transition-colors duration-200 mb-3 md:mb-0">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Kembali
+            </a>
         </div>
 
-        <div class="flex justify-end">
+        <div class="flex-1 flex flex-col items-center text-center">
+            <h2 class="text-xl md:text-2xl font-bold text-white mb-1">
+                Laporan Tahunan
+            </h2>
+            <span class="text-xl text-gray-300">Tahun {{ $selectedYear }}</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-end gap-3 mt-4 md:mt-0">
+            <form method="GET" action="{{ route('admin.reports.yearly') }}" class="flex items-center w-full sm:w-auto">
+                <label for="selectYear" class="text-sm font-medium text-white mr-2 whitespace-nowrap hidden sm:block">Tahun:</label>
+                <select id="selectYear" 
+                        name="tahun" 
+                        onchange="this.form.submit()"
+                        class="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all">
+                    @for ($i = 2020; $i <= date('Y'); $i++)
+                        <option value="{{ $i }}" {{ $selectedYear == $i ? 'selected' : '' }}>{{ $i }}</option>
+                    @endfor
+                </select>
+            </form>
+
             <button id="exportExcel" 
-                    class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all duration-200 flex items-center shadow-sm hover:shadow-md">
-                <i class="fas fa-file-excel mr-2"></i> 
-                <span class="hidden sm:inline">Export</span> Excel
+                    class="w-full sm:w-auto px-4 py-2.5 bg-orange-100 hover:bg-orange-200 text-orange-700 border border-orange-300 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+                Export Excel
             </button>
         </div>
     </div>
+</div>
 
     <!-- Statistics Cards -->
     <div class="mb-8">
@@ -214,7 +216,6 @@
             </table>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')

@@ -1,97 +1,29 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-4 lg:py-8">
-    <div class="container mx-auto px-4 max-w-7xl">
+<div >
+    
+    <div class="max-w-9x1 mx-auto px-4 sm:px-2 lg:px-6 py-2">
         <!-- Header -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 lg:mb-8 overflow-hidden">
             <div class="bg-green-800 px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div class="flex-1">
-                        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white flex items-center group">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 mr-3 sm:mr-4 transform transition-transform duration-300 group-hover:rotate-12 flex-shrink-0" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24">
+                        <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-2xl font-semibold text-white flex items-center group">
+                            <svg class="w-6 h-6 sm:w-8 md:w-10 h-8 md:h-10 mr-2 sm:mr-3 md:mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                             </svg>
                             <span class="relative break-words">
                                 {{ ucfirst($kategori) }}
-                                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-white/30 transition-all duration-300 group-hover:w-full"></span>
                             </span>
                         </h1>
-                        <p class="text-white mt-2 text-base sm:text-lg">Daftar produk kategori {{ $kategori }}</p>
+                        <p class="text-gray-300 text-sm sm:text-base md:text-md">Daftar produk kategori {{ $kategori }}</p>
                     </div>
                     <div class="flex-shrink-0">
                         <div class="bg-white/20 rounded-lg px-3 py-2 sm:p-3">
                             <span class="text-white font-semibold text-sm sm:text-lg">{{ $data->count() }} Produk</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Action Bar -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 lg:mb-8">
-            <div class="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:gap-4 lg:items-center lg:justify-between">
-                <!-- Back Button -->
-                <div class="order-1 lg:order-1">
-                    <a href="{{ route('admin.data.index') }}"
-                       class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 group">
-                        <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        <span class="whitespace-nowrap">Kembali</span>
-                    </a>
-                </div>
-
-                <!-- Search Form -->
-                <div class="order-3 lg:order-2 flex-1 lg:max-w-2xl">
-                    <form action="{{ route('admin.data.by-kategori', $kategori) }}" method="GET" class="w-full">
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                            <div class="relative flex-1">
-                                @if(request('search'))
-                                <button type="button"
-                                    onclick="window.location.href='{{ route('admin.data.by-kategori', $kategori) }}'"
-                                    class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-700 z-10 transition-colors"
-                                    title="Hapus pencarian"
-                                    aria-label="Hapus pencarian">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                </button>
-                                @else
-                                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-600 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                                @endif
-                                <input
-                                    type="text"
-                                    name="search"
-                                    value="{{ request('search') }}"
-                                    placeholder="Cari dalam kategori {{ $kategori }}..."
-                                    class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-all duration-200 hover:border-gray-400 text-sm sm:text-base"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                class="px-4 sm:px-6 py-3 bg-green-800 hover:bg-green-900 text-white font-semibold rounded-xl shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                                <span class="hidden sm:inline">Cari</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Add Button -->
-                <div class="order-2 lg:order-3">
-                    <a href="{{ route('admin.data.create') }}"
-                       class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-green-800 hover:bg-green-900 text-white font-semibold rounded-xl shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200 group">
-                        <svg class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-200 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        <span class="whitespace-nowrap">Tambah Data</span>
-                    </a>
                 </div>
             </div>
         </div>

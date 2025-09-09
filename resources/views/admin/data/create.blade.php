@@ -1,18 +1,18 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="min-h-screen py-8 bg-gray-50">
-    <div class="container mx-auto px-4 max-w-4xl">
+<div>
+    <div class="max-w-9x1 mx-auto px-4 sm:px-2 lg:px-6 py-2">
         <!-- Header Section -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-8 overflow-hidden">
             <div class="bg-green-800 px-8 py-6">
-                <h1 class="text-3xl font-bold text-white flex items-center">
-                    <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-2xl font-semibold text-white flex items-center group">
+                    <svg class="w-6 h-6 sm:w-8 md:w-10 h-8 md:h-10 mr-2 sm:mr-3 md:mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
                     Tambah Data Barang
                 </h1>
-                <p class="text-white mt-2">Lengkapi informasi barang dengan detail yang akurat</p>
+                <p class="text-gray-300 text-sm sm:text-base md:text-md">Lengkapi informasi barang dengan detail yang akurat</p>
             </div>
         </div>
 

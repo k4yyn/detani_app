@@ -1,12 +1,13 @@
 @extends('layouts.admin')
 
 @section('content')
-<!-- Main Container dengan Background yang Lebih Lembut -->
-<div class="min-h-screen bg-green-50">
+
+
+<div>
     <!-- Main Content Container -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-9x1 mx-auto px-4 sm:px-2 lg:px-6 py-2">
         <!-- Dashboard Header -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
             <div class="space-y-2">
                 <h1 class="text-3xl sm:text-4xl font-bold text-green-900">
                     Dashboard Admin
@@ -19,6 +20,8 @@
                 <span class="font-medium text-green-800">{{ now()->isoFormat('D MMMM Y') }}</span>
             </div>
         </div>
+
+        <hr class="w-full h-px bg-green-200 border-0 mb-10">
 
         <!-- Stats Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
