@@ -4,16 +4,16 @@
 <div class="container mx-auto px-4 py-6 max-w-7xl">
     <!-- Header Section -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        <div class="p-6 border-b border-gray-100">
+        <div class="bg-gradient-to-r from-green-700 to-green-800 p-6 rounded-t-lg">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <h1 class="text-2xl font-bold text-gray-800">
+                <h1 class="text-2xl font-bold text-white">
                     Nota Harian
-                    <span class="block sm:inline text-lg font-medium text-gray-500 mt-1 sm:mt-0 sm:ml-2">
+                    <span class="block sm:inline text-lg font-medium text-green-100 mt-1 sm:mt-0 sm:ml-2">
                         {{ now()->format('d M Y') }}
                     </span>
                 </h1>
                 <a href="{{ route('user.nota.notaHarian.cetak') }}" 
-                   class="inline-flex items-center justify-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-sm">
+                   class="inline-flex items-center justify-center px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors duration-200 shadow-sm">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
                     </svg>
@@ -37,7 +37,7 @@
             <!-- Desktop Table View -->
             <div class="hidden md:block overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-gray-50 border-b border-gray-200">
+                    <thead class="bg-green-50 border-b border-green-200">
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Kode Transaksi</th>
@@ -48,7 +48,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @foreach($transaksi as $t)
-                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                        <tr class="hover:bg-green-50 transition-colors duration-150">
                             <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -79,7 +79,7 @@
             <!-- Mobile Card View -->
             <div class="md:hidden p-4 space-y-4">
                 @foreach($transaksi as $t)
-                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <div class="bg-green-50 rounded-lg p-4 border border-green-200">
                     <div class="flex items-start justify-between mb-3">
                         <div>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mb-2">
@@ -109,7 +109,7 @@
             </div>
 
             <!-- Summary Footer (if there are transactions) -->
-            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+            <div class="bg-green-50 px-6 py-4 border-t border-green-200">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-600">
                     <span>Total {{ $transaksi->count() }} transaksi hari ini</span>
                     <span class="font-medium mt-1 sm:mt-0">

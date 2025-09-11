@@ -20,24 +20,7 @@
             <!-- Top Bar -->
             <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center space-x-3">
-                    <button class="p-2 hover:bg-gray-100 rounded-lg">
-                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
                     <h1 class="text-xl font-bold text-green-700">TRANSAKSI</h1>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="p-2 hover:bg-gray-100 rounded-full">
-                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                        </svg>
-                    </button>
-                    <button class="p-2 hover:bg-gray-100 rounded-full">
-                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                        </svg>
-                    </button>
                 </div>
             </div>
 
@@ -62,13 +45,6 @@
                     </svg>
                 </button>
                 
-                
-                <!-- Barcode -->
-                <button class="p-2 hover:bg-gray-100 rounded-lg">
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                </button>
                 
                 <!-- Filter Dropdown -->
                 <div class="flex-1 flex justify-end">

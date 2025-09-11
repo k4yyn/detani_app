@@ -1,18 +1,26 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="p-4 bg-gray-50 min-h-screen">
+<div class="p-4 bg-green-50 min-h-screen">
     <div class="max-w-4xl mx-auto">
 
     <!-- Notifikasi sukses + tombol cetak struk  -->
     @if(session('success'))
-        <div class="alert alert-success">
+        <div class="bg-green-100 border border-green-300 text-green-800 p-4 rounded-lg mb-6 flex items-center">
+            <svg class="w-5 h-5 mr-3 text-green-700" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
             {{ session('success') }}
             @if(session('kembalian'))
                 <br>Kembalian: Rp {{ number_format(session('kembalian')) }}
             @endif
             @if(session('last_transaksi_id'))
-                <br><a href="{{ route('user.transaksi.struk', session('last_transaksi_id')) }}" target="_blank" class="btn btn-sm btn-primary mt-2">Cetak Struk</a>
+                <br><a href="{{ route('user.transaksi.struk', session('last_transaksi_id')) }}" target="_blank" class="inline-flex items-center mt-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200 transition-colors">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16h8M8 12h8m-7 8h6m1-10V4a1 1 0 00-1-1H7a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1z"></path>
+                    </svg>
+                    Cetak Struk
+                </a>
             @endif
         </div>
     @endif
@@ -20,15 +28,15 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
             <div class="flex items-center space-x-3">
-                <a href="{{ route('user.transaksi.index') }}" class="p-2 hover:bg-gray-200 rounded-lg transition-colors">
-                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('user.transaksi.index') }}" class="p-2 hover:bg-green-200 rounded-lg transition-colors">
+                    <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </a>
-                <h2 class="text-2xl font-bold text-gray-800">Keranjang Belanja</h2>
+                <h2 class="text-2xl font-bold text-green-900">Keranjang Belanja</h2>
             </div>
             @if(count($keranjang) > 0)
-                <button onclick="clearCart()" class="text-red-500 hover:text-red-700 text-sm font-medium">
+                <button onclick="clearCart()" class="text-red-600 hover:text-red-700 text-sm font-medium">
                     Kosongkan Keranjang
                 </button>
             @endif
@@ -36,7 +44,7 @@
 
         @if (count($keranjang) == 0)
             <!-- Empty Cart -->
-            <div class="bg-white rounded-lg shadow-sm p-8 text-center">
+            <div class="bg-white rounded-xl shadow-sm border border-green-200 p-8 text-center">
                 <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3H3m4 10v6a1 1 0 001 1h8a1 1 0 001-1v-6M9 17h6"></path>
                 </svg>
@@ -53,10 +61,10 @@
         @else
 
            <!-- Cart Items -->
-<div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+<div class="bg-white rounded-xl shadow-sm border border-green-200 overflow-hidden mb-6">
     <div class="overflow-x-auto">
         <table class="w-full">
-            <thead class="bg-gray-50 border-b">
+            <thead class="bg-green-50 border-b border-green-200">
                 <tr>
                     <th class="text-left py-4 px-6 font-semibold text-gray-700">Produk</th>
                     <th class="text-center py-4 px-4 font-semibold text-gray-700">Harga</th>
@@ -67,16 +75,16 @@
             </thead>
             <tbody id="cart-items">
                 @foreach ($keranjang as $index => $item)
-                    <tr class="border-b hover:bg-gray-50 cart-item" data-id="{{ $item['id'] }}">
+                    <tr class="border-b border-green-100 hover:bg-green-50 cart-item" data-id="{{ $item['id'] }}">
                         <td class="py-4 px-6">
                             <div class="flex items-center space-x-3">
                                 <div class="w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="font-medium text-gray-800">{{ $item['nama'] }}</h4>
+                                    <h4 class="font-medium text-green-900">{{ $item['nama'] }}</h4>
                                     <p class="text-sm text-gray-500">ID: {{ $item['id'] }}</p>
                                 </div>
                             </div>
@@ -107,7 +115,7 @@
                                 </button>
                             </div>
                         </td>
-                        <td class="py-4 px-4 text-right font-semibold text-gray-800 subtotal">
+                        <td class="py-4 px-4 text-right font-semibold text-green-900 subtotal">
                             Rp {{ number_format($item['subtotal']) }}
                         </td>
                         <td class="py-4 px-4 text-center space-x-1">
@@ -133,7 +141,7 @@
 
 
             <!-- Order Summary -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6 mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-lg font-semibold text-gray-700">Total Belanja:</span>
                     <span class="text-2xl font-bold text-orange-600" id="total-amount">Rp {{ number_format($total) }}</span>
@@ -141,8 +149,8 @@
             </div>
 
             <!-- Checkout Form -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Pembayaran</h3>
+            <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6">
+                <h3 class="text-lg font-semibold text-green-900 mb-4">Pembayaran</h3>
                 <form action="{{ route('user.transaksi.checkout') }}" method="POST" id="checkout-form">
                     @csrf
                     <!-- Tambahan Informasi Transaksi -->
@@ -155,17 +163,17 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pelanggan</label>
-                                <input type="text" name="nama_pelanggan" class="w-full border rounded-lg px-4 py-2">
+                                <input type="text" name="nama_pelanggan" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Meja</label>
-                                <input type="text" name="nomor_meja" class="w-full border rounded-lg px-4 py-2">
+                                <input type="text" name="nomor_meja" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan Tambahan</label>
-                                <input type="text" name="keterangan_tambahan" class="w-full border rounded-lg px-4 py-2">
+                                <input type="text" name="keterangan_tambahan" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                             </div>
                         </div>
                     </div>
@@ -202,7 +210,7 @@
                                   placeholder="Catatan untuk transaksi ini..." 
                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"></textarea>
                          <label class="inline-flex items-center mt-2">
-                            <input type="checkbox" name="cetak_struk" class="form-checkbox text-indigo-600">
+                            <input type="checkbox" name="cetak_struk" class="form-checkbox text-green-600">
                             <span class="ml-2 text-sm text-gray-700">Cetak Struk setelah checkout</span>
                         </label>
                     </div>
@@ -249,20 +257,20 @@
     <!-- Modal Edit -->
     <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-lg shadow-lg relative">
-            <h3 class="text-lg font-semibold mb-4">Edit Harga & Diskon</h3>
+            <h3 class="text-lg font-semibold text-green-900 mb-4">Edit Harga & Diskon</h3>
             <form id="editForm">
                 <input type="hidden" id="editItemId">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-1">Harga (Rp)</label>
-                    <input type="number" id="editHarga" class="w-full border rounded px-3 py-2" required>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                    <input type="number" id="editHarga" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-transparent" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-1">Diskon (Rp)</label>
-                    <input type="number" id="editDiskon" class="w-full border rounded px-3 py-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Diskon (Rp)</label>
+                    <input type="number" id="editDiskon" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-transparent">
                 </div>
                 <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Simpan</button>
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors">Simpan</button>
                 </div>
             </form>
             <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700">✕</button>

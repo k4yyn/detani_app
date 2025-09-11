@@ -5,7 +5,7 @@
     <!-- Header Section -->
     <div class="mb-8 text-center">
         <h1 class="text-3xl font-bold text-gray-800 mb-2">
-            <span class="text-blue-600">💰</span> Input Penjualan Tiket
+            <span class="text-green-600">💰</span> Input Penjualan Tiket
         </h1>
         <p class="text-gray-600">Catat penjualan tiket harian Anda</p>
     </div>
@@ -45,7 +45,7 @@
             <button type="button" class="absolute top-2 right-2 p-1 text-red-600 hover:text-red-800" 
                     onclick="this.parentElement.style.display='none'">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18-6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
@@ -53,9 +53,9 @@
 
     <!-- Stock Information Section -->
     <div class="bg-white shadow-lg rounded-lg mb-8">
-        <div class="px-6 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-gray-200">
+        <div class="px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                 </svg>
                 Informasi Stok Bulan Ini
@@ -80,17 +80,17 @@
                 </div>
 
                 <!-- Total Terjual -->
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-yellow-600 mb-1">Total Terjual</p>
-                            <p class="text-2xl font-bold text-yellow-800">{{ number_format($stock->totalSold()) }}</p>
-                            <p class="text-xs text-yellow-600">
+                            <p class="text-sm font-medium text-orange-600 mb-1">Total Terjual</p>
+                            <p class="text-2xl font-bold text-orange-800">{{ number_format($stock->totalSold()) }}</p>
+                            <p class="text-xs text-orange-600">
                                 {{ $stock->initial_stock > 0 ? round(($stock->totalSold() / $stock->initial_stock) * 100, 1) : 0 }}% terjual
                             </p>
                         </div>
-                        <div class="p-3 bg-yellow-100 rounded-full">
-                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-3 bg-orange-100 rounded-full">
+                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                             </svg>
                         </div>
@@ -139,85 +139,87 @@
     </div>
 
     <!-- Sales Form Section -->
-<div class="bg-white shadow-lg rounded-lg">
-    <div class="px-6 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-            </svg>
-            Form Input Penjualan
-        </h2>
-    </div>
-    
-    <form action="{{ route('user.tickets.store') }}" method="POST" class="p-6 space-y-6">
-        @csrf
-        <input type="hidden" name="ticket_stock_id" value="{{ $stock->id }}">
+    <div class="bg-white shadow-lg rounded-lg">
+        <div class="px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Form Input Penjualan
+            </h2>
+        </div>
         
-        <!-- Tanggal Penjualan -->
-        <div class="space-y-2">
-            <label for="date" class="block text-sm font-medium text-gray-700">Tanggal Penjualan <span class="text-red-500">*</span></label>
-            <input type="date" name="date" id="date"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                value="{{ now()->toDateString() }}" 
-                min="{{ now()->startOfMonth()->toDateString() }}" 
-                max="{{ now()->endOfMonth()->toDateString() }}" 
-                required>
-        </div>
+        <form action="{{ route('user.tickets.store') }}" method="POST" class="p-6 space-y-6">
+            @csrf
+            <input type="hidden" name="ticket_stock_id" value="{{ $stock->id }}">
+            
+            <!-- Tanggal Penjualan -->
+            <div class="space-y-2">
+                <label for="date" class="block text-sm font-medium text-gray-700">Tanggal Penjualan <span class="text-red-500">*</span></label>
+                <input type="date" name="date" id="date"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    value="{{ now()->toDateString() }}" 
+                    min="{{ now()->startOfMonth()->toDateString() }}" 
+                    max="{{ now()->endOfMonth()->toDateString() }}" 
+                    required>
+            </div>
 
-        <!-- Jumlah Tiket Terjual -->
-        <div class="space-y-2">
-            <label for="sold_amount" class="block text-sm font-medium text-gray-700">Jumlah Tiket Terjual <span class="text-red-500">*</span></label>
-            <input type="number" name="sold_amount" id="sold_amount"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                placeholder="Masukkan jumlah..." min="1" max="{{ $stock->remainingStock() }}" required>
-        </div>
+            <!-- Jumlah Tiket Terjual -->
+            <div class="space-y-2">
+                <label for="sold_amount" class="block text-sm font-medium text-gray-700">Jumlah Tiket Terjual <span class="text-red-500">*</span></label>
+                <input type="number" name="sold_amount" id="sold_amount"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="Masukkan jumlah..." min="1" max="{{ $stock->remainingStock() }}" required>
+            </div>
 
-        <!-- Harga per Tiket -->
-        <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Harga per Tiket</label>
-            <input type="text" id="price_per_ticket" name="price_per_ticket" readonly
-                class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
-        </div>
+            <!-- Harga per Tiket -->
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Harga per Tiket</label>
+                <input type="text" id="price_per_ticket" name="price_per_ticket" readonly
+                    class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
+            </div>
 
-        <!-- Total Kotor -->
-        <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Total Kotor</label>
-            <input type="text" id="gross_total" name="gross_total" readonly
-                class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
-        </div>
+            <!-- Total Kotor -->
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Total Kotor</label>
+                <input type="text" id="gross_total" name="gross_total" readonly
+                    class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
+            </div>
 
-        <!-- Diskon -->
-        <div class="space-y-2">
-            <label for="discount" class="block text-sm font-medium text-gray-700">Diskon</label>
-            <input type="number" name="discount" id="discount" value="0"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500">
-        </div>
+            <!-- Diskon -->
+            <div class="space-y-2">
+                <label for="discount" class="block text-sm font-medium text-gray-700">Diskon</label>
+                <input type="number" name="discount" id="discount" value="0"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
 
-        <!-- Total Bersih -->
-        <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Total Bersih</label>
-            <input type="text" id="net_total" name="net_total" readonly
-                class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
-        </div>
+            <!-- Total Bersih -->
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Total Bersih</label>
+                <input type="text" id="net_total" name="net_total" readonly
+                    class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
+            </div>
 
-        <!-- Catatan -->
-        <div class="space-y-2">
-            <label for="notes" class="block text-sm font-medium text-gray-700">Catatan</label>
-            <textarea name="notes" id="notes" rows="2"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-                placeholder="Tambahkan catatan jika ada..."></textarea>
-        </div>
+            <!-- Catatan -->
+            <div class="space-y-2">
+                <label for="notes" class="block text-sm font-medium text-gray-700">Catatan</label>
+                <textarea name="notes" id="notes" rows="2"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="Tambahkan catatan jika ada..."></textarea>
+            </div>
 
-        <!-- Submit Button -->
-        <div class="pt-4 border-t border-gray-200">
-            <button type="submit"
-                class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg shadow-md flex items-center justify-center">
-                Simpan Penjualan
-            </button>
-        </div>
-    </form>
-</div>
-
+            <!-- Submit Button -->
+            <div class="pt-4 border-t border-gray-200">
+                <button type="submit"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Simpan Penjualan
+                </button>
+            </div>
+        </form>
+    </div>
 
     <!-- Tips Section -->
     <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
