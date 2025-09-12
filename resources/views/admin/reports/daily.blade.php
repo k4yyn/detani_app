@@ -4,7 +4,6 @@
 @section('header', 'Laporan Harian')
 
 @section('content')
-    <!-- Header Section -->
     <div class="bg-green-900 rounded-xl shadow-sm border border-green-200 p-6 mb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         
