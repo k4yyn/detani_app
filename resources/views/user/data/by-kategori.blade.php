@@ -4,8 +4,8 @@
 <div class="min-h-screen py-8">
     <div class="container mx-auto px-4 max-w-7xl">
         <!-- Header -->
-        <div class="bg-white rounded-2xl shadow-xl border border-amber-100 mb-8 overflow-hidden">
-            <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-6">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 mb-8 overflow-hidden">
+            <div class="bg-gradient-to-r from-green-800 to-green-700 px-8 py-6">
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-3xl md:text-4xl font-bold text-white flex items-center group">
@@ -17,7 +17,7 @@
                                 <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-white/30 transition-all duration-300 group-hover:w-full"></span>
                             </span>
                         </h1>
-                        <p class="text-amber-100 mt-2 text-lg">Daftar produk kategori {{ $kategori }}</p>
+                        <p class="text-green-100 mt-2 text-lg">Daftar produk kategori {{ $kategori }}</p>
                     </div>
                     <div class="hidden lg:flex items-center space-x-4">
                         <div class="bg-white/20 rounded-lg p-3">
@@ -29,7 +29,7 @@
         </div>
 
         <!-- Action Bar -->
-        <div class="bg-white rounded-2xl shadow-xl border border-amber-100 p-6 mb-8">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 mb-8">
             <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
                 <a href="{{ route('user.data.index') }}"
                    class="w-full lg:w-auto inline-flex items-center justify-center px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 group">
@@ -51,7 +51,7 @@
                                 </svg>
                             </a>
                             @else
-                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-amber-400 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-400 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                             @endif
@@ -60,12 +60,12 @@
                                 name="search"
                                 value="{{ request('search') }}"
                                 placeholder="Cari dalam kategori {{ $kategori }}..."
-                                class="w-full pl-12 pr-4 py-3 border-2 border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 hover:border-amber-300"
+                                class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-green-400"
                             />
                         </div>
                         <button
                             type="submit"
-                            class="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2"
+                            class="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -78,13 +78,13 @@
         </div>
 
         <!-- Daftar Produk -->
-        <div class="bg-white rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
             @if($data->count() > 0)
-                <div class="divide-y divide-amber-100">
+                <div class="divide-y divide-gray-200">
                     @foreach ($data as $item)
-                        <div class="flex flex-col md:flex-row md:items-center justify-between px-6 py-5 hover:bg-amber-50 transition">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between px-6 py-5 hover:bg-green-50 transition">
                             <div class="flex items-center space-x-4">
-                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-amber-400 to-orange-400 rounded-xl flex items-center justify-center">
+                                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-green-700 to-green-800 rounded-xl flex items-center justify-center">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -147,7 +147,7 @@
                     </p>
                     @if(request('search'))
                         <a href="{{ route('user.data.by-kategori', $kategori) }}" 
-                           class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors">
+                           class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
@@ -165,11 +165,11 @@
             <!-- Mobile: 1 column, SM: 2 columns, MD: 2 columns, LG+: 4 columns -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <!-- Card 1: Total Produk -->
-                <div class="bg-white rounded-xl shadow-lg border border-amber-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                 </svg>
                             </div>
@@ -182,7 +182,7 @@
                 </div>
 
                 <!-- Card 2: Total Stok -->
-                <div class="bg-white rounded-xl shadow-lg border border-green-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -199,11 +199,11 @@
                 </div>
 
                 <!-- Card 3: Nilai Stok -->
-                <div class="bg-white rounded-xl shadow-lg border border-yellow-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                                 </svg>
                             </div>
@@ -218,11 +218,11 @@
                 </div>
 
                 <!-- Card 4: Rata-rata Harga -->
-                <div class="bg-white rounded-xl shadow-lg border border-purple-100 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                                 </svg>
                             </div>
