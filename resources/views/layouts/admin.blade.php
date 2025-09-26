@@ -6,6 +6,8 @@
     <meta name="theme-color" content="#166534">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
@@ -42,7 +44,7 @@
                             <i class="fas fa-bars text-lg"></i>
                         </button>
                         <div class="flex-shrink-0 flex items-center ml-4">
-                            <img class="h-14 w-auto -mt-2" src="{{ asset('asset/image/logo detani.png') }}" alt="Amaliah Logo">
+                            <img class="h-14 w-auto -mt-2" src="{{ asset('asset/image/logo-detani.png') }}" alt="Amaliah Logo">
                             <span class="ml-2 text-lg font-medium text-gray-800 hidden sm:inline">Admin DeTani</span>
                         </div>
                     </div>
@@ -94,9 +96,9 @@
 
     <div class="flex items-center justify-between px-6 py-5 bg-green-900 text-white rounded-tr-xl">
         <div class="flex items-center">
-            <img class="h-14 w-auto -mt-2" src="{{ asset('asset/image/logo detani.png') }}" alt="Detani Logo">
+            <img class="h-14 w-auto -mt-2" src="{{ asset('asset/image/logo-detani.png') }}" alt="Detani Logo">
             <div class="ml-3">
-                <h2 class="text-xl font-bold tracking-tight">Admin Padel</h2>
+                <h2 class="text-xl font-bold tracking-tight">Admin Panel</h2>
             </div>
         </div>
         <button @click="showSidebar = false" class="text-green-200 hover:text-white transition-colors duration-200 focus:outline-none">
@@ -305,5 +307,27 @@
     </style>
 
     @stack('scripts')
+<script>
+console.log('🚀 Script loaded');
+if ("serviceWorker" in navigator) {
+  console.log('✅ Service Worker supported');
+  window.addEventListener("load", () => {
+    console.log('🔄 Registering Service Worker...');
+    navigator.serviceWorker
+      .register("/service-worker.js")  // Pakai path absolut
+      .then(reg => {
+        console.log("✅ Service Worker registered successfully");
+        console.log("📍 Scope:", reg.scope);
+        console.log("📦 Registration:", reg);
+      })
+      .catch(err => {
+        console.error("❌ Service Worker registration failed:");
+        console.error(err);
+      });
+  });
+} else {
+  console.error("❌ Service Worker not supported");
+}
+</script>
 </body>
 </html>
