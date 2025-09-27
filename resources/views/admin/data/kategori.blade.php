@@ -24,16 +24,16 @@
                             <span class="sm:hidden">Kelola kategori barang</span>
                         </p>
                     </div>
-                    <div class="hidden lg:flex items-center space-x-4">
+                
                         <a href="{{ route('admin.data.create') }}"
                        class="w-full md:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-green-700 hover:bg-green-900 text-white font-medium sm:font-semibold text-sm sm:text-base rounded-lg md:rounded-xl shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200 group">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 4v16m8-8H4"></path>
                         </svg>
                         <span class="hidden sm:inline">Tambah Data</span>
-                        <span class="sm:hidden">Tambah</span>
+                        <span class="sm:hidden">Tambah Data</span>
                     </a>
-                    </div>
+    
                 </div>
             </div>
         </div> 

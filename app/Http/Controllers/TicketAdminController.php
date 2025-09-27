@@ -47,6 +47,7 @@ class TicketAdminController extends Controller
                 'month' => ucfirst(strtolower($request->month)),
                 'year' => $request->year,
                 'initial_stock' => $request->initial_stock,
+                'original_stock' => $request->initial_stock,
             ]);
         }
 
