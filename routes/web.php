@@ -75,6 +75,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/keranjang/tambah', [TransaksiKasirController::class, 'tambahKeranjang'])->name('keranjang.tambah');
             Route::get('/keranjang', [TransaksiKasirController::class, 'keranjang'])->name('keranjang');
             Route::post('/keranjang/update/{id}', [TransaksiKasirController::class, 'updateQty'])->name('keranjang.update');
+            Route::delete('/keranjang/clear', [TransaksiKasirController::class, 'clear'])
+             ->name('keranjang.clear');
             Route::delete('/keranjang/{id}', [TransaksiKasirController::class, 'hapusItem'])->name('keranjang.hapus');
             Route::post('/keranjang/edit/{id}', [TransaksiKasirController::class, 'editHargaDiskon'])->name('keranjang.edit');
             Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');

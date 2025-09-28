@@ -323,7 +323,7 @@
 
         showLoading(true);
         try {
-            const url = `{{ url('user/transaksi/keranjang/hapus') }}/${productId}`;
+            const url = "{{ route('user.transaksi.keranjang.hapus', ':id') }}".replace(':id', productId);   
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -343,9 +343,20 @@
     }
 
     // --- Clear cart ---
-    function clearCart() {
-        if (!confirm('Apakah Anda yakin ingin mengosongkan keranjang?')) return;
-        alert('Fitur kosongkan keranjang akan diimplementasikan');
+     function clearCart() {
+        if (confirm("Yakin ingin mengosongkan keranjang?")) {
+           fetch("{{ route('user.transaksi.keranjang.clear') }}", {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload(); // refresh halaman
+                }
+            });
+        }
     }
 
     // --- Hitung kembalian ---

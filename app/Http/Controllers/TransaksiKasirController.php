@@ -11,13 +11,14 @@ use Illuminate\Support\Facades\Session;
 class TransaksiKasirController extends Controller
 {
     public function index()
-    {
-        $data = Data::all();
-        $keranjang = Session::get('keranjang', []);
-        $total = collect($keranjang)->sum('subtotal');
+{
+    $data = Data::orderByRaw('stok = 0, nama_barang ASC')->get();
 
-        return view('user.transaksi.index', compact('data', 'keranjang', 'total'));
-    }
+    $keranjang = Session::get('keranjang', []);
+    $total = collect($keranjang)->sum('subtotal');
+
+    return view('user.transaksi.index', compact('data', 'keranjang', 'total'));
+}
 
     public function tambahKeranjang(Request $request)
 {
@@ -92,6 +93,17 @@ class TransaksiKasirController extends Controller
         $total = collect($keranjang)->sum('subtotal');
 
         return view('user.transaksi.keranjang', compact('keranjang', 'total'));
+    }
+
+    public function clear()
+    {
+        // kalau pakai session
+        session()->forget('keranjang');
+
+        // kalau pakai DB
+        // Keranjang::where('user_id', auth()->id())->delete();
+
+        return response()->json(['success' => true]);
     }
 
     public function hapusItem($id)
