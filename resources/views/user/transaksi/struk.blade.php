@@ -1,27 +1,43 @@
-@extends('layouts.user')
-
-@section('content')
-<div class="min-h-screen bg-gray-50">
-    @if(session('success'))
-        <div style="background: #d4edda; color: #155724; padding: 10px; margin-bottom: 10px; border-radius: 4px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Struk Transaksi</title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 14px; }
-        .struk { max-width: 400px; margin: auto; border: 1px solid #ccc; padding: 20px; }
+    @media print {
+        nav, .navbar, .footer-nav, .btn-cetak, .mt-4, .no-print {
+            display: none !important;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        @page {
+            size: 58mm auto;   /* ganti ke 80mm auto kalau pakai kertas 80mm */
+            margin: 0;         
+        }
+
+        .struk {
+            width: 100%;
+            max-width: 58mm;
+            margin: auto;
+        }
+
         .center { text-align: center; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 6px 0; border-bottom: 1px dashed #ccc; text-align: left; }
+        th, td { padding: 4px 0; border-bottom: 1px dashed #ccc; text-align: left; font-size: 12px; }
         .total-row td { font-weight: bold; }
-        .footer { margin-top: 20px; text-align: center; font-size: 13px; }
-        .btn-cetak { margin-top: 20px; text-align: center; }
-        .btn-cetak button { padding: 8px 16px; font-size: 14px; cursor: pointer; }
+        .footer { margin-top: 10px; text-align: center; font-size: 11px; }
+    }
     </style>
-    <body>
+</head>
+<body>
     <div class="struk">
         <div class="center">
+            <img src="{{ asset('asset/image/logo-detani.png') }}" alt="Logo Kantin" style="display:block; margin:0 auto 2px auto; max-width:120px;">
             <h2>Kantin DeTani</h2>
             <p>Jln. Goalpara, Kp. Cijeruk, Sukamekar, Kec. Sukaraja, Sukabumi <br>Telp: 0819-1188-0088</p>
         </div>
@@ -30,7 +46,7 @@
 
         <p>
             <strong>Kode Transaksi:</strong> {{ $transaksi->kode_transaksi }}<br>
-            <strong>Tanggal:</strong> {{ $transaksi->created_at->format('d/m/Y H:i') }}<br>
+            <strong>Tanggal:</strong> {{ $transaksi->created_at->timezone('Asia/Jakarta')->format('d/m/Y H:i') }}<br>
             <strong>Kasir:</strong> {{ optional($transaksi->user)->name ?? '-' }}<br>
             @if ($transaksi->nama_pelanggan)
                 <strong>Pelanggan:</strong> {{ $transaksi->nama_pelanggan }}<br>
@@ -61,7 +77,7 @@
                                 <br><small>Diskon: Rp {{ number_format($item->diskon, 0, ',', '.') }}</small>
                             @endif
                             @if ($transaksi->keterangan)
-                            <br><strong>Catatan:</strong> {{ $transaksi->keterangan }}<br>
+                                <br><strong>Catatan:</strong> {{ $transaksi->keterangan }}
                             @endif
                         </td>
                         <td>{{ $item->qty }}</td>
@@ -82,11 +98,11 @@
                     <td>Rp {{ number_format($transaksi->kembalian, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3">Metode Pembayaran</td>
+                    <td colspan="3">Metode</td>
                     <td>{{ $transaksi->metode_pembayaran ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="3">Status Pembayaran</td>
+                    <td colspan="3">Status</td>
                     <td>{{ $transaksi->status_pembayaran ?? '-' }}</td>
                 </tr>
             </tbody>
@@ -97,18 +113,22 @@
             <p>~ De Tani Waterpark ~</p>
         </div>
 
-        <!-- Button kembali -->
-    <a href="{{ route('user.transaksi.index') }}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Kembali ke Transaksi</a>
-</div>
+        <!-- Tombol kembali (hanya tampil di layar, tidak ikut ke print) -->
+        <a href="{{ route('user.transaksi.index') }}" 
+           class="no-print mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+           Kembali ke Transaksi
+        </a>
+    </div>
 
-@if (request('print') === 'true')
-<script>
-    window.onload = function () {
-        window.print();
-        setTimeout(function () {
-            window.location.href = "{{ route('user.transaksi.index') }}";
-        }, 1000);
-    };
-</script>
-@endif
-@endsection
+    @if (request('print') === 'true')
+    <script>
+        window.onload = function () {
+            window.print();
+            setTimeout(function () {
+                window.location.href = "{{ route('user.transaksi.index') }}";
+            }, 1000);
+        };
+    </script>
+    @endif
+</body>
+</html>
