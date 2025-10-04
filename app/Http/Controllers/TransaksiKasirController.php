@@ -234,7 +234,7 @@ class TransaksiKasirController extends Controller
 
     // Cek apakah user ingin mencetak struk
     $cetak = $request->has('cetak_struk') ? 'true' : 'false';
-
+ 
       if ($request->has('cetak_struk')) {
         return redirect()->route('user.transaksi.struk', [
             'id' => $transaksi->id

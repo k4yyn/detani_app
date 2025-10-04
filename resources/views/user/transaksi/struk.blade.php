@@ -6,68 +6,149 @@
     <title>Struk Transaksi - Kantin DeTani</title>
     <style>
         /* CSS Thermal Printer */
+             * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            line-height: 1.1;
+        }
+        
         body {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px; /* Lebih kecil untuk thermal */
+            font-weight: normal;
+            width: 58mm; /* Standar thermal 58mm */
             max-width: 58mm;
             margin: 0 auto;
-            padding: 10px;
+            padding: 2mm;
             background: white;
-            line-height: 1.3;
+            color: black;
+        }
+
+        /* HEADER */
+        .center { 
+            text-align: center; 
+            margin-bottom: 8px;
         }
         
-        .struk-content {
-            background: white;
+        .center img {
+            max-width: 60px !important; /* Logo lebih kecil */
+            height: auto;
+            margin-bottom: 5px;
         }
         
-        .center { text-align: center; }
-        
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin: 8px 0;
+        .center h2 {
+            font-size: 13px;
+            margin: 3px 0;
+            font-weight: bold;
         }
         
-        th, td { 
-            padding: 3px 0; 
+        .center p {
+            font-size: 9px;
+            margin: 1px 0;
+            line-height: 1.2;
+        }
+
+        /* DIVIDER */
+        hr {
+            border: none;
+            border-top: 1px dashed #000;
+            margin: 6px 0;
+        }
+
+        /* INFO TRANSAKSI */
+        .transaction-info {
+            margin-bottom: 8px;
+            font-size: 10px;
+        }
+        
+        .transaction-info p {
+            margin: 2px 0;
+        }
+
+        /* TABLE STYLING */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 6px 0;
+            font-size: 10px;
+        }
+        
+        th, td {
+            padding: 2px 0;
             border-bottom: 1px dashed #ccc;
         }
         
-        .total-row td { 
-            font-weight: bold; 
+        th {
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .total-row td {
+            font-weight: bold;
             border-bottom: 2px solid #000;
+            padding-top: 3px;
         }
-        
-        .footer { 
-            margin-top: 12px; 
-            text-align: center; 
-            font-size: 11px;
+
+        /* FOOTER */
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 9px;
         }
-        
-        /* Tombol Mobile */
+
+        /* PRINT SPECIFIC STYLES */
+        @media print {
+            @page {
+                size: 58mm auto; /* UKURAN THERMAL 58mm */
+                margin: 0;
+                padding: 0;
+            }
+            
+            body {
+                width: 58mm !important;
+                margin: 0 !important;
+                padding: 2mm !important;
+                font-size: 11px !important;
+            }
+            
+            .mobile-actions, .no-print, .alert-success {
+                display: none !important;
+            }
+            
+            /* Force black text for printing */
+            * {
+                color: black !important;
+                background: transparent !important;
+            }
+        }
+
+        /* MOBILE ACTIONS (Hanya untuk preview) */
         .mobile-actions {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background: white;
-            padding: 12px;
+            padding: 10px;
             border-top: 2px solid #eee;
             display: flex;
             gap: 8px;
             justify-content: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
         
         .btn {
-            padding: 12px 16px;
+            padding: 10px 14px;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             flex: 1;
-            min-width: 0;
         }
         
         .btn-print {
@@ -81,32 +162,8 @@
             text-decoration: none;
             text-align: center;
         }
-
-        /* Success message */
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #c3e6cb;
-        }
-        
-        /* Sembunyikan tombol saat print */
-        @media print {
-            .mobile-actions, .no-print { 
-                display: none !important; 
-            }
-            body { 
-                margin: 0; 
-                padding: 5px;
-                max-width: 58mm;
-            }
-            .alert-success {
-                display: none;
-            }
-        }
     </style>
+
 </head>
 <body>
     <!-- Pesan Success -->
