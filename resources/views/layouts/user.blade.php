@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
+<link rel="manifest" href="{{ asset('manifest.json') }}">
 <title>@yield('title', 'Kasir DeTani')</title>
 
 <!-- Tailwind -->
@@ -136,6 +138,7 @@
         </div>
         @endif
 
+<<<<<<< HEAD
                 {{-- FLASH MESSAGE --}}
         @if(session('success'))
             <div class="mb-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300">
@@ -143,6 +146,9 @@
             </div>
         @endif
 
+=======
+        {{-- FLASH MESSAGE --}}
+>>>>>>> dc2a83e004410dc8e2ac90b85f4359cbaf3abb19
         @if(session('error'))
             <div class="mb-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300">
                 <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
@@ -214,5 +220,27 @@ button:active, a:active { transform: scale(0.98); }
 </style>
 
 @stack('scripts')
+<script>
+console.log('🚀 Script loaded');
+if ("serviceWorker" in navigator) {
+  console.log('✅ Service Worker supported');
+  window.addEventListener("load", () => {
+    console.log('🔄 Registering Service Worker...');
+    navigator.serviceWorker
+      .register("/service-worker.js")  // Pakai path absolut
+      .then(reg => {
+        console.log("✅ Service Worker registered successfully");
+        console.log("📍 Scope:", reg.scope);
+        console.log("📦 Registration:", reg);
+      })
+      .catch(err => {
+        console.error("❌ Service Worker registration failed:");
+        console.error(err);
+      });
+  });
+} else {
+  console.error("❌ Service Worker not supported");
+}
+</script>
 </body>
 </html>

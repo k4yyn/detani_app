@@ -276,15 +276,13 @@
             <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700">✕</button>
         </div>
     </div>
-     @if(session('success_checkout'))
-        <div class="mb-6">
-            <a href="{{ route('user.transaksi.struk', session('success_checkout')) }}" 
+    @if(session('transaksi_terbaru'))
+        <div class="mb-4 p-4 bg-green-50 rounded-lg">
+            <p class="text-green-800 mb-2">Transaksi berhasil!</p>
+            <a href="{{ route('user.transaksi.struk', session('transaksi_terbaru')) }}" 
             target="_blank"
-            class="inline-flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16h8M8 12h8m-7 8h6m1-10V4a1 1 0 00-1-1H7a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1z"></path>
-                </svg>
-                <span>Cetak Struk</span>
+            class="inline-flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                🖨️ Cetak Struk
             </a>
         </div>
     @endif
@@ -323,7 +321,7 @@
 
         showLoading(true);
         try {
-            const url = `{{ url('user/transaksi/keranjang/hapus') }}/${productId}`;
+            const url = "{{ route('user.transaksi.keranjang.hapus', ':id') }}".replace(':id', productId);   
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -343,9 +341,20 @@
     }
 
     // --- Clear cart ---
-    function clearCart() {
-        if (!confirm('Apakah Anda yakin ingin mengosongkan keranjang?')) return;
-        alert('Fitur kosongkan keranjang akan diimplementasikan');
+     function clearCart() {
+        if (confirm("Yakin ingin mengosongkan keranjang?")) {
+           fetch("{{ route('user.transaksi.keranjang.clear') }}", {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload(); // refresh halaman
+                }
+            });
+        }
     }
 
     // --- Hitung kembalian ---

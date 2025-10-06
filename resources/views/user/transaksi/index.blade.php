@@ -83,17 +83,19 @@
     <!-- Products List -->
 <div class="px-2 py-1">
     <div id="productList" class="space-y-1">
-        @forelse ($data as $item)
-            <div class="product-item bg-white rounded-md p-3 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer text-sm" 
-                 data-kategori="{{ $item->kategori }}"
-                 onclick="addToCart({{ $item->id }}, '{{ $item->nama_barang }}', {{ $item->harga_jual }})">
+            @forelse ($data as $item)
+            <div class="product-item bg-white rounded-md p-3 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-sm
+                {{ $item->stok <= 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
+                data-kategori="{{ $item->kategori }}"
+                @if($item->stok > 0)
+                    onclick="addToCart({{ $item->id }}, '{{ $item->nama_barang }}', {{ $item->harga_jual }})"
+                @endif>
+                
                 <div class="flex items-center space-x-2">
-                    <!-- Product Icon/Image -->
                     <div class="w-9 h-9 bg-gradient-to-br from-gray-100 to-gray-200 rounded-md flex items-center justify-center flex-shrink-0">
                         <span class="text-gray-600 font-bold text-sm">{{ strtoupper(substr($item->nama_barang, 0, 2)) }}</span>
                     </div>
-                    
-                    <!-- Product Info -->
+
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-gray-900 text-sm leading-tight mb-0.5">{{ $item->nama_barang }}</h3>
                         <div class="flex items-center space-x-1 text-xs text-gray-600 mb-1">
@@ -108,7 +110,8 @@
                             @else
                                 <button class="text-green-600 hover:text-green-700 p-1 rounded-full hover:bg-green-50">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
                                 </button>
                             @endif
@@ -119,7 +122,8 @@
         @empty
             <div class="text-center py-12">
                 <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2a2 2 0 00-2 2v3a2 2 0 01-2 2H8a2 2 0 01-2-2v-3a2 2 0 00-2-2H4"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2a2 2 0 00-2 2v3a2 2 0 01-2 2H8a2 2 0 01-2-2v-3a2 2 0 00-2-2H4"></path>
                 </svg>
                 <p class="text-gray-500">Belum ada produk tersedia</p>
             </div>

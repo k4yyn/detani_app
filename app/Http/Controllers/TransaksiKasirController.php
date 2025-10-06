@@ -11,13 +11,14 @@ use Illuminate\Support\Facades\Session;
 class TransaksiKasirController extends Controller
 {
     public function index()
-    {
-        $data = Data::all();
-        $keranjang = Session::get('keranjang', []);
-        $total = collect($keranjang)->sum('subtotal');
+{
+    $data = Data::orderByRaw('stok = 0, nama_barang ASC')->get();
 
-        return view('user.transaksi.index', compact('data', 'keranjang', 'total'));
-    }
+    $keranjang = Session::get('keranjang', []);
+    $total = collect($keranjang)->sum('subtotal');
+
+    return view('user.transaksi.index', compact('data', 'keranjang', 'total'));
+}
 
     public function tambahKeranjang(Request $request)
 {
@@ -92,6 +93,17 @@ class TransaksiKasirController extends Controller
         $total = collect($keranjang)->sum('subtotal');
 
         return view('user.transaksi.keranjang', compact('keranjang', 'total'));
+    }
+
+    public function clear()
+    {
+        // kalau pakai session
+        session()->forget('keranjang');
+
+        // kalau pakai DB
+        // Keranjang::where('user_id', auth()->id())->delete();
+
+        return response()->json(['success' => true]);
     }
 
     public function hapusItem($id)
@@ -222,22 +234,37 @@ class TransaksiKasirController extends Controller
 
     // Cek apakah user ingin mencetak struk
     $cetak = $request->has('cetak_struk') ? 'true' : 'false';
-
-    if ($request->has('cetak_struk')) {
+ 
+      if ($request->has('cetak_struk')) {
         return redirect()->route('user.transaksi.struk', [
-            'id' => $transaksi->id,
-            'print' => 'true'
-        ])->with('success', 'Transaksi berhasil. Struk akan dicetak.');
+            'id' => $transaksi->id
+        ])->with('auto_print', true); // **GUNAKAN SESSION, BUKAN PARAMETER URL**
     } else {
         return redirect()->route('user.transaksi.index')
-            ->with('success', 'Transaksi berhasil.');
+            ->with('success', 'Transaksi berhasil.')
+            ->with('transaksi_terbaru', $transaksi->id);
     }
 }
 
-    public function struk($id)
+   public function struk($id)
 {
-        $transaksi = Transaksi::with(['user', 'details.data'])->findOrFail($id);
-        return view('user.transaksi.struk', compact('transaksi'));
+    $transaksi = Transaksi::with(['details', 'user'])
+        ->findOrFail($id);
+    
+    // **PERBAIKAN: Ambil dari session, bukan parameter URL**
+    $auto_print = session('auto_print', false);
+    
+    // **Hapus session auto_print setelah digunakan**
+    if ($auto_print) {
+        session()->forget('auto_print');
+    }
+    
+    return view('user.transaksi.struk', compact('transaksi', 'auto_print'));
 }
 
+private function isMobileDevice()
+{
+    return preg_match("/(android|webos|iphone|ipad|ipod|blackberry|windows phone)/i", 
+                     $_SERVER['HTTP_USER_AGENT']);
+}
 }
