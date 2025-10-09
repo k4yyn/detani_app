@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/keranjang/edit/{id}', [TransaksiKasirController::class, 'editHargaDiskon'])->name('keranjang.edit');
             Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');
             Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
+            Route::post('/print-thermal/{id}', [TransaksiKasirController::class, 'printThermal'])->name('print.thermal');
             });
         });
        

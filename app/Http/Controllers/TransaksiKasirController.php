@@ -176,7 +176,7 @@ class TransaksiKasirController extends Controller
 }
 
 
-    public function checkout(Request $request)
+   public function checkout(Request $request)
 {
     $keranjang = Session::get('keranjang', []);
     if (empty($keranjang)) {
@@ -207,7 +207,7 @@ class TransaksiKasirController extends Controller
         'uang_dibayar' => $bayar,
         'kembalian' => $kembalian,
         'metode_pembayaran' => $request->metode_pembayaran,
-        'status_pembayaran' => 'Lunas', // Jika kamu nanti ingin menambahkan cicilan, bisa ubah ini
+        'status_pembayaran' => 'Lunas',
     ]);
 
     // Simpan detail
@@ -232,29 +232,35 @@ class TransaksiKasirController extends Controller
 
     Session::forget('keranjang');
 
-    // Cek apakah user ingin mencetak struk
-    $cetak = $request->has('cetak_struk') ? 'true' : 'false';
- 
-      if ($request->has('cetak_struk')) {
-        return redirect()->route('user.transaksi.struk', [
-            'id' => $transaksi->id
-        ])->with('auto_print', true); // **GUNAKAN SESSION, BUKAN PARAMETER URL**
-    } else {
-        return redirect()->route('user.transaksi.index')
-            ->with('success', 'Transaksi berhasil.')
-            ->with('transaksi_terbaru', $transaksi->id);
+    // CETAK THERMAL OTOMATIS JIKA DIPILIH
+    if ($request->has('cetak_struk')) {
+        try {
+            $printService = new \App\Services\ThermalPrintService('bluetooth');
+            $printService->printReceipt($transaksi);
+            
+            return redirect()->route('user.transaksi.index')
+                ->with('success', 'Transaksi berhasil & struk tercetak!')
+                ->with('transaksi_terbaru', $transaksi->id);
+                
+        } catch (\Exception $e) {
+            // Jika print gagal, tetap redirect ke struk view
+            return redirect()->route('user.transaksi.struk', ['id' => $transaksi->id])
+                ->with('error', 'Transaksi berhasil tapi print gagal: ' . $e->getMessage());
+        }
     }
+
+    return redirect()->route('user.transaksi.index')
+        ->with('success', 'Transaksi berhasil.')
+        ->with('transaksi_terbaru', $transaksi->id);
 }
 
-   public function struk($id)
+public function struk($id)
 {
     $transaksi = Transaksi::with(['details', 'user'])
         ->findOrFail($id);
     
-    // **PERBAIKAN: Ambil dari session, bukan parameter URL**
     $auto_print = session('auto_print', false);
     
-    // **Hapus session auto_print setelah digunakan**
     if ($auto_print) {
         session()->forget('auto_print');
     }
@@ -262,9 +268,19 @@ class TransaksiKasirController extends Controller
     return view('user.transaksi.struk', compact('transaksi', 'auto_print'));
 }
 
-private function isMobileDevice()
+// Tambahkan route untuk print manual
+public function printThermal($id)
 {
-    return preg_match("/(android|webos|iphone|ipad|ipod|blackberry|windows phone)/i", 
-                     $_SERVER['HTTP_USER_AGENT']);
+    try {
+        $transaksi = Transaksi::with(['details', 'user'])->findOrFail($id);
+        
+        $printService = new \App\Services\ThermalPrintService('bluetooth');
+        $printService->printReceipt($transaksi);
+        
+        return back()->with('success', 'Struk berhasil dicetak!');
+        
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal mencetak: ' . $e->getMessage());
+    }
 }
 }

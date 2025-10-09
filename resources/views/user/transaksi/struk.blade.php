@@ -240,15 +240,17 @@
         </div>
     </div>
 
-    <!-- Tombol Aksi Mobile -->
     <div class="mobile-actions no-print">
-        <button class="btn btn-print" onclick="handlePrint()">
-            🖨️ CETAK STRUK
+    <form action="{{ route('user.transaksi.print.thermal', $transaksi->id) }}" method="POST" style="flex: 1;">
+        @csrf
+        <button type="submit" class="btn btn-print">
+            🖨️ CETAK THERMAL
         </button>
-        <a href="{{ route('user.transaksi.index') }}" class="btn btn-back">
-            🔙 KE TRANSAKSI
-        </a>
-    </div>
+    </form>
+    <a href="{{ route('user.transaksi.index') }}" class="btn btn-back">
+        🔙 KE TRANSAKSI
+    </a>
+</div>
 
     <!-- Script Print yang Diperbaiki -->
     <script>
