@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#d97706"> <!-- Amber-600 -->
+<meta name="theme-color" content="#166534"> <!-- Green-800 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -27,13 +27,13 @@
 <div x-data="{ showSidebar: false }" class="flex flex-col min-h-full">
 
 <!-- HEADER -->
-<header class="bg-amber-700 text-white shadow sticky top-0 z-30">
+<header class="bg-green-800 text-white shadow sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Menu & Logo -->
             <div class="flex items-center">
                 <!-- Desktop only: Show hamburger for sidebar -->
-                <button @click="showSidebar = true" class="hidden md:inline-flex items-center justify-center p-2 rounded-md text-white hover:text-amber-100 hover:bg-amber-600 focus:outline-none transition">
+                <button @click="showSidebar = true" class="hidden md:inline-flex items-center justify-center p-2 rounded-md text-white hover:text-green-100 hover:bg-green-700 focus:outline-none transition">
                     <i class="fas fa-bars text-lg"></i>
                 </button>
                 <div class="flex items-center ml-0 md:ml-4 space-x-2">
@@ -44,13 +44,13 @@
 
             <!-- Date & User -->
             <div class="flex items-center space-x-4">
-                <div class="flex items-center bg-amber-50 px-3 py-1 rounded-lg text-amber-700 shadow">
-                    <i class="far fa-calendar-alt mr-2 text-amber-600"></i>
+                <div class="flex items-center bg-green-50 px-3 py-1 rounded-lg text-green-800 shadow">
+                    <i class="far fa-calendar-alt mr-2 text-green-600"></i>
                     <span class="text-sm font-medium">{{ now()->format('d M Y') }}</span>
                 </div>
                 <div class="flex items-center text-white group relative">
                     <div class="flex items-center space-x-2">
-                        <div class="h-8 w-8 rounded-full bg-amber-600 flex items-center justify-center text-white font-medium">
+                        <div class="h-8 w-8 rounded-full bg-green-600 flex items-center justify-center text-white font-medium">
                             {{ substr(auth()->user()->name, 0, 1) }}
                         </div>
                         <span class="hidden md:inline text-sm">{{ auth()->user()->name }}</span>
@@ -58,7 +58,7 @@
                     <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded shadow py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-amber-50 hover:text-amber-700">
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-green-50 hover:text-green-700">
                                 <i class="fas fa-sign-out-alt mr-2 text-stone-400"></i> Logout
                             </button>
                         </form>
@@ -81,35 +81,35 @@
          x-transition:leave-start="translate-x-0"
          x-transition:leave-end="-translate-x-full">
         <div class="flex flex-col h-full">
-            <div class="flex items-center justify-between px-4 py-4 bg-amber-600 text-white">
+            <div class="flex items-center justify-between px-4 py-4 bg-green-700 text-white">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-store text-lg"></i>
                     <span class="text-lg font-semibold">Kasir DeTani</span>
                 </div>
-                <button @click="showSidebar = false" class="text-amber-100 hover:text-white">
+                <button @click="showSidebar = false" class="text-green-100 hover:text-white">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
 
             <nav class="flex-1 px-4 py-4 space-y-1">
                 <a href="{{ url('user/dashboard') }}" 
-                   class="{{ request()->is('user/dashboard*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mb-1">
+                   class="{{ request()->is('user/dashboard*') ? 'bg-green-50 text-green-700' : 'text-stone-700 hover:bg-stone-100 hover:text-green-700' }} block px-4 py-2 rounded transition mb-1">
                     <i class="fas fa-home mr-2"></i> Dashboard
                 </a>
                 <a href="{{ url('user/transaksi') }}" 
-                   class="{{ request()->is('user/transaksi*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mb-1">
+                   class="{{ request()->is('user/transaksi*') ? 'bg-green-50 text-green-700' : 'text-stone-700 hover:bg-stone-100 hover:text-green-700' }} block px-4 py-2 rounded transition mb-1">
                     <i class="fas fa-shopping-cart mr-2"></i> Transaksi
                 </a>
                 <a href="{{ route('user.data.index') }}" 
-                   class="{{ request()->is('user.data.index*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
+                   class="{{ request()->is('user.data.index*') ? 'bg-green-50 text-green-700' : 'text-stone-700 hover:bg-stone-100 hover:text-green-700' }} block px-4 py-2 rounded transition">
                     <i class="fas fa-box text-sm"></i> Data Barang
                 </a>
                 <a href="{{ route('user.nota.notaHarian') }}" 
-                    class="{{ request()->is('user/nota.nota-harian*') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition">
+                    class="{{ request()->is('user/nota.nota-harian*') ? 'bg-green-50 text-green-700' : 'text-stone-700 hover:bg-stone-100 hover:text-green-700' }} block px-4 py-2 rounded transition">
                     <i class="fas fa-receipt mr-2"></i> Nota Harian
                 </a>
                 <a href="{{ route('user.tickets.create') }}" 
-                    class="{{ request()->is('user/tickets/create') ? 'bg-amber-50 text-amber-700' : 'text-stone-700 hover:bg-stone-100 hover:text-amber-700' }} block px-4 py-2 rounded transition mt-1">
+                    class="{{ request()->is('user/tickets/create') ? 'bg-green-50 text-green-700' : 'text-stone-700 hover:bg-stone-100 hover:text-green-700' }} block px-4 py-2 rounded transition mt-1">
                     <i class="fas fa-ticket-alt mr-2"></i> Penjualan Tiket
                 </a>
             </nav>
@@ -117,7 +117,7 @@
             <div class="px-4 py-3 border-t">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-amber-50 hover:text-amber-700 rounded transition">
+                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-green-50 hover:text-green-700 rounded transition">
                         <i class="fas fa-sign-out-alt mr-2"></i> Logout
                     </button>
                 </form>
@@ -138,17 +138,13 @@
         </div>
         @endif
 
-<<<<<<< HEAD
                 {{-- FLASH MESSAGE --}}
         @if(session('success'))
             <div class="mb-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300">
                 <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
             </div>
         @endif
-
-=======
         {{-- FLASH MESSAGE --}}
->>>>>>> dc2a83e004410dc8e2ac90b85f4359cbaf3abb19
         @if(session('error'))
             <div class="mb-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300">
                 <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
@@ -163,31 +159,30 @@
 </main>
 
 <!-- MOBILE BOTTOM NAVIGATION -->
-<!-- MOBILE BOTTOM NAVIGATION -->
 <nav class="fixed bottom-0 inset-x-0 bg-white border-t shadow md:hidden z-20">
     <div class="flex justify-around">
         <a href="{{ url('user/dashboard') }}" 
-           class="{{ request()->is('user/dashboard*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+           class="{{ request()->is('user/dashboard*') ? 'text-green-600 bg-green-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
             <i class="fas fa-home text-lg mb-1"></i>
             <span class="text-xs font-medium">Dashboard</span>
         </a>
         <a href="{{ url('user/transaksi') }}" 
-           class="{{ request()->is('user/transaksi*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+           class="{{ request()->is('user/transaksi*') ? 'text-green-600 bg-green-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
             <i class="fas fa-shopping-cart text-lg mb-1"></i>
             <span class="text-xs font-medium">Transaksi</span>
         </a>
         <a href="{{ route('user.data.index') }}" 
-           class="{{ request()->is('data*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+           class="{{ request()->is('data*') ? 'text-green-600 bg-green-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
             <i class="fas fa-box text-lg mb-1"></i>
             <span class="text-xs font-medium">Barang</span>
         </a>
         <a href="{{ route('user.nota.notaHarian') }}" 
-           class="{{ request()->is('user/nota/nota-harian*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+           class="{{ request()->is('user/nota/nota-harian*') ? 'text-green-600 bg-green-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
             <i class="fas fa-receipt text-lg mb-1"></i>
             <span class="text-xs font-medium">Nota</span>
         </a>
         <a href="{{ route('user.tickets.create') }}" 
-           class="{{ request()->is('user/tickets/*') ? 'text-amber-600 bg-amber-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
+           class="{{ request()->is('user/tickets/*') ? 'text-green-600 bg-green-50' : 'text-stone-500' }} flex flex-col items-center justify-center p-2 transition-all duration-200 flex-1">
             <i class="fas fa-ticket-alt text-lg mb-1"></i>
             <span class="text-xs font-medium">Tiket</span>
         </a>
@@ -213,7 +208,7 @@ button:active, a:active { transform: scale(0.98); }
         transform: translateX(-50%);
         width: 20px;
         height: 2px;
-        background: #d97706;
+        background: #166534; /* Green-800 */
         border-radius: 0 0 2px 2px;
     }
 }
