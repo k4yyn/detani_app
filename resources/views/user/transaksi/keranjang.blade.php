@@ -177,6 +177,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label for="jenis_transaksi" class="form-label">Jenis Transaksi</label>
+                        <select class="form-select" id="jenis_transaksi" name="jenis_transaksi" required onchange="updateJenisTransaksi()">
+                            <option value="pelanggan" selected>Pelanggan</option>
+                            <option value="owner">Owner</option>
+                            <option value="karyawan">Karyawan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div id="pelaku_transaksi_field" class="mb-3 hidden">
+                        <label for="pelaku_transaksi" class="form-label">Pelaku Transaksi *</label>
+                        <input type="text" 
+                            name="pelaku_transaksi" 
+                            id="pelaku_transaksi"
+                            placeholder="Contoh: Bangunan, Sopir, Tamu, dll"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <p class="text-sm text-gray-500 mt-1">Isikan siapa yang melakukan transaksi ini</p>
+                    </div>
                     <div class="grid md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Bayar *</label>
@@ -292,6 +310,60 @@
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     let currentTotal = {{ $total }};
 
+    // --- Update jenis transaksi handler ---
+    function updateJenisTransaksi() {
+        const jenisTransaksi = document.getElementById('jenis_transaksi').value;
+        const bayarInput = document.getElementById('bayar-input');
+        const kembalianDisplay = document.getElementById('kembalian-display');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        
+        // Jika owner/lainnya, set otomatis 0 dan nonaktifkan input
+        if (jenisTransaksi === 'owner' || jenisTransaksi === 'lainnya') {
+            bayarInput.value = 0;
+            bayarInput.disabled = true;
+            bayarInput.min = 0;
+            kembalianDisplay.textContent = 'Rp 0';
+            kembalianDisplay.classList.remove('text-red-600');
+            kembalianDisplay.classList.add('text-gray-700');
+            checkoutBtn.disabled = false;
+            
+            // Sembunyikan tombol preset bayar
+            document.querySelectorAll('button[onclick^="setBayar"]').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            document.querySelector('button[onclick="setExactAmount()"]').style.display = 'none';
+        } else {
+            // Jika bukan owner/lainnya, aktifkan kembali
+            bayarInput.disabled = false;
+            bayarInput.min = currentTotal;
+            calculateChange();
+            
+            // Tampilkan kembali tombol preset bayar
+            document.querySelectorAll('button[onclick^="setBayar"]').forEach(btn => {
+                btn.style.display = 'inline-block';
+            });
+            document.querySelector('button[onclick="setExactAmount()"]').style.display = 'inline-block';
+        }
+        
+        // ✅ Panggil fungsi togglePelakuTransaksi
+        togglePelakuTransaksi();
+    }
+
+    // --- Toggle Pelaku Transaksi ---
+    function togglePelakuTransaksi() {
+        const jenisTransaksi = document.getElementById('jenis_transaksi').value;
+        const pelakuField = document.getElementById('pelaku_transaksi_field');
+        
+        if (jenisTransaksi === 'lainnya') {
+            pelakuField.classList.remove('hidden');
+            document.getElementById('pelaku_transaksi').required = true;
+        } else {
+            pelakuField.classList.add('hidden');
+            document.getElementById('pelaku_transaksi').required = false;
+            document.getElementById('pelaku_transaksi').value = '';
+        }
+    }
+
     // --- Update quantity ---
     async function updateQuantity(productId, newQty) {
         if (newQty < 1) return;
@@ -359,10 +431,21 @@
 
     // --- Hitung kembalian ---
     function calculateChange() {
+        const jenisTransaksi = document.getElementById('jenis_transaksi').value;
         const bayarInput = document.getElementById('bayar-input');
         const kembalianDisplay = document.getElementById('kembalian-display');
         const checkoutBtn = document.getElementById('checkout-btn');
 
+        // Jika owner/lainnya, langsung set 0
+        if (jenisTransaksi === 'owner' || jenisTransaksi === 'lainnya') {
+            kembalianDisplay.textContent = 'Rp 0';
+            kembalianDisplay.classList.remove('text-red-600');
+            kembalianDisplay.classList.add('text-gray-700');
+            checkoutBtn.disabled = false;
+            return;
+        }
+
+        // Logic normal untuk pelanggan/karyawan
         const bayar = parseFloat(bayarInput.value) || 0;
         const kembalian = bayar - currentTotal;
 
@@ -407,7 +490,7 @@
         checkoutText.classList.add('hidden');
         checkoutLoading.classList.remove('hidden');
         checkoutBtn.disabled = true;
-});
+    });
 
     // --- Modal edit harga/diskon ---
     function openEditModal(id, harga, diskon) {
@@ -462,7 +545,12 @@
 
     // --- Generate nomor transaksi otomatis saat halaman dimuat ---
     document.addEventListener('DOMContentLoaded', function () {
+        // Inisialisasi jenis transaksi saat pertama kali load
+        updateJenisTransaksi();
         calculateChange();
+        
+        // ✅ Inisialisasi pelaku transaksi
+        togglePelakuTransaksi();
 
         const now = new Date();
         const kode = `TRX${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`;
@@ -483,6 +571,12 @@
     .overflow-x-auto td {
         padding: 0.75rem 0.5rem;
     }
+}
+
+input:disabled {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
 }
 </style>
 @endsection

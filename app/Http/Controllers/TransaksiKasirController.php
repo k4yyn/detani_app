@@ -176,7 +176,7 @@ class TransaksiKasirController extends Controller
 }
 
 
-   public function checkout(Request $request)
+ public function checkout(Request $request)
 {
     $keranjang = Session::get('keranjang', []);
     if (empty($keranjang)) {
@@ -184,13 +184,26 @@ class TransaksiKasirController extends Controller
     }
 
     $total = collect($keranjang)->sum('subtotal');
-    $bayar = (float)$request->bayar;
+    $jenisTransaksi = $request->jenis_transaksi ?? 'pelanggan';
 
-    if ($bayar < $total) {
-        return back()->with('error', 'Uang bayar tidak mencukupi');
+    // Logic untuk set otomatis 0 jika owner/lainnya
+    if (in_array($jenisTransaksi, ['owner', 'lainnya'])) {
+        $total = 0;
+        $bayar = 0;
+        $kembalian = 0;
+        $statusPembayaran = 'Lunas'; // Otomatis lunas
+        $metodePembayaran = 'Gratis'; // Bisa diganti sesuai kebutuhan
+    } else {
+        $bayar = (float)$request->bayar;
+        $kembalian = $bayar - $total;
+        $statusPembayaran = 'Lunas';
+        $metodePembayaran = $request->metode_pembayaran;
+        
+        // Validasi hanya untuk non-owner
+        if ($bayar < $total) {
+            return back()->with('error', 'Uang bayar tidak mencukupi');
+        }
     }
-
-    $kembalian = $bayar - $total;
 
     $invoice = 'INV-' . now()->format('YmdHis') . '-' . strtoupper(\Str::random(4));
 
@@ -206,11 +219,13 @@ class TransaksiKasirController extends Controller
         'total_harga' => $total,
         'uang_dibayar' => $bayar,
         'kembalian' => $kembalian,
-        'metode_pembayaran' => $request->metode_pembayaran,
-        'status_pembayaran' => 'Lunas',
+        'metode_pembayaran' => $metodePembayaran,
+        'status_pembayaran' => $statusPembayaran,
+        'jenis_transaksi' => $jenisTransaksi,
+        'pelaku_transaksi' => $request ->pelaku_transaksi,
     ]);
 
-    // Simpan detail
+    // Simpan detail (sama seperti sebelumnya)
     foreach ($keranjang as $item) {
         TransaksiDetail::create([
             'transaksi_id' => $transaksi->id,
@@ -241,9 +256,8 @@ class TransaksiKasirController extends Controller
             return redirect()->route('user.transaksi.index')
                 ->with('success', 'Transaksi berhasil & struk tercetak!')
                 ->with('transaksi_terbaru', $transaksi->id);
-                
+
         } catch (\Exception $e) {
-            // Jika print gagal, tetap redirect ke struk view
             return redirect()->route('user.transaksi.struk', ['id' => $transaksi->id])
                 ->with('error', 'Transaksi berhasil tapi print gagal: ' . $e->getMessage());
         }

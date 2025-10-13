@@ -19,7 +19,9 @@ class Transaksi extends Model
         'keterangan',
         'keterangan_tambahan',
         'metode_pembayaran',
-        'status_pembayaran'
+        'status_pembayaran',
+        'jenis_transaksi',
+        'pelaku_transaksi'
     ];
 
     // Relasi ke tabel transaksi_details

@@ -47,7 +47,7 @@
             </div>
 
             <form id="filterForm" method="GET" action="{{ route('admin.reports.index') }}" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                     <div class="space-y-2">
                         <label class="block text-sm font-medium text-gray-700">Jenis Laporan</label>
                         <select id="filterSelect" name="filter"
@@ -58,6 +58,28 @@
                             <option value="bulanan" {{ request('filter') == 'bulanan' ? 'selected' : '' }}>Bulanan</option>
                             <option value="tahunan" {{ request('filter') == 'tahunan' ? 'selected' : '' }}>Tahunan</option>
                             <option value="custom" {{ request('filter') == 'custom' ? 'selected' : '' }}>Custom</option>
+                        </select>
+                    </div>
+
+                       <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">Jenis Transaksi</label>
+                        <select name="jenis_transaksi"
+                                class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-colors">
+                            <option value="semua" {{ request('jenis_transaksi', 'semua') == 'semua' ? 'selected' : '' }}>Semua Transaksi</option>
+                            <option value="pelanggan" {{ request('jenis_transaksi') == 'pelanggan' ? 'selected' : '' }}>Pelanggan</option>
+                            <option value="owner" {{ request('jenis_transaksi') == 'owner' ? 'selected' : '' }}>Owner</option>
+                            <option value="karyawan" {{ request('jenis_transaksi') == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
+                            <option value="lainnya" {{ request('jenis_transaksi') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
+                    </div>
+
+                     <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">Metode Pembayaran</label>
+                        <select name="metode_pembayaran"
+                                class="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-colors">
+                            <option value="semua" {{ request('metode_pembayaran', 'semua') == 'semua' ? 'selected' : '' }}>Semua Metode</option>
+                            <option value="Cash" {{ request('metode_pembayaran') == 'Cash' ? 'selected' : '' }}>Cash</option>
+                            <option value="QRIS" {{ request('metode_pembayaran') == 'QRIS' ? 'selected' : '' }}>QRIS</option>
                         </select>
                     </div>
 
@@ -117,22 +139,39 @@
             </form>
         </div>
 
+         @if(request('jenis_transaksi') && request('jenis_transaksi') !== 'semua')
+         <div class="mb-4 inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-100 text-purple-700">
+                <i class="fas fa-user-tag mr-2 text-xs"></i>
+                Jenis Transaksi: <strong class="ml-1">{{ ucfirst(request('jenis_transaksi')) }}</strong>
+            </div>
+        @endif
+
+        @if(request('metode_pembayaran') && request('metode_pembayaran') !== 'semua')
+            <div class="mb-4 inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700">
+                <i class="fas fa-credit-card mr-2 text-xs"></i>
+                Metode Pembayaran: <strong class="ml-1">{{ ucfirst(request('metode_pembayaran')) }}</strong>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <x-summary-card title="Total Transaksi"
-                                value="{{ number_format($totalTransaksi) }}"
+                <x-summary-card title="Total Transaksi"
+                                value="{{ number_format($totalTransaksiHariIni) }}"
                                 icon="fas fa-receipt"
                                 color="blue"
                                 desc="Transaksi tercatat" />
-            <x-summary-card title="Total Pendapatan"
-                                value="Rp {{ number_format($totalPendapatan, 0, ',', '.') }}"
+                
+                <x-summary-card title="Total Pendapatan"
+                                value="Rp {{ number_format($pendapatanHariIni, 0, ',', '.') }}"
                                 icon="fas fa-coins"
                                 color="green"
                                 desc="Revenue terkumpul" />
-            <x-summary-card title="Rata-rata Transaksi"
-                                value="Rp {{ number_format($rataRata, 0, ',', '.') }}"
+                
+                <x-summary-card title="Rata-rata Transaksi"
+                                value="Rp {{ number_format($rataTransaksiHariIni, 0, ',', '.') }}"
                                 icon="fas fa-chart-line"
                                 color="purple"
                                 desc="Per transaksi" />
+            </div>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-green-200 overflow-hidden">
@@ -151,6 +190,7 @@
                             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Kode</th>
                             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Tanggal</th>
                             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Kasir</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Jenis</th>
                             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Item</th>
                             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Total</th>
                             <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Metode</th>
@@ -178,6 +218,28 @@
                                             <i class="fas fa-user text-xs text-gray-600"></i>
                                         </div>
                                         {{ $transaksi->user->name ?? '-' }}
+                                    </div>
+                                </td>
+                                    <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                                    @php
+                                        $badgeColors = [
+                                            'pelanggan' => 'bg-blue-100 text-blue-800',
+                                            'owner' => 'bg-green-100 text-green-800',
+                                            'karyawan' => 'bg-purple-100 text-purple-800',
+                                            'lainnya' => 'bg-orange-100 text-orange-800'
+                                        ];
+                                        $color = $badgeColors[$transaksi->jenis_transaksi] ?? 'bg-gray-100 text-gray-800';
+                                    @endphp
+                                    <div class="flex flex-col gap-1">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $color }}">
+                                            {{ ucfirst($transaksi->jenis_transaksi) }}
+                                        </span>
+                                        @if($transaksi->jenis_transaksi === 'lainnya' && $transaksi->pelaku_transaksi)
+                                            <span class="text-xs text-orange-600 font-medium">
+                                                <i class="fas fa-user-circle mr-1"></i>
+                                                {{ $transaksi->pelaku_transaksi }}
+                                            </span>
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-center">
@@ -308,6 +370,15 @@
         const customDateFilter = document.getElementById('customDateFilter');
         const filterForm = document.getElementById('filterForm');
         
+        const autoSubmitElements = document.querySelectorAll('select[name="filter"], select[name="jenis_transaksi"], select[name="metode_pembayaran"]' );
+        autoSubmitElements.forEach(element => {
+            element.addEventListener('change', function() {
+                if (filterSelect.value !== 'custom') {
+                    filterForm.submit();
+                }
+            });
+        });
+
         if (filterSelect.value === 'custom') {
             customDateFilter.style.display = 'grid';
         }
@@ -319,12 +390,6 @@
                 customDateFilter.style.display = 'none';
                 filterForm.submit();
             }
-        });
-
-        const buttons = document.querySelectorAll('button[type="submit"], .btn-submit');
-        buttons.forEach(button => {
-            button.addEventListener('click', function() {
-            });
         });
     });
 </script>

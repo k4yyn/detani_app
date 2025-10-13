@@ -51,6 +51,9 @@
                             <th scope="col" class="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-white uppercase tracking-wider">
                                 Kasir
                             </th>
+                            <th scope="col" class="px-3 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-semibold text-white uppercase tracking-wider">
+                                Jenis
+                            </th>
                             <th scope="col" class="px-3 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-semibold text-white uppercase tracking-wider">
                                 Total
                             </th>
@@ -63,47 +66,128 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse ($transaksis as $t)
-                            <tr class="hover:bg-green-50 transition-colors duration-150">
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <div class="font-medium">{{ $t->created_at->format('d M Y') }}</div>
-                                    <div class="text-xs text-gray-500 md:hidden">{{ $t->created_at->timezone('Asia/Jakarta')->format('H:i') }} WIB</div>
-                                </td>
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-blue-600 font-mono">
-                                    {{ $t->invoice ?? '-' }}
-                                </td>
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <div class="flex items-center">
-                                    <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center mr-2">
-                                            <i class="fas fa-user text-xs text-gray-600"></i>
-                                    </div>
-                                    {{ $t->user->name ?? '_'}}
-                                    </div>
-                                </td>
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm font-semibold text-green-900 text-right">
-                                    <div class="text-sm md:text-base">Rp {{ number_format($t->total_harga, 0, ',', '.') }}</div>
-                                </td>
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
-                                        {{ strtolower($t->metode_pembayaran ?? 'tunai') === 'tunai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-700' }}">
-                                        {{ ucfirst($t->metode_pembayaran ?? 'Tunai') }}
-                                    </span>
-                                </td>
-                                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
-                                    <a href="{{ route('admin.transaksi.struk', $t->id) }}" target="_blank"
-                                       class="inline-flex items-center px-2 md:px-3 py-1 md:py-2 text-xs md:text-sm bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm">
-                                        <svg class="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                        </svg>
-                                        <span class="hidden sm:inline">Lihat Struk</span>
-                                        <span class="sm:hidden">Struk</span>
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
+                        @php
+                            $groupOrder = ['owner', 'karyawan', 'lainnya', 'pelanggan'];
+                            $groupLabels = [
+                                'owner' => 'Transaksi Owner',
+                                'karyawan' => 'Transaksi Karyawan', 
+                                'lainnya' => 'Transaksi Lainnya',
+                                'pelanggan' => 'Transaksi Pelanggan'
+                            ];
+                            $groupColors = [
+                                'owner' => 'bg-green-50 border-green-200',
+                                'karyawan' => 'bg-purple-50 border-purple-200',
+                                'lainnya' => 'bg-orange-50 border-orange-200', 
+                                'pelanggan' => 'bg-blue-50 border-blue-200'
+                            ];
+                            $groupIcons = [
+                                'owner' => 'fas fa-crown text-green-600',
+                                'karyawan' => 'fas fa-user-tie text-purple-600',
+                                'lainnya' => 'fas fa-ellipsis-h text-orange-600',
+                                'pelanggan' => 'fas fa-users text-blue-600'
+                            ];
+                        @endphp
+
+                        @foreach($groupOrder as $group)
+                            @if(isset($groupedTransaksis[$group]) && $groupedTransaksis[$group]->count() > 0)
+                                <!-- GROUP HEADER -->
+                                <tr class="{{ $groupColors[$group] }} border-t-4 border-l-4 border-r-4">
+                                    <td colspan="7" class="px-4 py-3">
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                            <div class="flex items-center">
+                                                <i class="{{ $groupIcons[$group] }} mr-3 text-lg"></i>
+                                                <span class="text-lg font-bold text-gray-800">{{ $groupLabels[$group] }}</span>
+                                                <span class="ml-3 px-2 py-1 text-xs font-medium bg-white rounded-full border">
+                                                    {{ $groupedTransaksis[$group]->count() }} transaksi
+                                                </span>
+                                            </div>
+                                            <div class="text-sm font-semibold text-gray-700">
+                                                Total Group: Rp {{ number_format($groupedTransaksis[$group]->sum('total_harga'), 0, ',', '.') }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- DATA PER GROUP -->
+                                @foreach($groupedTransaksis[$group] as $t)
+                                    <tr class="hover:bg-gray-50 transition-colors duration-150 border-l-4 border-r-4 
+                                        {{ $loop->last ? 'border-b-4' : '' }} 
+                                        {{ $group == 'owner' ? 'border-green-200' : '' }}
+                                        {{ $group == 'karyawan' ? 'border-purple-200' : '' }}
+                                        {{ $group == 'lainnya' ? 'border-orange-200' : '' }}
+                                        {{ $group == 'pelanggan' ? 'border-blue-200' : '' }}">
+                                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <div class="font-medium">{{ $t->created_at->format('d M Y') }}</div>
+                                            <div class="text-xs text-gray-500 md:hidden">{{ $t->created_at->timezone('Asia/Jakarta')->format('H:i') }} WIB</div>
+                                        </td>
+                                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-blue-600 font-mono">
+                                            {{ $t->invoice ?? '-' }}
+                                        </td>
+                                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center mr-2">
+                                                    <i class="fas fa-user text-xs text-gray-600"></i>
+                                                </div>
+                                                {{ $t->user->name ?? '_'}}
+                                            </div>
+                                        </td>
+                                         <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                                            @php
+                                                $badgeColors = [
+                                                    'pelanggan' => 'bg-blue-100 text-blue-800',
+                                                    'owner' => 'bg-green-100 text-green-800',
+                                                    'karyawan' => 'bg-purple-100 text-purple-800',
+                                                    'lainnya' => 'bg-orange-100 text-orange-800'
+                                                ];
+                                                $color = $badgeColors[$t->jenis_transaksi] ?? 'bg-gray-100 text-gray-800';
+                                            @endphp
+                                            <div class="flex flex-col gap-1">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $color }}">
+                                                    {{ ucfirst($t->jenis_transaksi) }}
+                                                </span>
+                                                @if($t->jenis_transaksi === 'lainnya' && $t->pelaku_transaksi)
+                                                    <span class="text-xs text-orange-600 font-medium">
+                                                        <i class="fas fa-user-circle mr-1"></i>
+                                                        {{ $t->pelaku_transaksi }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm font-semibold text-green-900 text-right">
+                                            <div class="text-sm md:text-base">Rp {{ number_format($t->total_harga, 0, ',', '.') }}</div>
+                                        </td>
+                                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                                {{ strtolower($t->metode_pembayaran ?? 'tunai') === 'tunai' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-700' }}">
+                                                {{ ucfirst($t->metode_pembayaran ?? 'Tunai') }}
+                                            </span>
+                                        </td>
+                                        <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-center">
+                                            <a href="{{ route('admin.transaksi.struk', $t->id) }}" target="_blank"
+                                               class="inline-flex items-center px-2 md:px-3 py-1 md:py-2 text-xs md:text-sm bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm">
+                                                <svg class="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                                </svg>
+                                                <span class="hidden sm:inline">Lihat Struk</span>
+                                                <span class="sm:hidden">Struk</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                                <!-- GROUP SEPARATOR -->
+                                @if(!$loop->last)
+                                    <tr>
+                                        <td colspan="7" class="h-4 bg-gray-100"></td>
+                                    </tr>
+                                @endif
+                            @endif
+                        @endforeach
+
+                        @if($transaksis->count() === 0)
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center">
+                                <td colspan="7" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -114,18 +198,19 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforelse
+                        @endif
                     </tbody>
                     <tfoot class="bg-green-50">
                         <tr class="border-t-2 border-green-700">
                             <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 text-right font-bold text-green-900 text-sm md:text-lg">
-                                Total:
+                                Total Keseluruhan:
                             </td>
                             <td colspan="3" class="px-3 md:px-6 py-4 md:py-6 font-bold text-lg md:text-xl text-green-900">
                                 <div class="bg-blue-100 rounded-lg px-3 py-2 inline-block text-blue-700">
                                     Rp {{ number_format($total, 0, ',', '.') }}
                                 </div>
                             </td>
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -143,6 +228,45 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </p>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Transaksi</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($totalTransaksi) }}</p>
+                </div>
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <i class="fas fa-receipt text-blue-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Pendapatan</p>
+                    <p class="text-2xl font-bold text-green-900 mt-1">Rp {{ number_format($total, 0, ',', '.') }}</p>
+                </div>
+                <div class="p-3 bg-green-100 rounded-lg">
+                    <i class="fas fa-coins text-green-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-green-200 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Rata-rata Transaksi</p>
+                    <p class="text-2xl font-bold text-purple-900 mt-1">Rp {{ number_format($rataTransaksi, 0, ',', '.') }}</p>
+                </div>
+                <div class="p-3 bg-purple-100 rounded-lg">
+                    <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
