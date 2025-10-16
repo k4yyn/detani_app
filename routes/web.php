@@ -139,14 +139,14 @@ Route::middleware('auth')->group(function () {
             Route::delete('/kategori/{kategori}', [DataController::class, 'destroyKategori'])->name('destroy-kategori');
         });
 
-        // User Management
-        Route::get('/users', [UserController::class, 'index'])->name('users.index');
-        Route::post('/users/{id}/approve', [UserController::class, 'approve'])->name('users.approve');
-
-        // Approval (akses ke halaman konfirmasi user)
-        Route::get('/approval', [UserApprovalController::class, 'index'])->name('approval');
-        Route::post('/approval/{id}/approve', [UserApprovalController::class, 'approve'])->name('approval.approve');
-        Route::post('/approval/{id}/reject', [UserApprovalController::class, 'reject'])->name('approval.reject');
+        // User Management - Lengkap
+        Route::prefix('users')->name('users.')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::post('/{id}/approve', [UserController::class, 'approve'])->name('approve');
+            Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [UserController::class, 'update'])->name('update');
+            Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+        });
 
         // Reports
         Route::prefix('reports')->name('reports.')->group(function () {

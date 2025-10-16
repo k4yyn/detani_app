@@ -168,14 +168,14 @@
     </div>
 </div>
 
-        <a href="{{ url('admin/approval') }}"
+        <a href="{{ url('admin/users') }}"
            class="group relative flex items-center px-4 py-3 text-sm font-medium rounded-xl mx-2 transition-all duration-300 ease-in-out cursor-pointer 
-           {{ request()->is('admin/approval*') ? 'bg-green-50 text-green-900 font-semibold' : 'text-gray-600 hover:bg-green-50 hover:text-green-900' }}">
+           {{ request()->is('admin/users*') ? 'bg-green-50 text-green-900 font-semibold' : 'text-gray-600 hover:bg-green-50 hover:text-green-900' }}">
             <div class="w-8 h-8 rounded-full mr-4 flex items-center justify-center transition-all duration-300 ease-in-out transform
-                        {{ request()->is('admin/approval*') ? 'bg-green-100 text-green-600 scale-110' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-green-600 group-hover:scale-110' }}">
+                        {{ request()->is('admin/users*') ? 'bg-green-100 text-green-600 scale-110' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-green-600 group-hover:scale-110' }}">
                 <i class="fas fa-lock"></i>
             </div>
-            <span class="flex-1">Izin Akses</span>
+            <span class="flex-1">Manajemen Akun</span>
             <div class="w-2 h-2 rounded-full bg-green-600 transition-opacity duration-200 {{ request()->is('admin/approval*') ? 'opacity-100' : 'opacity-0' }}"></div>
         </a>
     </nav>
