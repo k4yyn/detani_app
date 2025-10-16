@@ -12,7 +12,7 @@ class TransaksiKasirController extends Controller
 {
     public function index()
 {
-    $data = Data::orderByRaw('stok = 0, nama_barang ASC')->get();
+     $data = Data::orderByRaw('stock_kantin1 = 0, nama_barang ASC')->get();
 
     $keranjang = Session::get('keranjang', []);
     $total = collect($keranjang)->sum('subtotal');
@@ -237,10 +237,28 @@ class TransaksiKasirController extends Controller
             'diskon' => $item['diskon'] ?? 0
         ]);
 
-        if (is_numeric($item['id'])) {
+                if (is_numeric($item['id'])) {
             $produk = Data::find($item['id']);
             if ($produk) {
-                $produk->decrement('stok', $item['qty']);
+                $totalTersedia = $produk->stock_kantin1 + $produk->stock_gudang;
+                
+                if ($totalTersedia >= $item['qty']) {
+                    // Prioritaskan dari kantin1 dulu
+                    $kurangiDariKantin = min($item['qty'], $produk->stock_kantin1);
+                    $kurangiDariGudang = $item['qty'] - $kurangiDariKantin;
+                    
+                    if ($kurangiDariKantin > 0) {
+                        $produk->decrement('stock_kantin1', $kurangiDariKantin);
+                    }
+                    if ($kurangiDariGudang > 0) {
+                        $produk->decrement('stock_gudang', $kurangiDariGudang);
+                    }
+                    
+                    // Tetap update stok total
+                    //$produk->decrement('stok', $item['qty']);
+                } else {
+                    throw new \Exception("Stock tidak cukup untuk {$produk->nama_barang}. Tersedia: {$totalTersedia}");
+                }
             }
         }
     }

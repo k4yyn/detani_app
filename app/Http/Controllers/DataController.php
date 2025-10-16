@@ -85,7 +85,7 @@ public function store(Request $request)
         'nama_barang' => 'required|string',
         'kategori' => 'required|string',
         'deskripsi' => 'nullable|string',
-        'stok' => 'required|integer|min:1',
+        'stock_gudang' => 'required|integer|min:1',
         'harga_pokok' => 'required|numeric|min:0',
         'harga_jual' => 'required|numeric|min:0',
         'lokasi_penyimpanan' => 'required|string',
@@ -107,7 +107,8 @@ public function store(Request $request)
         'nama_barang' => $request->nama_barang,
         'kategori' => $kategori, // sudah diganti
         'deskripsi' => $request->deskripsi,
-        'stok' => $request->stok,
+        'stock_gudang' => $request->stock_gudang,
+        'stock_kantin1' => 0,
         'harga_pokok' => $request->harga_pokok,
         'harga_jual' => $request->harga_jual,
         'lokasi_penyimpanan' => $request->lokasi_penyimpanan,
@@ -126,7 +127,7 @@ public function edit($id)
 public function update(Request $request, $id)
 {
     $request->validate([
-        'stok' => 'required|integer|min:1|max:9999',
+        'stock_gudang' => 'required|integer|min:1|max:9999',
         'harga_pokok' => 'required|numeric|min:0',
         'harga_jual' => 'required|numeric|min:0',
         'lokasi_penyimpanan' => 'required|string'
@@ -134,7 +135,7 @@ public function update(Request $request, $id)
 
     $data = Data::findOrFail($id);
     $data->update([
-        'stok' => $request->stok,
+        'stock_gudang' => $request->stock_gudang,
         'harga_pokok' => $request->harga_pokok,
         'harga_jual' => $request->harga_jual,
         'lokasi_penyimpanan' => $request->lokasi_penyimpanan,

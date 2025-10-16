@@ -63,7 +63,7 @@
                                             @else bg-red-100 text-red-800
                                             @endif
                                         ">
-                                            {{ $item->stok }} unit
+                                            {{ $item->stock_gudang }} unit
                                         </span>
                                     </div>
                                     <div class="space-y-1">
@@ -134,7 +134,7 @@
                                             @else bg-red-100 text-red-800
                                             @endif
                                         ">
-                                            {{ $item->stok }} unit
+                                            {{ $item->stock_gudang }} unit
                                         </span>
                                     </div>
                                     <div class="text-center min-w-0">
@@ -247,7 +247,7 @@
                     </div>
                     <div class="ml-4 min-w-0">
                         <p class="text-xs sm:text-sm font-medium text-orange-500 truncate">Total Stok</p>
-                        <p class="text-xl sm:text-2xl font-bold text-green-800">{{ $data->sum('stok') }}</p>
+                        <p class="text-xl sm:text-2xl font-bold text-green-800">{{ $data->sum('stock_gudang') }}</p>
                     </div>
                 </div>
             </div>

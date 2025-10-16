@@ -142,9 +142,9 @@
                                 Stok <span class="text-red-700">*</span>
                             </label>
                             <input type="number"
-                                   name="stok"
+                                   name="stock_gudang"
                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-all duration-200 hover:border-gray-400"
-                                   value="{{ old('stok') }}"
+                                   value="{{ old('stock_gudang') }}"
                                    min="1"
                                    placeholder="0"
                                    required>

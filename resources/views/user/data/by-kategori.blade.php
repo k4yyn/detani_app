@@ -107,7 +107,7 @@
                                         @else bg-red-100 text-red-800
                                         @endif
                                     ">
-                                        {{ $item->stok }} unit
+                                        {{ $item->stock_gudang }} unit
                                     </span>
                                 </div>
                                 <div class="flex flex-col">
@@ -193,7 +193,7 @@
                         </div>
                         <div class="ml-3 sm:ml-4 min-w-0 flex-1">
                             <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Total Stok</p>
-                            <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ number_format($data->sum('stok')) }}</p>
+                            <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ number_format($data->sum('stock_gudang')) }}</p>
                         </div>
                     </div>
                 </div>

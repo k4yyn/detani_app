@@ -13,6 +13,7 @@ use App\Http\Controllers\{
     UserController,
     TicketAdminController,
     TicketKasirController,
+    StockKantinController,
 };
 
 // ========================
@@ -82,22 +83,30 @@ Route::middleware('auth')->group(function () {
             Route::post('/checkout', [TransaksiKasirController::class, 'checkout'])->name('checkout');
             Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
             Route::post('/print-thermal/{id}', [TransaksiKasirController::class, 'printThermal'])->name('print.thermal');
-            });
         });
-       
+
+        // Tickets untuk User
         Route::prefix('user')->group(function () {
-        Route::get('tickets/create', [TicketKasirController::class, 'createSale'])->name('user.tickets.create');
-        Route::post('tickets', [TicketKasirController::class, 'storeSale'])->name('user.tickets.store');
+            Route::get('tickets/create', [TicketKasirController::class, 'createSale'])->name('user.tickets.create');
+            Route::post('tickets', [TicketKasirController::class, 'storeSale'])->name('user.tickets.store');
         });
 
         // Nota
         Route::get('/user/nota/nota-harian', [App\Http\Controllers\NotaHarianController::class, 'index'])
-        ->name('user.nota.notaHarian')
-        ->middleware('auth');
+            ->name('user.nota.notaHarian');
         Route::get('/user/nota/nota-harian/cetak', [App\Http\Controllers\NotaHarianController::class, 'cetak'])
-        ->name('user.nota.notaHarian.cetak')
-        ->middleware('auth');
+            ->name('user.nota.notaHarian.cetak');
 
+        Route::prefix('user/stock-kantin')->name('user.stock-kantin.')->group(function () {
+        Route::get('/dashboard', [StockKantinController::class, 'dashboard'])->name('dashboard');
+        Route::get('/verifikasi', [StockKantinController::class, 'verifikasiStock'])->name('verifikasi');
+        Route::post('/verifikasi', [StockKantinController::class, 'simpanVerifikasi'])->name('simpan-verifikasi');
+        Route::get('/transfer', [StockKantinController::class, 'transferStock'])->name('transfer');
+        Route::post('/transfer', [StockKantinController::class, 'prosesTransfer'])->name('proses-transfer');
+        Route::get('/laporan', [StockKantinController::class, 'laporan'])->name('laporan');
+        Route::get('/auto-setup', [StockKantinController::class, 'autoSetup'])->name('auto-setup');
+        });
+    });
 
     // ========================
     // ADMIN Routes (role:admin)
@@ -117,7 +126,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/{ticket}', [TicketAdminController::class, 'update'])->name('update');
         });
 
-       // Data Barang
+        // Data Barang
         Route::prefix('data')->name('data.')->group(function () {
             Route::get('/', [DataController::class, 'index'])->name('index'); // Default ke halaman kategori
             Route::get('/all', [DataController::class, 'indexAll'])->name('all'); // Halaman daftar semua barang
@@ -151,7 +160,13 @@ Route::middleware('auth')->group(function () {
             Route::match(['get', 'post'], '/export', [ReportController::class, 'export'])->name('export');
         });
 
-        // struk admin
-        Route::get('/transaksi/{id}/struk', [ReportController::class, 'struk'])->name('transaksi.struk');        
-        });
+        // Struk admin
+        Route::get('/transaksi/{id}/struk', [ReportController::class, 'struk'])->name('transaksi.struk');
+
+        // ❌ ADMIN STOCK OPNAME - COMMENT DULU
+        // Route::prefix('stock-opname')->name('stock-opname.')->group(function () {
+        //     Route::get('/', [Admin\StockOpnameController::class, 'index'])->name('index');
+        //     Route::get('/{id}', [Admin\StockOpnameController::class, 'show'])->name('show');
+        // });
+    });
 });

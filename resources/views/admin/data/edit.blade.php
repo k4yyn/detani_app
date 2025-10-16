@@ -38,19 +38,19 @@
 
                 <div class="p-6">
                     <div class="mb-6">
-                        <label for="stok" class="block text-sm font-semibold text-green-800 mb-2 flex items-center">
+                        <label for="stock_gudang" class="block text-sm font-semibold text-green-800 mb-2 flex items-center">
                             Jumlah Stok <span class="text-red-700">*</span>
                         </label>
                         <input
                             type="number"
-                            name="stok"
+                            name="stock_gudang"
                             id="stok"
                             min="1"
                             max="9999"
                             required
                             class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-all duration-200 hover:border-gray-400"
                             placeholder="Masukkan jumlah stok"
-                            value="{{ old('stok', $data->stok) }}"
+                            value="{{ old('stock_gudang', $data->stock_gudang) }}"
                         >
                     </div>
 

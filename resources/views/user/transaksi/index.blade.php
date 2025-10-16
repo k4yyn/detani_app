@@ -85,9 +85,9 @@
     <div id="productList" class="space-y-1">
             @forelse ($data as $item)
             <div class="product-item bg-white rounded-md p-3 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-sm
-                {{ $item->stok <= 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
+                {{ $item->stock_kantin1 <= 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
                 data-kategori="{{ $item->kategori }}"
-                @if($item->stok > 0)
+                @if($item->stock_kantin1 > 0)
                     onclick="addToCart({{ $item->id }}, '{{ $item->nama_barang }}', {{ $item->harga_jual }})"
                 @endif>
                 
@@ -101,11 +101,11 @@
                         <div class="flex items-center space-x-1 text-xs text-gray-600 mb-1">
                             <span class="bg-gray-100 px-1.5 py-0.5 rounded">{{ $item->kategori }}</span>
                             <span>•</span>
-                            <span>Stok: {{ $item->stok }}</span>
+                            <span>Stok: {{ $item->stock_kantin1 }}</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-base font-bold text-gray-900">Rp {{ number_format($item->harga_jual) }}</span>
-                            @if($item->stok <= 0)
+                            @if($item->stock_kantin1 <= 0)
                                 <span class="text-xs text-red-500 bg-red-50 px-1.5 py-0.5 rounded">Habis</span>
                             @else
                                 <button class="text-green-600 hover:text-green-700 p-1 rounded-full hover:bg-green-50">
