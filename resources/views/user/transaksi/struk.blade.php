@@ -252,7 +252,7 @@
     </a>
 </div>
 
- <!-- RawBT Printing Script -->
+<!-- RawBT Printing Script -->
 <script>
 // Function untuk print dengan RawBT
 async function printWithRawBT(transaksiId) {
@@ -280,15 +280,19 @@ async function printWithRawBT(transaksiId) {
             const intentUrl = `intent://rawbt/#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.data=${cleanData};end`;
             
             console.log('Membuka RawBT via Intent...');
+            
+            // Method 1: Coba buka dengan window.location
             window.location.href = intentUrl;
             
-            // Fallback setelah 3 detik
+            // Method 2: Fallback dengan user interaction
             setTimeout(() => {
                 if (!document.hidden) {
-                    console.log('RawBT tidak terbuka');
-                    alert('RawBT tidak terbuka. Pastikan app RawBT sudah terinstall.');
+                    console.log('RawBT tidak terbuka otomatis, butuh user interaction');
+                    
+                    // Tampilkan button untuk buka RawBT manually
+                    showRawBTButton(intentUrl, cleanData);
                 }
-            }, 3000);
+            }, 1000);
             
         } else {
             console.error('Data struk tidak valid:', result);
@@ -299,6 +303,57 @@ async function printWithRawBT(transaksiId) {
         console.error('Print error:', error);
         alert('Gagal mencetak: ' + error.message);
     }
+}
+
+// Tampilkan button untuk buka RawBT manually
+function showRawBTButton(intentUrl, cleanData) {
+    // Hapus button lama jika ada
+    const oldButton = document.getElementById('rawbt-manual-button');
+    if (oldButton) oldButton.remove();
+    
+    // Buat button baru
+    const button = document.createElement('button');
+    button.id = 'rawbt-manual-button';
+    button.innerHTML = '🖨️ TAP UNTUK CETAK STRUK';
+    button.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 20px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 10000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    `;
+    
+    // Click handler
+    button.addEventListener('click', function() {
+        console.log('User mengklik print button');
+        
+        // Method 1: Coba buka Intent langsung
+        window.location.href = intentUrl;
+        
+        // Method 2: Fallback dengan window.open (lebih reliable)
+        setTimeout(() => {
+            const newWindow = window.open(intentUrl, '_blank');
+            if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                // Jika semua gagal, arahkan ke Play Store
+                console.log('Membuka Play Store...');
+                window.location.href = 'https://play.google.com/store/apps/details?id=ru.a402d.rawbtprinter';
+            }
+        }, 500);
+        
+        // Hapus button setelah diklik
+        this.remove();
+    });
+    
+    document.body.appendChild(button);
 }
 
 // Handle manual print button
@@ -312,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Auto print untuk Android
+    // Auto print untuk Android - TAMPILKAN BUTTON, JANGAN AUTO
     const urlParams = new URLSearchParams(window.location.search);
     const autoPrint = urlParams.has('auto_print');
     const isAndroid = /Android/i.test(navigator.userAgent);
@@ -322,20 +377,94 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Transaksi ID:', '{{ $transaksi->id }}');
     
     if (autoPrint && isAndroid) {
-        console.log('Memulai auto-print...');
+        console.log('Menampilkan print button...');
         
-        // Tunggu 2 detik lalu print
+        // Tunggu 1 detik lalu tampilkan button
         setTimeout(() => {
-            printWithRawBT('{{ $transaksi->id }}');
-        }, 2000);
+            // Tampilkan button print, jangan auto
+            const intentUrl = `intent://rawbt/#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end`;
+            showRawBTButton(intentUrl);
+        }, 1000);
     }
 });
+
+// Alternative: Simple print dengan user interaction
+function simplePrint() {
+    const transaksiId = '{{ $transaksi->id }}';
+    console.log('Simple print:', transaksiId);
+    
+    // Langsung buka RawBT dengan data kosong dulu
+    const intentUrl = `intent://rawbt/#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end`;
+    window.location.href = intentUrl;
+    
+    // Setelah itu ambil data dan print
+    setTimeout(async () => {
+        try {
+            const response = await fetch(`/user/transaksi/print-thermal/${transaksiId}?rawbt=1`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                // Data sudah diambil, tinggal print di RawBT
+                console.log('Data siap untuk print');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }, 1000);
+}
 </script>
 
-<!-- Debug Info -->
-<div style="display: none;">
-    <p>Transaksi ID: {{ $transaksi->id }}</p>
-    <p>User Agent: {{ request()->header('User-Agent') }}</p>
+<!-- Simple Print Button (Alternative) -->
+<div class="mobile-actions no-print">
+    <button onclick="simplePrint()" class="btn btn-print" style="flex: 1;">
+        🖨️ TAP UNTUK CETAK STRUK
+    </button>
+    <a href="{{ route('user.transaksi.index') }}" class="btn btn-back">
+        🔙 KE TRANSAKSI
+    </a>
 </div>
+
+<style>
+.btn {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-print {
+    background: #28a745;
+    color: white;
+}
+
+.btn-back {
+    background: #6c757d;
+    color: white;
+}
+
+.mobile-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 15px;
+    border-top: 2px solid #eee;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+</style>
 </body>
 </html>

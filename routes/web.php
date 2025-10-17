@@ -84,6 +84,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/struk/{id}', [TransaksiKasirController::class, 'struk'])->name('struk');
             Route::post('/print-thermal/{id}', [TransaksiKasirController::class, 'printThermal'])
                 ->name('print.thermal');
+            Route::get('/test-print', [TransaksiKasirController::class, 'testPrint']);
         });
 
         // Tickets untuk User

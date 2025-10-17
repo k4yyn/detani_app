@@ -342,4 +342,24 @@ public function printThermal($id)
         return back()->with('error', 'Gagal mencetak: ' . $e->getMessage());
     }
 }
+
+// Test simple print
+public function testPrint()
+{
+    $transaksi = Transaksi::latest()->first();
+    
+    if (!$transaksi) {
+        return response()->json(['error' => 'No transaction found'], 404);
+    }
+    
+    $printService = new \App\Services\ThermalPrintService('rawbt');
+    $escposData = $printService->getRawBTData($transaksi);
+    
+    return response()->json([
+        'success' => true,
+        'rawbt' => true,
+        'escpos_data' => $escposData,
+        'message' => 'Test print data'
+    ]);
+}
 }
