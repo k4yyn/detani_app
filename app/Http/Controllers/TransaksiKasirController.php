@@ -191,15 +191,14 @@ class TransaksiKasirController extends Controller
         $total = 0;
         $bayar = 0;
         $kembalian = 0;
-        $statusPembayaran = 'Lunas'; // Otomatis lunas
-        $metodePembayaran = 'Gratis'; // Bisa diganti sesuai kebutuhan
+        $statusPembayaran = 'Lunas';
+        $metodePembayaran = 'Gratis';
     } else {
         $bayar = (float)$request->bayar;
         $kembalian = $bayar - $total;
         $statusPembayaran = 'Lunas';
         $metodePembayaran = $request->metode_pembayaran;
         
-        // Validasi hanya untuk non-owner
         if ($bayar < $total) {
             return back()->with('error', 'Uang bayar tidak mencukupi');
         }
@@ -222,10 +221,10 @@ class TransaksiKasirController extends Controller
         'metode_pembayaran' => $metodePembayaran,
         'status_pembayaran' => $statusPembayaran,
         'jenis_transaksi' => $jenisTransaksi,
-        'pelaku_transaksi' => $request ->pelaku_transaksi,
+        'pelaku_transaksi' => $request->pelaku_transaksi,
     ]);
 
-    // Simpan detail (sama seperti sebelumnya)
+    // Simpan detail
     foreach ($keranjang as $item) {
         TransaksiDetail::create([
             'transaksi_id' => $transaksi->id,
@@ -237,13 +236,12 @@ class TransaksiKasirController extends Controller
             'diskon' => $item['diskon'] ?? 0
         ]);
 
-                if (is_numeric($item['id'])) {
+        if (is_numeric($item['id'])) {
             $produk = Data::find($item['id']);
             if ($produk) {
                 $totalTersedia = $produk->stock_kantin1 + $produk->stock_gudang;
                 
                 if ($totalTersedia >= $item['qty']) {
-                    // Prioritaskan dari kantin1 dulu
                     $kurangiDariKantin = min($item['qty'], $produk->stock_kantin1);
                     $kurangiDariGudang = $item['qty'] - $kurangiDariKantin;
                     
@@ -253,9 +251,6 @@ class TransaksiKasirController extends Controller
                     if ($kurangiDariGudang > 0) {
                         $produk->decrement('stock_gudang', $kurangiDariGudang);
                     }
-                    
-                    // Tetap update stok total
-                    //$produk->decrement('stok', $item['qty']);
                 } else {
                     throw new \Exception("Stock tidak cukup untuk {$produk->nama_barang}. Tersedia: {$totalTersedia}");
                 }
@@ -268,20 +263,35 @@ class TransaksiKasirController extends Controller
     // CETAK THERMAL OTOMATIS JIKA DIPILIH
     if ($request->has('cetak_struk')) {
         try {
-            $printService = new \App\Services\ThermalPrintService('bluetooth');
-            $printService->printReceipt($transaksi);
+            // Cek jika Android (gunakan RawBT)
+            $userAgent = $request->header('User-Agent');
+            $isAndroid = preg_match('/Android/i', $userAgent);
             
-            return redirect()->route('user.transaksi.index')
-                ->with('success', 'Transaksi berhasil & struk tercetak!')
-                ->with('transaksi_terbaru', $transaksi->id);
+            if ($isAndroid) {
+                // Untuk Android: Redirect ke halaman struk dengan auto-print
+                return redirect()->route('user.transaksi.struk', ['id' => $transaksi->id, 'auto_print' => 1])
+                    ->with('success', 'Transaksi berhasil! Struk akan dicetak otomatis.')
+                    ->with('transaksi_terbaru', $transaksi->id);
+            } else {
+                // Untuk Desktop: Cetak via Bluetooth seperti biasa
+                $printService = new \App\Services\ThermalPrintService('bluetooth');
+                $printService->printReceipt($transaksi);
+                
+                return redirect()->route('user.transaksi.index')
+                    ->with('success', 'Transaksi berhasil & struk tercetak!')
+                    ->with('transaksi_terbaru', $transaksi->id);
+            }
 
         } catch (\Exception $e) {
+            // Jika print gagal, tetap redirect ke struk
             return redirect()->route('user.transaksi.struk', ['id' => $transaksi->id])
-                ->with('error', 'Transaksi berhasil tapi print gagal: ' . $e->getMessage());
+                ->with('error', 'Transaksi berhasil tapi print gagal: ' . $e->getMessage())
+                ->with('transaksi_terbaru', $transaksi->id);
         }
     }
 
-    return redirect()->route('user.transaksi.index')
+    // Jika tidak cetak struk, tetap redirect ke halaman struk
+    return redirect()->route('user.transaksi.struk', ['id' => $transaksi->id])
         ->with('success', 'Transaksi berhasil.')
         ->with('transaksi_terbaru', $transaksi->id);
 }
