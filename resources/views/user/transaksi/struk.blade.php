@@ -252,71 +252,66 @@
     </a>
 </div>
 
-    <!-- RawBT Printing Script -->
-<script>
+ <script>
 class RawBTPrinter {
     constructor() {
-        this.isRawBTAvailable = typeof RawBT !== 'undefined';
+        this.rawbtAppPackage = 'ru.a402d.rawbtprinter';
     }
 
-    // Print dengan RawBT
-    printWithRawBT(escposData) {
-        if (this.isRawBTAvailable) {
-            // Jika RawBT tersedia (Android app)
-            RawBT.printText(escposData);
-            return true;
-        } else {
-            // Fallback: Buka RawBT app dengan data
-            this.openRawBTApp(escposData);
-            return false;
-        }
-    }
-
-    // Buka RawBT app dengan intent
-    openRawBTApp(escposData) {
-        const base64Data = btoa(escposData).replace(/\//g, '_').replace(/\+/g, '-');
-        const url = `intent://rawbt/#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.data=${base64Data};end`;
-        
-        // Coba buka RawBT app
-        window.location.href = url;
-        
-        // Fallback ke Play Store jika app tidak terinstall
-        setTimeout(() => {
-            if (!document.hidden) {
-                window.location.href = 'https://play.google.com/store/apps/details?id=ru.a402d.rawbtprinter';
-            }
-        }, 500);
-    }
-
-    // Print struk transaksi
-    async printStruk(transaksiId) {
+    // Print dengan Intent saja (tidak perlu JavaScript interface)
+    async printWithIntent(transaksiId) {
         try {
+            console.log('Mengambil data struk...');
+            
+            // 1. Get ESC/POS data dari server
             const response = await fetch(`/user/transaksi/print-thermal/${transaksiId}?rawbt=1`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 }
             });
-
-            const result = await response.json();
             
-            if (result.success && result.rawbt) {
-                // Decode base64 ESC/POS data
-                const escposText = atob(result.escpos_data);
-                return this.printWithRawBT(escposText);
-            } else {
-                throw new Error('Format response tidak sesuai');
+            if (!response.ok) {
+                throw new Error('Gagal mengambil data struk');
             }
+            
+            const result = await response.json();
+            console.log('Response:', result);
+            
+            if (result.success && result.escpos_data) {
+                // 2. Encode data untuk Intent
+                const cleanData = result.escpos_data.replace(/\//g, '_').replace(/\+/g, '-');
+                const intentUrl = `intent://rawbt/#Intent;scheme=rawbt;package=${this.rawbtAppPackage};S.data=${cleanData};end`;
+                
+                console.log('Membuka RawBT via Intent...');
+                
+                // 3. Buka RawBT
+                window.location.href = intentUrl;
+                
+                // 4. Fallback setelah 3 detik
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        console.log('RawBT tidak terbuka, mungkin belum install');
+                        if (confirm('RawBT tidak terbuka. Install sekarang?')) {
+                            window.location.href = 'https://play.google.com/store/apps/details?id=ru.a402d.rawbtprinter';
+                        }
+                    }
+                }, 3000);
+                
+            } else {
+                throw new Error(result.error || 'Data struk tidak valid');
+            }
+            
         } catch (error) {
             console.error('Print error:', error);
             alert('Gagal mencetak: ' + error.message);
-            return false;
         }
     }
 }
 
-// Initialize RawBT printer
+// Initialize printer
 const rawBTPrinter = new RawBTPrinter();
 
 // Handle print button click
@@ -327,25 +322,16 @@ document.addEventListener('DOMContentLoaded', function() {
         printForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const transaksiId = '{{ $transaksi->id }}';
-            const isAndroid = /Android/i.test(navigator.userAgent);
+            const transaksiId = '{{ $transaksi->id }}'; // Ini akan otomatis terisi
+            console.log('Print transaksi ID:', transaksiId);
             
-            if (isAndroid) {
-                // Gunakan RawBT untuk Android
-                await rawBTPrinter.printStruk(transaksiId);
-            } else {
-                // Desktop: submit form biasa
-                this.submit();
-            }
+            await rawBTPrinter.printWithIntent(transaksiId);
         });
     }
 
-    // Auto print untuk RawBT jika di-set
-    @if($auto_print && request()->has('rawbt_auto'))
-    setTimeout(() => {
-        rawBTPrinter.printStruk('{{ $transaksi->id }}');
-    }, 1000);
-    @endif
+    // Debug info
+    console.log('Transaksi ID:', '{{ $transaksi->id }}');
+    console.log('RawBT Printer Handler Loaded');
 });
 </script>
 </body>
