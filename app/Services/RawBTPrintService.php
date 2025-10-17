@@ -10,15 +10,16 @@ class RawBTPrintService
     {
         $lines = [];
         
-        // Config printer
-        $lines[] = "\x1B\x40"; // Initialize printer
-        $lines[] = "\x1B\x21\x00"; // Reset text size
+        // Initialize printer
+        $lines[] = "\x1B\x40";
         
-        // Header - Center alignment
+        // Header - Center alignment & Double size
         $lines[] = "\x1B\x61\x01"; // Center align
         $lines[] = "\x1B\x21\x22"; // Double height and width
         $lines[] = "Kantin DeTani\n";
-        $lines[] = "\x1B\x21\x00"; // Normal text
+        
+        // Normal text
+        $lines[] = "\x1B\x21\x00";
         $lines[] = "Jln. Goalpara, Kp. Cijeruk, Sukamekar\n";
         $lines[] = "Kec. Sukaraja, Sukabumi\n";
         $lines[] = "Telp: 0819-1188-0088\n";
@@ -36,27 +37,23 @@ class RawBTPrintService
         
         $lines[] = "========================\n";
         
-        // Items header
-        $lines[] = $this->formatLine("ITEM", "QTY", "HARGA");
-        $lines[] = "------------------------\n";
-        
         // Items
         foreach ($transaksi->details as $item) {
             $nama = $item->nama_manual ?? optional($item->data)->nama_barang ?? '-';
             $nama = substr($nama, 0, 20);
             
             $qty = str_pad($item->qty, 3);
-            $harga = str_pad(number_format($item->harga, 0, ',', '.'), 8);
+            $harga = "Rp " . number_format($item->harga, 0, ',', '.');
             
-            $lines[] = $this->formatLine($nama, $qty, $harga);
+            $lines[] = str_pad($nama, 20) . str_pad($qty, 5) . str_pad($harga, 15) . "\n";
         }
         
         $lines[] = "========================\n";
         
         // Totals
-        $lines[] = $this->formatLine("TOTAL:", "", number_format($transaksi->total_harga, 0, ',', '.'));
-        $lines[] = $this->formatLine("BAYAR:", "", number_format($transaksi->uang_dibayar, 0, ',', '.'));
-        $lines[] = $this->formatLine("KEMBALI:", "", number_format($transaksi->kembalian, 0, ',', '.'));
+        $lines[] = str_pad("TOTAL:", 25) . "Rp " . number_format($transaksi->total_harga, 0, ',', '.') . "\n";
+        $lines[] = str_pad("BAYAR:", 25) . "Rp " . number_format($transaksi->uang_dibayar, 0, ',', '.') . "\n";
+        $lines[] = str_pad("KEMBALI:", 25) . "Rp " . number_format($transaksi->kembalian, 0, ',', '.') . "\n";
         
         $lines[] = "\n";
         
@@ -72,18 +69,58 @@ class RawBTPrintService
         return implode('', $lines);
     }
     
-    private function formatLine($item, $qty, $harga)
-    {
-        $item = str_pad($item, 20);
-        $qty = str_pad($qty, 5);
-        $harga = str_pad($harga, 10);
-        
-        return $item . $qty . $harga . "\n";
-    }
-    
     public function getBase64ESC_POS($transaksi)
     {
         $escpos = $this->generateESC_POS($transaksi);
         return base64_encode($escpos);
+    }
+    
+    // Simple text version untuk testing
+    public function generateSimpleText($transaksi)
+    {
+        $text = "";
+        
+        // Header
+        $text .= "Kantin DeTani\n";
+        $text .= "Jln. Goalpara, Kp. Cijeruk, Sukamekar\n";
+        $text .= "Kec. Sukaraja, Sukabumi\n";
+        $text .= "Telp: 0819-1188-0088\n";
+        $text .= "========================\n\n";
+        
+        // Transaction Info
+        $text .= "Kode    : " . $transaksi->kode_transaksi . "\n";
+        $text .= "Tanggal : " . $transaksi->created_at->timezone('Asia/Jakarta')->format('d/m/Y H:i') . "\n";
+        $text .= "Kasir   : " . ($transaksi->user->name ?? '-') . "\n";
+        
+        if ($transaksi->nama_pelanggan) {
+            $text .= "Customer: " . $transaksi->nama_pelanggan . "\n";
+        }
+        
+        $text .= "========================\n\n";
+        
+        // Items
+        $text .= str_pad("ITEM", 20) . str_pad("QTY", 5) . str_pad("HARGA", 15) . "\n";
+        $text .= "------------------------\n";
+        
+        foreach ($transaksi->details as $item) {
+            $nama = $item->nama_manual ?? optional($item->data)->nama_barang ?? '-';
+            $nama = substr($nama, 0, 20);
+            
+            $qty = str_pad($item->qty, 3);
+            $harga = "Rp " . number_format($item->harga, 0, ',', '.');
+            
+            $text .= str_pad($nama, 20) . str_pad($qty, 5) . str_pad($harga, 15) . "\n";
+        }
+        
+        $text .= "========================\n";
+        $text .= str_pad("TOTAL:", 25) . "Rp " . number_format($transaksi->total_harga, 0, ',', '.') . "\n";
+        $text .= str_pad("BAYAR:", 25) . "Rp " . number_format($transaksi->uang_dibayar, 0, ',', '.') . "\n";
+        $text .= str_pad("KEMBALI:", 25) . "Rp " . number_format($transaksi->kembalian, 0, ',', '.') . "\n\n";
+        
+        // Footer
+        $text .= "Terima kasih telah berbelanja!\n";
+        $text .= "~ De Tani Waterpark ~\n\n\n\n";
+        
+        return $text;
     }
 }
