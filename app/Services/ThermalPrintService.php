@@ -5,26 +5,30 @@ namespace App\Services;
 use Mike42\Escpos\PrintConnectors\WindowsBluetoothPrintConnector;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Mike42\Escpos\Printer;
+use App\Models\Transaksi;
 
 class ThermalPrintService
 {
     private $printer;
+    private $connectionType;
 
     public function __construct($connectionType = 'bluetooth', $deviceMac = null)
     {
-        $this->connect($connectionType, $connectionString);
+        $this->connectionType = $connectionType;
+
+        if ($connectionType !== 'rawbt') {
+            $this->connect($connectionType, $deviceMac);
+        }
     }
 
-    private function connect($connectionType, $connectionString)
+     private function connect($connectionType, $deviceMac = null)
     {
         try {
             if ($connectionType === 'bluetooth') {
-                // Untuk Bluetooth printer (via IP)
                 $macAddress = $deviceMac ?? env('THERMAL_PRINTER_MAC', '02:2E:35:1D:06:BE');
                 $connector = new FilePrintConnector("bluetooth://$macAddress");
             } else {
-                // Untuk USB printer
-                 $connector = new FilePrintConnector(env('THERMAL_PRINTER_USB', '/dev/usb/lp0'));
+                $connector = new FilePrintConnector(env('THERMAL_PRINTER_USB', '/dev/usb/lp0'));
             }
             
             $this->printer = new Printer($connector);
@@ -36,6 +40,12 @@ class ThermalPrintService
 
     public function printReceipt($transaksi)
     {
+
+         if ($this->connectionType === 'rawbt') {
+            $rawbtService = new RawBTPrintService();
+            return $rawbtService->generateESC_POS($transaksi);
+        }
+
         try {
             // Config printer untuk thermal 58mm
             $this->printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -104,6 +114,12 @@ class ThermalPrintService
         } catch (\Exception $e) {
             throw new \Exception("Print failed: " . $e->getMessage());
         }
+    }
+
+     public function getRawBTData($transaksi)
+    {
+        $rawbtService = new RawBTPrintService();
+        return $rawbtService->getBase64ESC_POS($transaksi);
     }
 }
 

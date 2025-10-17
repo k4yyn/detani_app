@@ -306,10 +306,27 @@ public function printThermal($id)
     try {
         $transaksi = Transaksi::with(['details', 'user'])->findOrFail($id);
         
-        $printService = new \App\Services\ThermalPrintService('bluetooth');
-        $printService->printReceipt($transaksi);
+        // Cek jika menggunakan RawBT (Android tablet)
+        $isAndroid = request()->has('rawbt') || preg_match('/Android/i', request()->userAgent());
         
-        return back()->with('success', 'Struk berhasil dicetak!');
+        if ($isAndroid) {
+            // Return data untuk RawBT
+            $printService = new \App\Services\ThermalPrintService('rawbt');
+            $escposData = $printService->getRawBTData($transaksi);
+            
+            return response()->json([
+                'success' => true,
+                'rawbt' => true,
+                'escpos_data' => $escposData,
+                'message' => 'Data struk siap untuk RawBT'
+            ]);
+        } else {
+            // Legacy printing untuk desktop/Bluetooth
+            $printService = new \App\Services\ThermalPrintService('bluetooth');
+            $printService->printReceipt($transaksi);
+            
+            return back()->with('success', 'Struk berhasil dicetak!');
+        }
         
     } catch (\Exception $e) {
         return back()->with('error', 'Gagal mencetak: ' . $e->getMessage());
